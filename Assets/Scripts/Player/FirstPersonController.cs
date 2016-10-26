@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(MouseLook))]
+[RequireComponent(typeof(JoystickLook))]
 public class FirstPersonController : MonoBehaviour
 {
     [Header("Look")]
-    [SerializeField] float m_mouseSensitivityX = 3f;
-    [SerializeField] float m_mouseSensitivityY = 3f;
-
-    [SerializeField] Vector2 m_verticalLookMinMan = new Vector2(-90f, 90f);
+    [SerializeField] Vector2 m_verticalLookMinMax = new Vector2(-90f, 90f);
 
     [Header("Walk")]
     [SerializeField] float m_walkSpeed = 3f;
@@ -21,14 +21,16 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] LayerMask m_jumpMask;
     [SerializeField] float m_groundedRayDistance = 0.1f;
 
+    private MouseLook m_mouseLook;
+    private JoystickLook m_joystickLook;
 
     private Rigidbody m_rigidbody;
     private Transform m_camera;
-    private float m_verticalLookRotation;
     private Vector3 m_moveAmount;
     private Vector3 m_smoothMoveVelocity;
     private bool m_grounded;
     private bool m_isRunning;
+    private bool m_useJoystickLook;
 
 
 	void Start()
@@ -36,19 +38,17 @@ public class FirstPersonController : MonoBehaviour
         m_rigidbody = GetComponent<Rigidbody>();
         m_camera = Camera.main.transform;
 
+        m_mouseLook = GetComponent<MouseLook>();
+        m_joystickLook = GetComponent<JoystickLook>();
+
         StartCoroutine(GetSprint());
+        StartCoroutine(CheckForJoysticks());
     }
 	
 
 	void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X");
-        float mouseY = Input.GetAxis("Mouse Y");
-
-        transform.Rotate(Vector3.up * mouseX * m_mouseSensitivityX);
-        m_verticalLookRotation += mouseY * m_mouseSensitivityY;
-        m_verticalLookRotation = Mathf.Clamp(m_verticalLookRotation, m_verticalLookMinMan.x, m_verticalLookMinMan.y);
-        m_camera.localEulerAngles = Vector3.left * m_verticalLookRotation;
+        RotateView();
 
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
@@ -77,6 +77,34 @@ public class FirstPersonController : MonoBehaviour
     void FixedUpdate()
     {
         m_rigidbody.MovePosition(m_rigidbody.position + transform.TransformDirection(m_moveAmount) * Time.deltaTime);
+    }
+
+
+    private void RotateView()
+    {
+        if (m_useJoystickLook)
+            m_joystickLook.LookRotation(transform, m_camera.transform, m_verticalLookMinMax);
+        else
+            m_mouseLook.LookRotation(transform, m_camera.transform, m_verticalLookMinMax);
+    }
+
+
+    private IEnumerator CheckForJoysticks()
+    {
+        while (true)
+        {
+            var joystickNames = Input.GetJoystickNames();
+
+            //for (int i = 0; i < joystickNames.Length; i++)
+            //    print(string.Format("{0} Joystick {1}: {2}", Time.time, i + 1, joystickNames[i]));
+
+            if (joystickNames.Length >= 1 && !string.IsNullOrEmpty(joystickNames[0]))
+                m_useJoystickLook = true;
+            else
+                m_useJoystickLook = false;
+
+            yield return new WaitForSeconds(1f);
+        }
     }
 
 
