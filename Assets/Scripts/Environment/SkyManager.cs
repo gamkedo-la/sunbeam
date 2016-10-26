@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 [RequireComponent(typeof(Light))]
 public class SkyManager : MonoBehaviour
 {
