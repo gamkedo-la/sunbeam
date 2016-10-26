@@ -4,6 +4,8 @@ using System.Collections;
 [RequireComponent(typeof(Light))]
 public class SkyManager : MonoBehaviour
 {
+    public static float SunAngleAboveHorizon;
+
     [SerializeField] Gradient m_skyColour;
     [SerializeField] Gradient m_sunColour;
     [SerializeField] AnimationCurve m_sunIntensity;
@@ -41,6 +43,7 @@ public class SkyManager : MonoBehaviour
     {
         var playerDirection = m_player.position.normalized;
         float dotToPlayer = Vector3.Dot(-transform.forward, playerDirection);
+        SunAngleAboveHorizon = Vector3.Angle(transform.forward, playerDirection) - 90f;
 
         float evaluationValue = 0.5f * (dotToPlayer + 1f);
 
