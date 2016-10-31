@@ -11,7 +11,7 @@ public class TorchManager : MonoBehaviour
     private float m_previousSunAngle;
 
 
-    void Awake()
+    void Start()
     {
         m_light = GetComponent<Light>();
         m_audioSource = GetComponent<AudioSource>();
@@ -32,12 +32,12 @@ public class TorchManager : MonoBehaviour
         float sunAngle = SkyManager.SunAngleAboveHorizon;
 
         if (sunAngle <= m_sunAngleForTorchToggle
-            && m_previousSunAngle > m_sunAngleForTorchToggle)
+            && !m_light.enabled)
         {
             SwitchTorch(true);           
         }
         else if (sunAngle > m_sunAngleForTorchToggle
-            && m_previousSunAngle <= m_sunAngleForTorchToggle)
+            && m_light.enabled)
         {
             SwitchTorch(false);
         }

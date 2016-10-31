@@ -22,7 +22,7 @@ public class SkyManager : MonoBehaviour
     private float m_sunDistanceFromPlayer;
 
 
-	void Start()
+	void Awake()
     {
         m_player = GameObject.FindGameObjectWithTag(Tags.Player).transform;
         m_sunLight = GetComponent<Light>();
@@ -37,7 +37,10 @@ public class SkyManager : MonoBehaviour
         m_originalSunColour = m_sunMaterial.GetColor("_TintColor");
 
         m_sunDistanceFromPlayer = Vector3.Distance(m_player.position, m_sunImage.position);
-	}
+
+        var playerDirection = m_player.position.normalized;
+        SunAngleAboveHorizon = Vector3.Angle(transform.forward, playerDirection) - 90f;
+    }
 	
 
 	void Update()
