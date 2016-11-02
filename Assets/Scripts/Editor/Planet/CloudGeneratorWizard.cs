@@ -47,10 +47,10 @@ public class CloudGeneratorWizard : ScriptableWizard
     }
 
 
-    [MenuItem("Custom/Generate clouds %#g")]
+    [MenuItem("Planet/Generate clouds %#g")]
     static void Handler()
     {
-        DisplayWizard<CloudGeneratorWizard>("Generate clouds", "Gnerate clouds");
+        DisplayWizard<CloudGeneratorWizard>("Generate clouds", "Generate clouds");
     }
 
 

@@ -16,7 +16,7 @@ public class EnvironmentToolsEditor : Editor
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 1000f))
             {
-                Debug.Log("Mouse clicked on " + hit.collider.name + " at " + hit.point + ", " + hit.distance + " away");
+                //Debug.Log("Mouse clicked on " + hit.collider.name + " at " + hit.point + ", " + hit.distance + " away");
 
                 var transform = (target as EnvironmentTools).transform;
                 var targetDirection = hit.point.normalized;
