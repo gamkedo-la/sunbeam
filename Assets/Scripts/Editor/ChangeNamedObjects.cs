@@ -29,7 +29,7 @@ public class ChangeNamedObjects : ScriptableWizard
     }
 
 
-    [MenuItem("Custom/Replace named objects with prefabs %#r")]
+    [MenuItem("Custom/Replace named objects with prefabs %#p")]
     static void Handler()
     {
         ScriptableWizard.DisplayWizard<ChangeNamedObjects>("Replace named objects with prefabs", "Apply");
