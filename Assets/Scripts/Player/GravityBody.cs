@@ -10,15 +10,23 @@ public class GravityBody : MonoBehaviour
 
     void Awake()
     {
-        m_rigidBody = GetComponent<Rigidbody>();
-        m_rigidBody.useGravity = false;
+        m_rigidBody = GetComponent<Rigidbody>(); 
 
-        m_gravityAttractor = GameObject.FindGameObjectWithTag(Tags.Planet).GetComponent<GravityAttractor>();
+        var gravityAttractorObject = GameObject.FindGameObjectWithTag(Tags.Planet);
+
+        if (gravityAttractorObject != null)
+        {
+            m_gravityAttractor = gravityAttractorObject.GetComponent<GravityAttractor>();
+            m_rigidBody.useGravity = false;
+        }
+        else
+            m_rigidBody.useGravity = true;
     }
 
     
 	void FixedUpdate()
     {
-        m_gravityAttractor.Attract(m_rigidBody);
+        if (m_gravityAttractor != null)
+            m_gravityAttractor.Attract(m_rigidBody);
 	}
 }

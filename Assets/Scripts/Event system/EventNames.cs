@@ -11,6 +11,7 @@ public enum StandardEventName
 
     Pause = 1,
     Unpause = 2,
+    MirrorDeactivated = 3,
 }
 
 
@@ -72,4 +73,5 @@ public enum TransformEventName
 {
     None = 0,
 
+    MirrorActivated = 1,
 }

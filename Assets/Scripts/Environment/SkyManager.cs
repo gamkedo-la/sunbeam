@@ -5,7 +5,7 @@ using System.Collections;
 [RequireComponent(typeof(Light))]
 public class SkyManager : MonoBehaviour
 {
-    public static float SunAngleAboveHorizon;
+    public float SunAngleAboveHorizon;
 
     [SerializeField] Gradient m_skyColour;
     [SerializeField] Gradient m_sunColour;

@@ -9,18 +9,31 @@ public class TorchManager : MonoBehaviour
     private Light m_light;
     private AudioSource m_audioSource;
     private float m_previousSunAngle;
+    private SkyManager m_skyManager;
+    private bool m_activeManagement;
 
 
     void Start()
     {
         m_light = GetComponent<Light>();
         m_audioSource = GetComponent<AudioSource>();
-        m_previousSunAngle = SkyManager.SunAngleAboveHorizon;
+        m_skyManager = FindObjectOfType<SkyManager>();
 
-        if (m_previousSunAngle <= m_sunAngleForTorchToggle)
-            m_light.enabled = true;
+        if (m_skyManager != null)
+        {
+            m_previousSunAngle = m_skyManager.SunAngleAboveHorizon;
+            m_activeManagement = true;
+
+            if (m_previousSunAngle <= m_sunAngleForTorchToggle)
+                m_light.enabled = true;
+            else
+                m_light.enabled = false;
+        }
         else
+        {
+            m_activeManagement = false;
             m_light.enabled = false;
+        }
     }
 	
 
@@ -29,7 +42,11 @@ public class TorchManager : MonoBehaviour
         if (GameController.AllowCheatMode && Input.GetKeyDown(KeyCode.T))
             ToggleLight();
 
-        float sunAngle = SkyManager.SunAngleAboveHorizon;
+
+        if (!m_activeManagement)
+            return;
+
+        float sunAngle = m_skyManager.SunAngleAboveHorizon;
 
         if (sunAngle <= m_sunAngleForTorchToggle
             && !m_light.enabled)

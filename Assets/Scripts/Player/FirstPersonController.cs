@@ -8,6 +8,7 @@ using System.Collections;
 public class FirstPersonController : MonoBehaviour
 {
     [Header("Look")]
+    [SerializeField] Transform m_camera;
     [SerializeField] Vector2 m_verticalLookMinMax = new Vector2(-90f, 90f);
 
     [Header("Walk")]
@@ -25,7 +26,6 @@ public class FirstPersonController : MonoBehaviour
     private JoystickLook m_joystickLook;
 
     private Rigidbody m_rigidbody;
-    private Transform m_camera;
     private Vector3 m_moveAmount;
     private Vector3 m_smoothMoveVelocity;
     private bool m_grounded;
@@ -36,7 +36,9 @@ public class FirstPersonController : MonoBehaviour
 	void Start()
     {
         m_rigidbody = GetComponent<Rigidbody>();
-        m_camera = Camera.main.transform;
+
+        if (m_camera == null)
+            m_camera = Camera.main.transform;
 
         m_mouseLook = GetComponent<MouseLook>();
         m_joystickLook = GetComponent<JoystickLook>();

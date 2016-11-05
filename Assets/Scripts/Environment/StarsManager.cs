@@ -6,10 +6,11 @@ public class StarsManager : MonoBehaviour
 	[SerializeField] float m_degreesAboveHorizonForMinAlpha = 5f;
 	[SerializeField] float m_degreesAboveHorizonForMaxAlpha = -15f;
 	[SerializeField] Transform m_cameraTransform;
-	//[SerializeField] Transform m_sunTransform;
+    //[SerializeField] Transform m_sunTransform;
 
 
-	private ParticleSystem m_stars;
+    private SkyManager m_skyManager;
+    private ParticleSystem m_stars;
 	private ParticleSystemRenderer m_renderer;
 	private Color m_colour;
 	private Vector3 m_position;
@@ -17,7 +18,8 @@ public class StarsManager : MonoBehaviour
 
 	void Awake()
 	{
-		m_stars = GetComponent<ParticleSystem>();
+        m_skyManager = FindObjectOfType<SkyManager>();
+        m_stars = GetComponent<ParticleSystem>();
 
 		m_renderer = (ParticleSystemRenderer) m_stars.GetComponent<Renderer>();
 		m_colour = m_renderer.material.GetColor("_TintColor");
@@ -32,7 +34,7 @@ public class StarsManager : MonoBehaviour
 
 	void Update() 
 	{
-		float degreesAboveHorizon = SkyManager.SunAngleAboveHorizon;
+		float degreesAboveHorizon = m_skyManager.SunAngleAboveHorizon;
 
 		float alpha = 1f;
 
