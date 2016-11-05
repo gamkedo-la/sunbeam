@@ -40,7 +40,7 @@ public class MirrorController : MonoBehaviour
     }
 
 
-	void Update()
+    void Update()
     {
         if (m_canBeActivated)
         {
@@ -63,10 +63,11 @@ public class MirrorController : MonoBehaviour
         float v = Input.GetAxis("Vertical");
 
         m_rotationPoint.Rotate(Vector3.up, h * m_rotationSpeed * Time.deltaTime, Space.Self);
+
         m_pitch -= v * m_pitchSpeed * Time.deltaTime;
         m_pitch = Mathf.Clamp(m_pitch, m_pitchMinMax.x, m_pitchMinMax.y);
 
-        m_pitchPoint.localEulerAngles = Vector3.left * m_pitch;    
+        m_pitchPoint.localEulerAngles = Vector3.left * m_pitch;
     }
 
 
