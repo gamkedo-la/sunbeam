@@ -3,12 +3,16 @@ using System.Collections;
 
 public class MirrorController : MonoBehaviour
 {
-    [SerializeField] float m_rotationSpeed = 10f;
+    [SerializeField] float m_rotationSpeed = 20f;
+    [SerializeField] float m_pitchSpeed = 10f;
+    [SerializeField] Vector2 m_pitchMinMax = new Vector2(20, 40);
     [SerializeField] Transform m_cameraPoint;
     [SerializeField] Transform m_rotationPoint;
+    [SerializeField] Transform m_pitchPoint;
 
     private bool m_active;
     private bool m_canBeActivated;
+    private float m_pitch;
 
 
     void Awake()
@@ -28,6 +32,11 @@ public class MirrorController : MonoBehaviour
 
         if (m_rotationPoint == null)
             m_rotationPoint = transform.GetChild(1);
+
+        m_pitch = m_pitchPoint.localEulerAngles.x;
+
+        if (m_pitch > 180f)
+            m_pitch = 360f - m_pitch;
     }
 
 
@@ -51,8 +60,13 @@ public class MirrorController : MonoBehaviour
             return;
 
         float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
 
         m_rotationPoint.Rotate(Vector3.up, h * m_rotationSpeed * Time.deltaTime, Space.Self);
+        m_pitch -= v * m_pitchSpeed * Time.deltaTime;
+        m_pitch = Mathf.Clamp(m_pitch, m_pitchMinMax.x, m_pitchMinMax.y);
+
+        m_pitchPoint.localEulerAngles = Vector3.left * m_pitch;    
     }
 
 
