@@ -5,10 +5,13 @@ using System.Collections;
 public class LightBeamManager : MonoBehaviour
 {
     [SerializeField] Transform m_mirror;
+    [SerializeField] LayerMask m_triggerMask;
 
     private Light m_lightSource;
     private float m_distance;
-    private Light m_light;    
+    private Light m_light;
+    private bool m_active;
+    private float m_range;
 
 
     void Awake()
@@ -16,6 +19,9 @@ public class LightBeamManager : MonoBehaviour
         m_lightSource = GameObject.FindGameObjectWithTag(Tags.Sun).GetComponent<Light>();
         m_distance = Vector3.Distance(m_mirror.position, transform.position);
         m_light = GetComponent<Light>();
+        m_range = m_light.range;
+
+        m_active = true;
 
         UpdateLightBeam();
     }
@@ -23,7 +29,11 @@ public class LightBeamManager : MonoBehaviour
 
     void Update()
     {
+        if (!m_active)
+            return;
+
         UpdateLightBeam();
+        CastRay();
     }
 
 
@@ -41,5 +51,32 @@ public class LightBeamManager : MonoBehaviour
 
         m_light.color = m_lightSource.color;
         m_light.intensity = m_lightSource.intensity * dot;
+    }
+
+
+    private void CastRay()
+    {
+        RaycastHit hit;
+        var ray = new Ray(transform.position, transform.forward);
+
+        if (Physics.Raycast(ray, out hit, m_range, m_triggerMask))
+        {
+            float distance = Vector3.Distance(transform.position, hit.point);
+            var solarPanelManager = hit.transform.GetComponentInParent<SolarPanelManager>();
+
+            if (solarPanelManager != null)
+            {
+                solarPanelManager.ChargeUp();
+                Debug.DrawRay(transform.position, transform.forward * distance, Color.green);
+            }
+            else
+            {
+                Debug.DrawRay(transform.position, transform.forward * distance, Color.magenta);
+            }
+        }
+        else
+        {
+            Debug.DrawRay(transform.position, transform.forward * m_range, Color.red);
+        }
     }
 }
