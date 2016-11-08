@@ -64,7 +64,7 @@ public class EventManager : MonoBehaviour
     }
 
 
-	public static void StartListening (StandardEventName eventName, UnityAction listener)
+	public static void StartListening(StandardEventName eventName, UnityAction listener)
 	{
 		UnityEvent thisEvent = null;
 		if (Instance.m_eventDictionary.TryGetValue (eventName, out thisEvent))
@@ -80,7 +80,7 @@ public class EventManager : MonoBehaviour
 	}
 
 
-	public static void StopListening (StandardEventName eventName, UnityAction listener)
+	public static void StopListening(StandardEventName eventName, UnityAction listener)
 	{
 		if (m_eventManager == null) return;
 
@@ -92,7 +92,7 @@ public class EventManager : MonoBehaviour
 	}
 
 
-	public static void TriggerEvent (StandardEventName eventName)
+	public static void TriggerEvent(StandardEventName eventName)
 	{
 		UnityEvent thisEvent = null;
 		if (Instance.m_eventDictionary.TryGetValue(eventName, out thisEvent))

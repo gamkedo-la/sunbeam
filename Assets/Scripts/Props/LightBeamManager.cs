@@ -2,7 +2,7 @@
 using System.Collections;
 
 [RequireComponent(typeof(Light))]
-public class LightBeamManager : MonoBehaviour
+public class LightBeamManager : MonoBehaviour, IActivatable
 {
     [SerializeField] Transform m_mirror;
     [SerializeField] LayerMask m_triggerMask;
@@ -33,7 +33,7 @@ public class LightBeamManager : MonoBehaviour
             return;
 
         UpdateLightBeam();
-        CastRay();
+        CastRayAlongBeam();
     }
 
 
@@ -54,7 +54,7 @@ public class LightBeamManager : MonoBehaviour
     }
 
 
-    private void CastRay()
+    private void CastRayAlongBeam()
     {
         RaycastHit hit;
         var ray = new Ray(transform.position, transform.forward);
@@ -78,5 +78,25 @@ public class LightBeamManager : MonoBehaviour
         {
             Debug.DrawRay(transform.position, transform.forward * m_range, Color.red);
         }
+    }
+
+
+    public void Activate()
+    {
+        m_active = true;
+        m_light.enabled = true;
+    }
+
+
+    public void Deactivate()
+    {
+        m_active = false;
+        m_light.enabled = false;
+    }
+
+
+    public Light LightSource
+    {
+        get { return m_lightSource; }
     }
 }

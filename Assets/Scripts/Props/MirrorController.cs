@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MirrorController : MonoBehaviour
+public class MirrorController : MonoBehaviour, IActivatable
 {
     [SerializeField] float m_rotationSpeed = 20f;
     [SerializeField] float m_pitchSpeed = 10f;
@@ -13,6 +13,7 @@ public class MirrorController : MonoBehaviour
     private bool m_active;
     private bool m_canBeActivated;
     private float m_pitch;
+    private bool m_activationTiggered;
 
 
     void Awake()
@@ -26,12 +27,7 @@ public class MirrorController : MonoBehaviour
         {
             if (camera != null)
                 m_cameraPoint = camera.transform;
-            else
-                m_cameraPoint = transform.GetChild(0);
         }
-
-        if (m_rotationPoint == null)
-            m_rotationPoint = transform.GetChild(1);
 
         m_pitch = m_pitchPoint.localEulerAngles.x;
 
@@ -44,14 +40,15 @@ public class MirrorController : MonoBehaviour
     {
         if (m_canBeActivated)
         {
-            if (!m_active && Input.GetAxisRaw("Action") == 1)
+            if (!m_activationTiggered && Input.GetAxisRaw("Action") == 1)
             {
-                m_active = true;
+                m_activationTiggered = true;
                 EventManager.TriggerEvent(TransformEventName.MirrorActivated, m_cameraPoint);
             }
-            else if (m_active && Input.GetAxisRaw("Cancel") == 1)
+            else if (m_activationTiggered && Input.GetAxisRaw("Cancel") == 1)
             {
                 m_active = false;
+                m_activationTiggered = false;
                 EventManager.TriggerEvent(StandardEventName.MirrorDeactivated);
             }
         }
@@ -68,6 +65,18 @@ public class MirrorController : MonoBehaviour
         m_pitch = Mathf.Clamp(m_pitch, m_pitchMinMax.x, m_pitchMinMax.y);
 
         m_pitchPoint.localEulerAngles = Vector3.left * m_pitch;
+    }
+
+
+    public void Activate()
+    {
+        m_active = true;
+    }
+
+
+    public void Deactivate()
+    {
+        m_active = false;
     }
 
 
