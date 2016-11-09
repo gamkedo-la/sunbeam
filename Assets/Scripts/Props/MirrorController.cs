@@ -40,7 +40,7 @@ public class MirrorController : MonoBehaviour, IActivatable
     {
         if (m_canBeActivated)
         {
-            if (!m_activationTiggered && Input.GetAxisRaw("Action") == 1)
+            if (!m_activationTiggered && Input.GetAxisRaw("Submit") == 1)
             {
                 m_activationTiggered = true;
                 EventManager.TriggerEvent(TransformEventName.MirrorActivated, m_cameraPoint);
