@@ -6,7 +6,7 @@ public class CloudGeneratorWizard : ScriptableWizard
 {
     [SerializeField] int m_seed = 1;
     [SerializeField] CloudProperties[] m_clouds = new CloudProperties[1];
-    [SerializeField] float m_planetRadius = 200;
+    [SerializeField] float m_planetRadius = 150;
 
     private int m_maxAttempts = 20;
     private List<Transform> m_placedClouds = new List<Transform>();
