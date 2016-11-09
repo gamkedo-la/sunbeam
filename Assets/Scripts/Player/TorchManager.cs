@@ -40,8 +40,10 @@ public class TorchManager : MonoBehaviour
 	void Update()
     {
         if (GameController.AllowCheatMode && Input.GetKeyDown(KeyCode.T))
+        {
+            //print("Toggle light manually");
             ToggleLight();
-
+        }
 
         if (!m_activeManagement)
             return;
@@ -49,13 +51,17 @@ public class TorchManager : MonoBehaviour
         float sunAngle = m_skyManager.SunAngleAboveHorizon;
 
         if (sunAngle <= m_sunAngleForTorchToggle
+            && m_previousSunAngle > m_sunAngleForTorchToggle
             && !m_light.enabled)
         {
+            //print("Turn light on automatically");
             SwitchTorch(true);           
         }
         else if (sunAngle > m_sunAngleForTorchToggle
+            && m_previousSunAngle <= m_sunAngleForTorchToggle
             && m_light.enabled)
         {
+            //print("Turn light off automatically");
             SwitchTorch(false);
         }
 

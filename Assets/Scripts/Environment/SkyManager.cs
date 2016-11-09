@@ -8,9 +8,9 @@ public class SkyManager : MonoBehaviour
     public float SunAngleAboveHorizon;
 
     [SerializeField] Gradient m_skyColour;
+    [SerializeField] Gradient m_ambientColour;
     [SerializeField] Gradient m_sunColour;
     [SerializeField] AnimationCurve m_sunIntensity;
-    [SerializeField] AnimationCurve m_ambientIntensity;
 
     private Transform m_player;
     private Transform m_sunImage;
@@ -54,7 +54,7 @@ public class SkyManager : MonoBehaviour
         var skyColour = m_skyColour.Evaluate(evaluationValue);
         m_skybox.SetColor("_Tint", skyColour);
 
-        RenderSettings.ambientIntensity = m_ambientIntensity.Evaluate(evaluationValue);
+        RenderSettings.ambientLight = m_ambientColour.Evaluate(evaluationValue);
         m_sunLight.intensity = m_sunIntensity.Evaluate(evaluationValue);
         var sunColour = m_sunColour.Evaluate(evaluationValue);
         m_sunLight.color = sunColour;
