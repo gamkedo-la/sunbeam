@@ -97,10 +97,15 @@ public class FirstPersonController : MonoBehaviour
         {
             var joystickNames = Input.GetJoystickNames();
 
-            //for (int i = 0; i < joystickNames.Length; i++)
-            //    print(string.Format("{0} Joystick {1}: {2}", Time.time, i + 1, joystickNames[i]));
+            bool validJoystick = false;
 
-            if (joystickNames.Length >= 1 && !string.IsNullOrEmpty(joystickNames[0]))
+            for (int i = 0; i < joystickNames.Length; i++)
+            {
+                validJoystick = validJoystick || !string.IsNullOrEmpty(joystickNames[i]);
+                //print(string.Format("{0} Joystick {1}: {2}", Time.time, i + 1, joystickNames[i]));
+            }
+
+            if (validJoystick)
                 m_useJoystickLook = true;
             else
                 m_useJoystickLook = false;
