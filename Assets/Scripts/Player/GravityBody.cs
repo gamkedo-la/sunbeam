@@ -4,6 +4,8 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody))]
 public class GravityBody : MonoBehaviour
 {
+    public bool useGravityAttractorGravity = true;
+
     private GravityAttractor m_gravityAttractor;
     private Rigidbody m_rigidBody;
 
@@ -23,10 +25,17 @@ public class GravityBody : MonoBehaviour
             m_rigidBody.useGravity = true;
     }
 
+
+    void Update()
+    {
+        if (m_gravityAttractor != null && !useGravityAttractorGravity)
+            m_gravityAttractor.Align(m_rigidBody);
+    }
+
     
 	void FixedUpdate()
     {
-        if (m_gravityAttractor != null)
-            m_gravityAttractor.Attract(m_rigidBody);
+        if (m_gravityAttractor != null && useGravityAttractorGravity)
+            m_gravityAttractor.Attract(m_rigidBody);          
 	}
 }

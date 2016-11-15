@@ -22,8 +22,13 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] LayerMask m_jumpMask;
     [SerializeField] float m_groundedRayDistance = 0.1f;
 
+    [Header("Free mode options")]
+    [Range(1, 2)]
+	[SerializeField] float m_speedMultiplier = 1.5f;
+
     private MouseLook m_mouseLook;
     private JoystickLook m_joystickLook;
+    private GravityBody m_gravityBody;
 
     private Rigidbody m_rigidbody;
     private Vector3 m_moveAmount;
@@ -31,6 +36,8 @@ public class FirstPersonController : MonoBehaviour
     private bool m_grounded;
     private bool m_isRunning;
     private bool m_useJoystickLook;
+    private bool m_freeMode;
+    private float m_speed;
 
 
 	void Start()
@@ -42,6 +49,7 @@ public class FirstPersonController : MonoBehaviour
 
         m_mouseLook = GetComponent<MouseLook>();
         m_joystickLook = GetComponent<JoystickLook>();
+        m_gravityBody = GetComponent<GravityBody>();
 
         StartCoroutine(GetSprint());
         StartCoroutine(CheckForJoysticks());
@@ -55,10 +63,24 @@ public class FirstPersonController : MonoBehaviour
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
 
+        if (m_freeMode && Input.anyKey)
+        {
+            float u = Input.GetAxisRaw("Elevation");
+            var freeMoveDirection = new Vector3(h, u, v).normalized;
+
+            float multiplier = 1f + Time.unscaledDeltaTime * (m_speedMultiplier - 1f);
+            m_speed *= multiplier;
+            transform.Translate(freeMoveDirection * m_speed * Time.unscaledDeltaTime);
+        }
+        else
+        {
+            m_speed = m_isRunning ? m_runSpeed : m_walkSpeed;
+        }
+
         var moveDirection = new Vector3(h, 0, v).normalized;
-        float speed = m_isRunning ? m_runSpeed : m_walkSpeed;
-        var targetMoveAmount = moveDirection * speed;
-        m_moveAmount = Vector3.SmoothDamp(m_moveAmount, targetMoveAmount, ref m_smoothMoveVelocity, m_moveSmooth);
+        var targetMoveAmount = moveDirection * m_speed;    
+
+        m_moveAmount = Vector3.SmoothDamp(m_moveAmount, targetMoveAmount, ref m_smoothMoveVelocity, m_moveSmooth);  
 
         if (m_grounded && Input.GetButtonDown("Jump"))
         {
@@ -135,5 +157,14 @@ public class FirstPersonController : MonoBehaviour
 
             yield return null;
         }
+    }
+
+
+    public void FreeMode(bool active)
+    {
+        m_freeMode = active;
+
+        if (m_gravityBody != null)
+            m_gravityBody.useGravityAttractorGravity = !m_freeMode;
     }
 }
