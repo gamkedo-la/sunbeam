@@ -12,15 +12,15 @@ public class JoystickLook : MonoBehaviour
     private float m_verticalLookRotation;
 
 
-    public void LookRotation(Transform character, Transform camera, Vector2 verticalLookMinMax)
+    public void LookRotation(Transform character, Transform camera, Vector2 verticalLookMinMax, float deltaTime)
     {
         float h = Input.GetAxis(m_horizontalAxisName);
         float v = Input.GetAxis(m_verticalAxisName);
 
         v = m_invertedVertical ? -v : v;
 
-        character.Rotate(Vector3.up, h * m_sensitivityX * 60f * Time.deltaTime);
-        m_verticalLookRotation += v * m_sensitivityY * 60f * Time.deltaTime;
+        character.Rotate(Vector3.up, h * m_sensitivityX * 60f * deltaTime);
+        m_verticalLookRotation += v * m_sensitivityY * 60f * deltaTime;
         camera.localEulerAngles = Vector3.left * m_verticalLookRotation;
 
         m_verticalLookRotation = Mathf.Clamp(m_verticalLookRotation, verticalLookMinMax.x, verticalLookMinMax.y);

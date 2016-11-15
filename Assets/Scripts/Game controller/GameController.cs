@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 public class GameController : MonoBehaviour
@@ -30,21 +31,39 @@ public class GameController : MonoBehaviour
     void Start()
     {
         m_firstPersonController = m_mainCamera.GetComponentInParent<FirstPersonController>();
+
+        StartCoroutine(CheckForAxisInput("Free camera", ToggleFreeCamera));
+        StartCoroutine(CheckForAxisInput("Pause", TogglePause));
     }
 
 
-    void Update()
+    private IEnumerator CheckForAxisInput(string axisName, Action action)
     {
-        if (AllowCheatMode)
-        {
-            if (Input.GetKeyDown(KeyCode.F))
-                ToggleFreeCamera();
+        bool buttonPressedPreviously = false;
 
-            if (m_freeCameraEnabled && Input.GetKeyDown(KeyCode.P))
+        while (true)
+        {
+            if (AllowCheatMode)
             {
-                m_paused = !m_paused;
-                SetTimeScale();
+                bool buttonPressed = Input.GetAxisRaw(axisName) == 1f;
+
+                if (buttonPressed && !buttonPressedPreviously)
+                    action.Invoke();
+
+                buttonPressedPreviously = buttonPressed;
             }
+
+            yield return null;
+        }
+    }
+
+
+    private void TogglePause()
+    {
+        if (m_freeCameraEnabled)
+        {
+            m_paused = !m_paused;
+            SetTimeScale();
         }
     }
 

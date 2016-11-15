@@ -23,14 +23,17 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] float m_groundedRayDistance = 0.1f;
 
     [Header("Free mode options")]
+    [SerializeField] float m_freeModeStartSpeed = 10f;
     [Range(1, 2)]
-	[SerializeField] float m_speedMultiplier = 1.5f;
+    [SerializeField] float m_speedMultiplier = 1.5f;
 
     private MouseLook m_mouseLook;
     private JoystickLook m_joystickLook;
     private GravityBody m_gravityBody;
 
     private Rigidbody m_rigidbody;
+    private Collider m_collider;
+
     private Vector3 m_moveAmount;
     private Vector3 m_smoothMoveVelocity;
     private bool m_grounded;
@@ -43,6 +46,7 @@ public class FirstPersonController : MonoBehaviour
 	void Start()
     {
         m_rigidbody = GetComponent<Rigidbody>();
+        m_collider = GetComponent<Collider>();
 
         if (m_camera == null)
             m_camera = Camera.main.transform;
@@ -63,14 +67,23 @@ public class FirstPersonController : MonoBehaviour
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
 
-        if (m_freeMode && Input.anyKey)
+        if (m_freeMode)
         {
             float u = Input.GetAxisRaw("Elevation");
+
+            if (h != 0 || v != 0 || u != 0)
+            {
+                float multiplier = 1f + Time.unscaledDeltaTime * (m_speedMultiplier - 1f);
+                m_speed *= multiplier;
+            }
+            else
+                m_speed = m_freeModeStartSpeed;
+      
             var freeMoveDirection = new Vector3(h, u, v).normalized;
 
-            float multiplier = 1f + Time.unscaledDeltaTime * (m_speedMultiplier - 1f);
-            m_speed *= multiplier;
             transform.Translate(freeMoveDirection * m_speed * Time.unscaledDeltaTime);
+
+            return;
         }
         else
         {
@@ -100,14 +113,18 @@ public class FirstPersonController : MonoBehaviour
 
     void FixedUpdate()
     {
-        m_rigidbody.MovePosition(m_rigidbody.position + transform.TransformDirection(m_moveAmount) * Time.deltaTime);
+        if (!m_freeMode)
+            m_rigidbody.MovePosition(m_rigidbody.position + transform.TransformDirection(m_moveAmount) * Time.deltaTime);
     }
 
 
     private void RotateView()
     {
         if (m_useJoystickLook)
-            m_joystickLook.LookRotation(transform, m_camera.transform, m_verticalLookMinMax);
+        {
+            float deltaTime = m_freeMode ? Time.unscaledDeltaTime : Time.deltaTime;
+            m_joystickLook.LookRotation(transform, m_camera.transform, m_verticalLookMinMax, deltaTime);
+        }
         else
             m_mouseLook.LookRotation(transform, m_camera.transform, m_verticalLookMinMax);
     }
@@ -166,5 +183,14 @@ public class FirstPersonController : MonoBehaviour
 
         if (m_gravityBody != null)
             m_gravityBody.useGravityAttractorGravity = !m_freeMode;
+
+        if (m_collider != null)
+            m_collider.enabled = !m_freeMode;
+
+        if (m_speed > 0 && m_freeMode)
+            m_speed = m_freeModeStartSpeed;
+
+        if (m_freeMode)
+            m_rigidbody.velocity = Vector3.zero;  
     }
 }

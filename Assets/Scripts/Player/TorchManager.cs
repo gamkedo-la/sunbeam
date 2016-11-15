@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 
 [RequireComponent(typeof(Light))]
 [RequireComponent(typeof(AudioSource))]
@@ -34,17 +36,13 @@ public class TorchManager : MonoBehaviour
             m_activeManagement = false;
             m_light.enabled = false;
         }
+
+        StartCoroutine(CheckForAxisInput("Torch", ToggleLight));
     }
 	
 
 	void Update()
     {
-        if (GameController.AllowCheatMode && Input.GetKeyDown(KeyCode.T))
-        {
-            //print("Toggle light manually");
-            ToggleLight();
-        }
-
         if (!m_activeManagement)
             return;
 
@@ -66,6 +64,27 @@ public class TorchManager : MonoBehaviour
         }
 
         m_previousSunAngle = sunAngle;
+    }
+
+
+    private IEnumerator CheckForAxisInput(string axisName, Action action)
+    {
+        bool buttonPressedPreviously = false;
+
+        while (true)
+        {
+            if (GameController.AllowCheatMode)
+            {
+                bool buttonPressed = Input.GetAxisRaw(axisName) == 1f;
+
+                if (buttonPressed && !buttonPressedPreviously)
+                    action.Invoke();
+
+                buttonPressedPreviously = buttonPressed;
+            }
+
+            yield return null;
+        }
     }
 
 
