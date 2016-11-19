@@ -37,6 +37,13 @@ public class GameController : MonoBehaviour
     }
 
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            QuitGame();
+    }
+
+
     private IEnumerator CheckForAxisInput(string axisName, Action action)
     {
         bool buttonPressedPreviously = false;
