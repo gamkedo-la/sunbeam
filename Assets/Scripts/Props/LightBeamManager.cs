@@ -12,6 +12,8 @@ public class LightBeamManager : MonoBehaviour, IActivatable
     private Light m_light;
     private bool m_active;
     private float m_range;
+    private MeshRenderer m_volumetricLightRenderer;
+    private float m_volumetricLightAlpha;
 
 
     void Awake()
@@ -20,6 +22,10 @@ public class LightBeamManager : MonoBehaviour, IActivatable
         m_distance = Vector3.Distance(m_mirror.position, transform.position);
         m_light = GetComponent<Light>();
         m_range = m_light.range;
+        m_volumetricLightRenderer = GetComponentInChildren<MeshRenderer>();
+
+        if (m_volumetricLightRenderer != null)
+            m_volumetricLightAlpha = m_volumetricLightRenderer.material.GetColor("_TintColor").a;
 
         m_active = true;
 
@@ -51,6 +57,13 @@ public class LightBeamManager : MonoBehaviour, IActivatable
 
         m_light.color = m_lightSource.color;
         m_light.intensity = m_lightSource.intensity * dot;
+        
+        if (m_volumetricLightRenderer != null)
+        {
+            var colour = m_lightSource.color;
+            colour.a = m_volumetricLightAlpha;
+            m_volumetricLightRenderer.material.SetColor("_TintColor", colour);
+        }
     }
 
 
@@ -85,6 +98,9 @@ public class LightBeamManager : MonoBehaviour, IActivatable
     {
         m_active = true;
         m_light.enabled = true;
+
+        if (m_volumetricLightRenderer != null)
+            m_volumetricLightRenderer.enabled = true;
     }
 
 
@@ -92,6 +108,9 @@ public class LightBeamManager : MonoBehaviour, IActivatable
     {
         m_active = false;
         m_light.enabled = false;
+
+        if (m_volumetricLightRenderer != null)
+            m_volumetricLightRenderer.enabled = false;
     }
 
 
