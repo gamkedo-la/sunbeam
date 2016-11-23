@@ -6,8 +6,9 @@ public class LightBeamManager : MonoBehaviour, IActivatable
 {
     [SerializeField] Transform m_mirror;
     [SerializeField] LayerMask m_triggerMask;
+    [SerializeField] Light m_lightSource;
 
-    private Light m_lightSource;
+    private bool m_lightSourceIsSun;
     private float m_distance;
     private Light m_light;
     private bool m_active;
@@ -18,7 +19,12 @@ public class LightBeamManager : MonoBehaviour, IActivatable
 
     void Awake()
     {
-        m_lightSource = GameObject.FindGameObjectWithTag(Tags.Sun).GetComponent<Light>();
+        if (m_lightSource == null)
+        {
+            m_lightSource = GameObject.FindGameObjectWithTag(Tags.Sun).GetComponent<Light>();
+            m_lightSourceIsSun = true;
+        }
+
         m_distance = Vector3.Distance(m_mirror.position, transform.position);
         m_light = GetComponent<Light>();
         m_range = m_light.range;
@@ -45,7 +51,10 @@ public class LightBeamManager : MonoBehaviour, IActivatable
 
     private void UpdateLightBeam()
     {
-        var directionToSource = m_lightSource.transform.forward;
+        var directionToSource = m_lightSourceIsSun 
+            ? m_lightSource.transform.forward
+            : transform.position - m_lightSource.transform.position;
+
         var reflection = Vector3.Reflect(directionToSource, m_mirror.up).normalized;
 
         transform.position = m_mirror.position + m_distance * reflection;
