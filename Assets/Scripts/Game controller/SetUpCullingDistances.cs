@@ -3,14 +3,15 @@ using System.Collections;
 
 public class SetUpCullingDistances : MonoBehaviour
 {
+    [SerializeField] float[] m_cullingDistances = new float[32];
+    [SerializeField] bool m_sphericalCull = true;
+
+
 	void Start() 
 	{
 		var camera = Camera.main;
-		float[] distances = new float[32];
 
-		distances[10] = 30f;		// grass
-
-		camera.layerCullDistances = distances;
-		camera.layerCullSpherical = true;
+		camera.layerCullDistances = m_cullingDistances;
+		camera.layerCullSpherical = m_sphericalCull;
 	}
 }

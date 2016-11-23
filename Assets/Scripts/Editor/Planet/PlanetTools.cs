@@ -20,17 +20,31 @@ public class PlanetTools : MonoBehaviour
 
 
     [MenuItem("Planet/Align with planet surface %#y")]
-    static void AlignWithGround()
+    static void AlignTransformsWithPlanetSurface()
     {
         Transform[] transforms = Selection.transforms;
 
         foreach (Transform myTransform in transforms)
         {
-            print("Aligning " + myTransform.name + " with planet surface");
+            AlignTransformWithPlanetSurface(myTransform);
+        }
+    }
 
+
+    private static void AlignTransformWithPlanetSurface(Transform myTransform)
+    {
+        if (myTransform.childCount == 0 || myTransform.GetChild(0).GetComponent<MeshRenderer>() != null)
+        {
             var targetDirection = myTransform.position.normalized;
-            var cloudUp = myTransform.up;
-            myTransform.rotation = Quaternion.FromToRotation(cloudUp, targetDirection) * myTransform.rotation;
+            var transformUp = myTransform.up;
+            myTransform.rotation = Quaternion.FromToRotation(transformUp, targetDirection) * myTransform.rotation;
+        }
+        else
+        {
+            for (int i = 0; i < myTransform.childCount; i++)
+            {
+                AlignTransformWithPlanetSurface(myTransform.GetChild(i));
+            }
         }
     }
 }
