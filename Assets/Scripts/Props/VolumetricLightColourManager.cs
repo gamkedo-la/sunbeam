@@ -22,7 +22,7 @@ public class VolumetricLightColourManager : MonoBehaviour
             return;
         
         var colour = m_light.color;
-        colour.a = m_alpha;
+        colour.a = m_alpha * m_light.intensity;
         m_meshRenderer.material.SetColor("_TintColor", colour);     
     }
 }

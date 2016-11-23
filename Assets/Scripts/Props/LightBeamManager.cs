@@ -7,6 +7,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
     [SerializeField] Transform m_mirror;
     [SerializeField] LayerMask m_triggerMask;
     [SerializeField] Light m_lightSource;
+    [SerializeField] float m_rayDistanceToSun = 500f;
 
     private bool m_lightSourceIsSun;
     private float m_distance;
@@ -14,7 +15,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
     private bool m_active;
     private float m_range;
     private MeshRenderer m_volumetricLightRenderer;
-    private float m_volumetricLightAlpha;
+    private float m_rayDistanceToLightSource;
 
 
     void Awake()
@@ -30,9 +31,10 @@ public class LightBeamManager : MonoBehaviour, IActivatable
         m_range = m_light.range;
         m_volumetricLightRenderer = GetComponentInChildren<MeshRenderer>();
 
-        if (m_volumetricLightRenderer != null)
-            m_volumetricLightAlpha = m_volumetricLightRenderer.material.GetColor("_TintColor").a;
-
+        m_rayDistanceToLightSource = m_lightSourceIsSun
+            ? m_rayDistanceToSun
+            : Vector3.Distance(m_lightSource.transform.position, transform.position) - 0.2f;
+            
         m_active = true;
 
         UpdateLightBeam();
@@ -41,11 +43,58 @@ public class LightBeamManager : MonoBehaviour, IActivatable
 
     void Update()
     {
+        CastRayToLightSource();
+
         if (!m_active)
             return;
 
         UpdateLightBeam();
-        CastRayAlongBeam();
+        CastRayAlongBeam();     
+    }
+
+
+    private void CastRayToLightSource()
+    {
+        var direction = m_lightSourceIsSun
+            ? -m_lightSource.transform.forward
+            : (m_lightSource.transform.position - transform.position).normalized;
+
+        RaycastHit hit;
+        var ray = new Ray(transform.position, direction);
+
+        if (Physics.Raycast(ray, out hit, m_rayDistanceToLightSource))
+        {
+            float distance = Vector3.Distance(transform.position, hit.point);
+
+            Debug.DrawRay(transform.position, direction * distance, Color.red);
+            Deactivate();
+        }
+        else
+        {
+            if (IsWithinLightCone(direction))
+            {
+                Debug.DrawRay(transform.position, direction * m_rayDistanceToLightSource, Color.green);
+                Activate();
+            }
+            else
+            {
+                Debug.DrawRay(transform.position, direction * m_rayDistanceToLightSource, Color.yellow);
+                Deactivate();
+            }
+        }
+    }
+
+
+    private bool IsWithinLightCone(Vector3 direction)
+    {
+        if (m_lightSourceIsSun)
+            return true;
+
+        direction = -direction;
+        float angleOfLightSource = Vector3.Angle(direction, m_lightSource.transform.forward);
+
+        // Make sure the light source is covering at least half of this light beam
+        return angleOfLightSource * 4f <= m_lightSource.spotAngle;
     }
 
 
@@ -66,13 +115,6 @@ public class LightBeamManager : MonoBehaviour, IActivatable
 
         m_light.color = m_lightSource.color;
         m_light.intensity = m_lightSource.intensity * dot;
-        
-        if (m_volumetricLightRenderer != null)
-        {
-            var colour = m_lightSource.color;
-            colour.a = m_volumetricLightAlpha;
-            m_volumetricLightRenderer.material.SetColor("_TintColor", colour);
-        }
     }
 
 
@@ -105,6 +147,9 @@ public class LightBeamManager : MonoBehaviour, IActivatable
 
     public void Activate()
     {
+        if (m_active)
+            return;
+
         m_active = true;
         m_light.enabled = true;
 
@@ -115,6 +160,9 @@ public class LightBeamManager : MonoBehaviour, IActivatable
 
     public void Deactivate()
     {
+        if (!m_active)
+            return;
+
         m_active = false;
         m_light.enabled = false;
 
