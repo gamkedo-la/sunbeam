@@ -4,12 +4,15 @@ using UnityEngine.Events;
 
 public class SolarPanelManager : MonoBehaviour
 {
+    [SerializeField] bool m_discharges;
     [SerializeField] float m_chargeTime = 5f;
+    [SerializeField] float m_dischargeTime = 3f;
     [SerializeField] Transform m_chargeBar;
     [SerializeField] GameObject m_chargedButton;
     [SerializeField] UnityEvent m_triggerActions;
 
     private float m_chargeLevel;
+    private bool m_charging;
     private bool m_charged;
     private bool m_actionsTrggered;
 
@@ -21,10 +24,25 @@ public class SolarPanelManager : MonoBehaviour
     }
 
 
+    void Update()
+    {
+        if (m_discharges)
+            Discharge();
+    }
+
+
+    void LateUpdate()
+    {
+        m_charging = false;
+    }
+
+
     public void ChargeUp()
     {
         if (m_charged)
             return;
+
+        m_charging = true;
 
         m_chargeLevel += Time.deltaTime / m_chargeTime;
         m_chargeLevel = Mathf.Clamp01(m_chargeLevel);
@@ -36,6 +54,18 @@ public class SolarPanelManager : MonoBehaviour
 
         if (m_charged && !m_actionsTrggered)
             TriggerActions();
+    }
+
+
+    public void Discharge()
+    {
+        if (m_charged || m_charging)
+            return;
+
+        m_chargeLevel -= Time.deltaTime / m_dischargeTime;
+        m_chargeLevel = Mathf.Clamp01(m_chargeLevel);
+
+        UpdateChargeLevel();
     }
 
 
