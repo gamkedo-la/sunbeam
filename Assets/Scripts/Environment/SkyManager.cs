@@ -64,6 +64,32 @@ public class SkyManager : MonoBehaviour
 	}
 
 
+    public float GetEvaluationValue(Transform observer)
+    {
+        var observerDirection = observer.position.normalized;
+        float dotToObserver = Vector3.Dot(-transform.forward, observerDirection);
+        float evaluationValue = 0.5f * (dotToObserver + 1f);
+
+        return evaluationValue;
+    }
+
+
+    public Color GetSunColour(float evaluationValue)
+    {
+        var colour = m_sunColour.Evaluate(evaluationValue);
+
+        return colour;
+    }
+
+
+    public float GetSunIntensity(float evaluationValue)
+    {
+        float intensity = m_sunIntensity.Evaluate(evaluationValue);
+
+        return intensity;
+    }
+
+
     void OnDestroy()
     {
         m_skybox.SetColor("_Tint", m_originalSkyboxColour);

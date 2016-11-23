@@ -132,16 +132,16 @@ public class MirrorController : MonoBehaviour, IActivatable
     {
         Gizmos.color = Color.blue;
 
-        var rotationMin = Quaternion.Euler(Vector3.up * m_rotationMinMax.x) * transform.forward;
-        var rotationMax = Quaternion.Euler(Vector3.up * m_rotationMinMax.y) * transform.forward;
+        var rotationMin = Quaternion.Euler(transform.up * m_rotationMinMax.x) * transform.forward;
+        var rotationMax = Quaternion.Euler(transform.up * m_rotationMinMax.y) * transform.forward;
 
         Gizmos.DrawRay(m_rotationPoint.position + m_rotationPoint.up * 0.5f, rotationMin * m_gizmoLineLength);
         Gizmos.DrawRay(m_rotationPoint.position + m_rotationPoint.up * 0.5f, rotationMax * m_gizmoLineLength);
 
         Gizmos.color = Color.cyan;
 
-        var pitchMin = Quaternion.Euler(Vector3.right * m_pitchMinMax.x) * transform.forward;
-        var pitchMax = Quaternion.Euler(Vector3.right * m_pitchMinMax.y) * transform.forward;
+        var pitchMin = Quaternion.Euler(-transform.right * m_pitchMinMax.x) * transform.forward;
+        var pitchMax = Quaternion.Euler(-transform.right * m_pitchMinMax.y) * transform.forward;
 
         Gizmos.DrawRay(m_pitchPoint.position, pitchMin * m_gizmoLineLength);
         Gizmos.DrawRay(m_pitchPoint.position, pitchMax * m_gizmoLineLength);

@@ -16,6 +16,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
     private float m_range;
     private MeshRenderer m_volumetricLightRenderer;
     private float m_rayDistanceToLightSource;
+    private SkyManager m_skyManager;
 
 
     void Awake()
@@ -23,6 +24,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
         if (m_lightSource == null)
         {
             m_lightSource = GameObject.FindGameObjectWithTag(Tags.Sun).GetComponent<Light>();
+            m_skyManager = m_lightSource.GetComponent<SkyManager>();
             m_lightSourceIsSun = true;
         }
 
@@ -113,8 +115,17 @@ public class LightBeamManager : MonoBehaviour, IActivatable
 
         dot = Mathf.Clamp01(dot);
 
-        m_light.color = m_lightSource.color;
-        m_light.intensity = m_lightSource.intensity * dot;
+        if (m_skyManager == null)
+        {
+            m_light.color = m_lightSource.color;
+            m_light.intensity = m_lightSource.intensity * dot;
+        }
+        else
+        {
+            float evaluationValue = m_skyManager.GetEvaluationValue(transform);
+            m_light.color = m_skyManager.GetSunColour(evaluationValue);
+            m_light.intensity = m_skyManager.GetSunIntensity(evaluationValue) * dot;
+        }
     }
 
 

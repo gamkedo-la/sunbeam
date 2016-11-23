@@ -14,7 +14,6 @@ public class GameController : MonoBehaviour
     private FirstPersonController m_firstPersonController;
     private Vector3 m_lastCameraPosition;
     private Quaternion m_lastCameraRotation;
-    private Transform m_cameraParent;
 
 
     void Awake()
@@ -22,8 +21,6 @@ public class GameController : MonoBehaviour
         OnUnpause();
 
         m_mainCamera = Camera.main;
-        m_cameraParent = m_mainCamera.transform.parent;
-
         m_timeScale = Time.timeScale;
     }
 

@@ -14,7 +14,7 @@ public class CloudGeneratorWizard : ScriptableWizard
 
     void OnWizardCreate()
     {
-        Random.seed = m_seed;
+        Random.InitState(m_seed);
         int totalClouds = 0;
 
         for (int i = 0; i < m_clouds.Length; i++)
