@@ -23,7 +23,7 @@ public class SetItemsOnGround : MonoBehaviour
         if (myTransform.childCount == 0 || myTransform.GetChild(0).GetComponent<MeshRenderer>() != null)
         {
             RaycastHit hit;
-            if (Physics.Raycast(myTransform.position, -myTransform.up, out hit, 100f, layerMask))
+            if (Physics.Raycast(myTransform.position + myTransform.up *2f, -myTransform.up, out hit, 100f, layerMask))
             {
                 var targetPosition = hit.point;
 
