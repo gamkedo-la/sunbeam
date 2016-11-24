@@ -9,7 +9,7 @@ public class EnvironmentToolsEditor : Editor
     {
         var e = Event.current;  
 
-        if (e != null && e.type == EventType.mouseDown && e.button == 0 && e.control)
+        if (e != null && e.type == EventType.mouseDown && e.button == 1 && e.control)
         {
             Ray ray = Camera.current.ScreenPointToRay(e.mousePosition);
 

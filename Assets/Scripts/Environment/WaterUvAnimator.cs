@@ -4,8 +4,8 @@ using System.Collections;
 [RequireComponent(typeof(MeshRenderer))]
 public class WaterUvAnimator : MonoBehaviour
 {
-    [SerializeField] float m_primaryUvSpeed = 0.1f;
-    [SerializeField] float m_secondaryUvSpeed = 0.1f;
+    [SerializeField] Vector2 m_primaryUvSpeed =new Vector2(0, -0.1f);
+    [SerializeField] Vector2 m_secondaryUvSpeed = new Vector2(0.1f, 0);
 
     private MeshRenderer m_meshRenderer;
 
@@ -18,10 +18,10 @@ public class WaterUvAnimator : MonoBehaviour
 
 	void Update()
     {
-        float mainOffset = Time.time * m_primaryUvSpeed;
-        float secondaryOffset = Time.time * m_secondaryUvSpeed;
+        var mainOffset = Time.time * m_primaryUvSpeed;
+        var secondaryOffset = Time.time * m_secondaryUvSpeed;
 
-        m_meshRenderer.material.mainTextureOffset = new Vector2(mainOffset, 0);
-        m_meshRenderer.material.SetTextureOffset("_DetailAlbedoMap", new Vector2(0, secondaryOffset));
+        m_meshRenderer.material.mainTextureOffset =  mainOffset;
+        m_meshRenderer.material.SetTextureOffset("_DetailAlbedoMap", secondaryOffset);
     }
 }
