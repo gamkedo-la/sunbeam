@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System;
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -16,6 +15,9 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] float m_runSpeed = 10f;
     [SerializeField] float m_moveSmooth = 0.15f;
     [SerializeField] bool m_toggleRun = true;
+    [SerializeField] float m_walkStepDistance = 1f;
+    [SerializeField] float m_runStepDistance = 2f;
+    [SerializeField] AudioClip[] m_footsteps;
 
     [Header("Jump")]
     [SerializeField] float m_jumpForce = 5f;
@@ -42,11 +44,16 @@ public class FirstPersonController : MonoBehaviour
     private bool m_freeMode;
     private float m_speed;
 
+    private AudioSource m_audioSource;
+    private float m_stepCycle;
+    private float m_nextStep;
 
-	void Start()
+
+    void Start()
     {
         m_rigidbody = GetComponent<Rigidbody>();
         m_collider = GetComponent<Collider>();
+        m_audioSource = GetComponent<AudioSource>();
 
         if (m_camera == null)
             m_camera = Camera.main.transform;
@@ -113,8 +120,11 @@ public class FirstPersonController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!m_freeMode)
-            m_rigidbody.MovePosition(m_rigidbody.position + transform.TransformDirection(m_moveAmount) * Time.deltaTime);
+        if (m_freeMode)
+            return;
+
+        m_rigidbody.MovePosition(m_rigidbody.position + transform.TransformDirection(m_moveAmount) * Time.deltaTime);
+        ProgressStepCycle();
     }
 
 
@@ -174,6 +184,66 @@ public class FirstPersonController : MonoBehaviour
 
             yield return null;
         }
+    }
+
+
+    private void ProgressStepCycle()
+    {
+        if (m_moveAmount.sqrMagnitude > 0)
+        {
+            float distanceTravelled = m_moveAmount.magnitude * Time.fixedDeltaTime;
+            m_stepCycle += distanceTravelled;
+        }
+
+        if (!(m_stepCycle > m_nextStep))
+        {
+            return;
+        }
+
+        float stepDistance = m_isRunning ? m_runStepDistance : m_walkStepDistance;
+        m_nextStep = m_stepCycle + stepDistance;
+
+        PlayFootStepAudio();
+    }
+
+
+    private void PlayFootStepAudio()
+    {
+        if (!m_grounded)
+            return;
+
+        int n = Random.Range(0, m_footsteps.Length);
+        m_audioSource.PlayOneShot(m_footsteps[n]);
+
+        //if (transform.position.y > m_footstepUpperAltitudeThreshold)
+        //{
+        //    // pick & play a random footstep sound from the array,
+        //    // excluding sound at index 0
+        //    int n = Random.Range(1, m_FootstepSoundsHigh.Length);
+        //    m_AudioSource.clip = m_FootstepSoundsHigh[n];
+        //    m_AudioSource.PlayOneShot(m_AudioSource.clip);
+        //    // move picked sound to index 0 so it's not picked next time
+        //    m_FootstepSoundsHigh[n] = m_FootstepSoundsHigh[0];
+        //    m_FootstepSoundsHigh[0] = m_AudioSource.clip;
+        //}
+        //else if (transform.position.y < m_footstepLowerAltitudeThreshold)
+        //{
+        //    int n = Random.Range(1, m_FootstepSoundsLow.Length);
+        //    m_AudioSource.clip = m_FootstepSoundsLow[n];
+        //    m_AudioSource.PlayOneShot(m_AudioSource.clip);
+        //    // move picked sound to index 0 so it's not picked next time
+        //    m_FootstepSoundsLow[n] = m_FootstepSoundsLow[0];
+        //    m_FootstepSoundsLow[0] = m_AudioSource.clip;
+        //}
+        //else
+        //{
+        //    int n = Random.Range(1, m_FootstepSoundsMid.Length);
+        //    m_AudioSource.clip = m_FootstepSoundsMid[n];
+        //    m_AudioSource.PlayOneShot(m_AudioSource.clip);
+        //    // move picked sound to index 0 so it's not picked next time
+        //    m_FootstepSoundsMid[n] = m_FootstepSoundsMid[0];
+        //    m_FootstepSoundsMid[0] = m_AudioSource.clip;
+        //}
     }
 
 
