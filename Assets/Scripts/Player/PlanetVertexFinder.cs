@@ -9,11 +9,12 @@ public class PlanetVertexFinder : MonoBehaviour
 
     private Transform m_playerTransform;
     private Mesh m_mesh;
+    private Vector3[] m_vertices;
     private Vector3 m_closestPoint;
     private int m_closestVertexIndex;
-    private bool m_iterating;
-    private Vector3[] m_vertices;
 
+    private bool m_iterating;
+    
 
     void Awake()
     {
@@ -22,7 +23,8 @@ public class PlanetVertexFinder : MonoBehaviour
         var meshFilter = GetComponentInChildren<MeshFilter>();
         m_mesh = meshFilter.mesh;
         m_vertices = m_mesh.vertices;
-        print(name + " mesh has " + m_vertices.Length + " vertices");
+
+        //print(name + " mesh has " + m_vertices.Length + " vertices");
     }
 
 
