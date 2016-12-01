@@ -1,22 +1,15 @@
 fileFormatVersion: 2
-guid: d4f165c091e2bc045a16ab5dbfa6253c
-timeCreated: 1480546132
+guid: c9fec190a8ce33b4ba39a94f54e3b6d9
+timeCreated: 1480636371
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: Plane_001
-    100002: //RootNode
-    100004: rboyblock
-    400000: Plane_001
-    400002: //RootNode
-    400004: rboyblock
-    2300000: Plane_001
-    2300002: rboyblock
-    3300000: Plane_001
-    3300002: rboyblock
-    4300000: rboyblock
-    4300002: Plane_001
+    100000: //RootNode
+    400000: //RootNode
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: Plane_001
     7400000: Default Take
     9500000: //RootNode
   materials:
