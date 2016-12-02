@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MirrorController : MonoBehaviour, IActivatable
+public class MirrorController : PropControllerBase
 {
     [Header("Rotation")]
     [SerializeField] Transform m_rotationPoint;
@@ -13,32 +13,15 @@ public class MirrorController : MonoBehaviour, IActivatable
     [SerializeField] float m_pitchSpeed = 10f;
     [SerializeField] Vector2 m_pitchMinMax = new Vector2(20, 40);   
 
-    [Header("Camera view point")]
-    [SerializeField] Transform m_cameraPoint;
-
     [Header("Gizmos")]
     [SerializeField] float m_gizmoLineLength = 10f;
 
-    private bool m_active;
-    private bool m_canBeActivated;
     private float m_rotation;
     private float m_pitch;
-    private bool m_activationTiggered;
 
 
     void Awake()
     {
-        var camera = GetComponentInChildren<Camera>();
-
-        if (camera != null)
-            camera.enabled = false;
-
-        if (m_cameraPoint == null)
-        {
-            if (camera != null)
-                m_cameraPoint = camera.transform;
-        }
-
         m_pitch = m_pitchPoint.localEulerAngles.x;
 
         if (m_pitch > 180f)
@@ -53,23 +36,10 @@ public class MirrorController : MonoBehaviour, IActivatable
     }
 
 
-    void Update()
+    protected override void Update()
     {
-        if (m_canBeActivated)
-        {
-            if (!m_activationTiggered && Input.GetAxisRaw("Submit") == 1)
-            {
-                m_activationTiggered = true;
-                EventManager.TriggerEvent(TransformEventName.MirrorActivated, m_cameraPoint);
-            }
-            else if (m_activationTiggered && Input.GetAxisRaw("Cancel") == 1)
-            {
-                m_active = false;
-                m_activationTiggered = false;
-                EventManager.TriggerEvent(StandardEventName.MirrorDeactivated);
-            }
-        }
-  
+        base.Update();
+
         if (!m_active)
             return;
 
@@ -95,36 +65,6 @@ public class MirrorController : MonoBehaviour, IActivatable
 
         m_pitch = Mathf.Clamp(m_pitch, m_pitchMinMax.x, m_pitchMinMax.y);
         m_pitchPoint.localEulerAngles = Vector3.left * m_pitch;
-    }
-
-
-    public void Activate()
-    {
-        m_active = true;
-    }
-
-
-    public void Deactivate()
-    {
-        m_active = false;
-    }
-
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (!other.CompareTag(Tags.Player))
-            return;
-
-        m_canBeActivated = true;
-    }
-
-
-    void OnTriggerExit(Collider other)
-    {
-        if (!other.CompareTag(Tags.Player))
-            return;
-
-        m_canBeActivated = false;
     }
 
 

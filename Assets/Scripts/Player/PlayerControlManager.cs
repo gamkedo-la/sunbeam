@@ -96,14 +96,14 @@ public class PlayerControlManager : MonoBehaviour
 
     void OnEnable()
     {
-        EventManager.StartListening(TransformEventName.MirrorActivated, MirrorActivated);
-        EventManager.StartListening(StandardEventName.MirrorDeactivated, MirrorDeactivated);
+        EventManager.StartListening(TransformEventName.PropActivated, MirrorActivated);
+        EventManager.StartListening(StandardEventName.PropDeactivated, MirrorDeactivated);
     }
 
 
     void OnDisable()
     {
-        EventManager.StopListening(TransformEventName.MirrorActivated, MirrorActivated);
-        EventManager.StopListening(StandardEventName.MirrorDeactivated, MirrorDeactivated);
+        EventManager.StopListening(TransformEventName.PropActivated, MirrorActivated);
+        EventManager.StopListening(StandardEventName.PropDeactivated, MirrorDeactivated);
     }
 }

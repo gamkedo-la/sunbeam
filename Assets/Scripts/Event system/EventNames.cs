@@ -11,7 +11,7 @@ public enum StandardEventName
 
     Pause = 1,
     Unpause = 2,
-    MirrorDeactivated = 3,
+    PropDeactivated = 3,
 }
 
 
@@ -73,5 +73,5 @@ public enum TransformEventName
 {
     None = 0,
 
-    MirrorActivated = 1,
+    PropActivated = 1,
 }
