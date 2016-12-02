@@ -10,7 +10,10 @@ public class SkyManager : MonoBehaviour
     [SerializeField] Gradient m_skyColour;
     [SerializeField] Gradient m_ambientColour;
     [SerializeField] Gradient m_sunColour;
+    [SerializeField] Gradient m_sunFlairColour;
     [SerializeField] AnimationCurve m_sunIntensity;
+    [SerializeField] AnimationCurve m_playerAltitudeAdjustment;
+    [SerializeField] Vector2 m_playerAltitudeMinMax = new Vector2(150f, 300f);
 
     private Transform m_player;
     private Transform m_sunImage;
@@ -21,6 +24,7 @@ public class SkyManager : MonoBehaviour
     private Color m_originalSkyboxColour;
     private Color m_originalSunColour;
     private float m_sunDistanceFromPlayer;
+    private float m_playerAltitude;
 
 
 	void Awake()
@@ -47,22 +51,31 @@ public class SkyManager : MonoBehaviour
 
 	void Update()
     {
+        m_playerAltitude = m_player.position.magnitude;
         var playerDirection = m_player.position.normalized;
+        
         float dotToPlayer = Vector3.Dot(-transform.forward, playerDirection);
         SunAngleAboveHorizon = Vector3.Angle(transform.forward, playerDirection) - 90f;
 
         float evaluationValue = 0.5f * (dotToPlayer + 1f);
+
+        float altitudeEvaluationValue = Mathf.InverseLerp(m_playerAltitudeMinMax.x, m_playerAltitudeMinMax.y, m_playerAltitude);
+        float altitudeAdjustment = m_playerAltitudeAdjustment.Evaluate(altitudeEvaluationValue);
+        evaluationValue += altitudeAdjustment;
 
         var skyColour = m_skyColour.Evaluate(evaluationValue);
         m_skybox.SetColor("_Tint", skyColour);
 
         RenderSettings.ambientLight = m_ambientColour.Evaluate(evaluationValue);
         m_sunLight.intensity = m_sunIntensity.Evaluate(evaluationValue);
+
         var sunColour = m_sunColour.Evaluate(evaluationValue);
         m_sunLight.color = sunColour;
-        m_flair.color = sunColour;
         m_sunMaterial.SetColor("_TintColor", sunColour);
 
+        var sunFlairColour = m_sunFlairColour.Evaluate(evaluationValue);
+        m_flair.color = sunFlairColour;
+       
         m_sunImage.position = m_player.position - transform.forward * m_sunDistanceFromPlayer;
 	}
 
