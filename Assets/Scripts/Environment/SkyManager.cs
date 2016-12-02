@@ -2,7 +2,7 @@
 using System.Collections;
 
 
-[RequireComponent(typeof(Light))]
+[RequireComponent(typeof(Light), typeof(LensFlare))]
 public class SkyManager : MonoBehaviour
 {
     public float SunAngleAboveHorizon;
@@ -15,6 +15,7 @@ public class SkyManager : MonoBehaviour
     private Transform m_player;
     private Transform m_sunImage;
     private Light m_sunLight;
+    private LensFlare m_flair;
     private Material m_skybox;
     private Material m_sunMaterial;
     private Color m_originalSkyboxColour;
@@ -26,6 +27,7 @@ public class SkyManager : MonoBehaviour
     {
         m_player = GameObject.FindGameObjectWithTag(Tags.Player).transform;
         m_sunLight = GetComponent<Light>();
+        m_flair = GetComponent<LensFlare>();
 
         var sunMesh = GetComponentInChildren<MeshRenderer>();
         m_sunImage = sunMesh.transform;
@@ -58,6 +60,7 @@ public class SkyManager : MonoBehaviour
         m_sunLight.intensity = m_sunIntensity.Evaluate(evaluationValue);
         var sunColour = m_sunColour.Evaluate(evaluationValue);
         m_sunLight.color = sunColour;
+        m_flair.color = sunColour;
         m_sunMaterial.SetColor("_TintColor", sunColour);
 
         m_sunImage.position = m_player.position - transform.forward * m_sunDistanceFromPlayer;

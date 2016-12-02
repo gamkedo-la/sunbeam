@@ -3,7 +3,7 @@ using System.Collections;
 
 public class StarsManager : MonoBehaviour 
 {
-	[SerializeField] float m_degreesAboveHorizonForMinAlpha = 5f;
+	[SerializeField] float m_degreesAboveHorizonForMinAlpha = -6f;
 	[SerializeField] float m_degreesAboveHorizonForMaxAlpha = -15f;
 	[SerializeField] Transform m_cameraTransform;
     //[SerializeField] Transform m_sunTransform;
