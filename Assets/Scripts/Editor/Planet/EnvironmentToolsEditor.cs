@@ -13,10 +13,13 @@ public class EnvironmentToolsEditor : Editor
         {
             Ray ray = Camera.current.ScreenPointToRay(e.mousePosition);
 
+            int layerMask = 1 << LayerMask.NameToLayer(Layers.Environment);
+            //Debug.Log("Layer mask: " + layerMask);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 1000f))
+            if (Physics.Raycast(ray, out hit, 1000f, layerMask))
             {
                 //Debug.Log("Mouse clicked on " + hit.collider.name + " at " + hit.point + ", " + hit.distance + " away");
+                //Debug.Log("Layer: " + hit.collider.gameObject.layer + " (" + LayerMask.LayerToName(hit.collider.gameObject.layer) + ")");
 
                 var transform = (target as EnvironmentTools).transform;
                 var targetDirection = hit.point.normalized;
