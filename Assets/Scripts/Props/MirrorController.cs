@@ -20,7 +20,7 @@ public class MirrorController : PropControllerBase
     private float m_pitch;
 
 
-    void Awake()
+    protected override void Awake()
     {
         m_pitch = m_pitchPoint.localEulerAngles.x;
 

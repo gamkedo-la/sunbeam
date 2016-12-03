@@ -13,12 +13,15 @@ public class PropControllerBase : MonoBehaviour, IActivatable
     protected bool m_activationTiggered;
 
     
-    void Awake()
+    protected virtual void Awake()
     {
         var camera = GetComponentInChildren<Camera>();
 
         if (camera != null)
+        {
             camera.enabled = false;
+            camera.gameObject.SetActive(false);
+        }
 
         if (m_cameraPoint == null)
         {

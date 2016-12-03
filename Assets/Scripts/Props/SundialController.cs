@@ -8,8 +8,10 @@ public class SundialController : PropControllerBase
     [SerializeField] float m_rotationSpeed = 20f;
 
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         if (m_objectToRotate == null)
         {
             var skyObject = GameObject.FindGameObjectWithTag(Tags.Sky);
