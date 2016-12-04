@@ -24,6 +24,10 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] LayerMask m_jumpMask;
     [SerializeField] float m_groundedRayDistance = 0.1f;
 
+    [Header("Climb")]
+    [SerializeField] float m_maxSlope = 40f;
+    [SerializeField] float m_maxStepHeight = 0.3f;
+
     [Header("Free mode options")]
     [SerializeField] float m_freeModeStartSpeed = 10f;
     [Range(1, 2)]
@@ -47,6 +51,13 @@ public class FirstPersonController : MonoBehaviour
     private AudioSource m_audioSource;
     private float m_stepCycle;
     private float m_nextStep;
+
+    private Vector3 m_contact;
+    private float m_slope;
+    private Vector3 m_slopeNormal;
+    private float m_slopeMovementDot;
+    private float m_step;
+    private bool m_canClimb;
 
 
     void Start()
@@ -108,7 +119,7 @@ public class FirstPersonController : MonoBehaviour
         }
 
         m_grounded = false;
-        var ray = new Ray(transform.position, -transform.up);
+        var ray = new Ray(transform.position + transform.up * 0.1f, -transform.up);
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, m_groundedRayDistance, m_jumpMask))
@@ -123,8 +134,58 @@ public class FirstPersonController : MonoBehaviour
         if (m_freeMode)
             return;
 
-        m_rigidbody.MovePosition(m_rigidbody.position + transform.TransformDirection(m_moveAmount) * Time.deltaTime);
+        var moveDirection = transform.TransformDirection(m_moveAmount);
+
+        Debug.DrawRay(transform.position + transform.up *0.5f, moveDirection);
+        m_slopeMovementDot = Vector3.Dot(m_slopeNormal, moveDirection);
+
+        m_canClimb = false;
+
+        if (m_slope > m_maxSlope && m_step < m_maxStepHeight)
+        {
+            float height = m_maxStepHeight - m_step;
+            var rayStart = m_contact + height * transform.up;
+            var ray = new Ray(rayStart, moveDirection.normalized);
+            float distance = 2f * Mathf.Abs(height / Mathf.Tan(m_slope * Mathf.Deg2Rad));
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, distance))
+            {
+                m_canClimb = false;
+                Debug.DrawRay(rayStart, moveDirection.normalized * distance, Color.red);
+            }
+            else
+            {
+                m_canClimb = true;
+                Debug.DrawRay(rayStart, moveDirection.normalized * distance, Color.green);
+            }
+        }
+
+        if (m_slope > m_maxSlope && m_slopeMovementDot < 0 && !m_canClimb)
+            return;
+        
+        m_rigidbody.MovePosition(m_rigidbody.position + moveDirection * Time.deltaTime);
         ProgressStepCycle();
+    }
+
+
+    void OnCollisionStay(Collision col)
+    {
+        var contact = col.contacts[0];
+        m_slopeNormal = contact.normal;
+        m_contact = contact.point;
+
+        //Debug.DrawRay(contact.point, m_slopeNormal, Color.red);
+
+        m_slope = Vector3.Angle(transform.up, m_slopeNormal);
+        m_step = Vector3.Dot(m_contact - transform.position, transform.up);
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawSphere(m_contact, 0.05f);
     }
 
 

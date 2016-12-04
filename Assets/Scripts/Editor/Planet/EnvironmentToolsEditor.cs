@@ -13,7 +13,7 @@ public class EnvironmentToolsEditor : Editor
         {
             Ray ray = Camera.current.ScreenPointToRay(e.mousePosition);
 
-            int layerMask = 1 << LayerMask.NameToLayer(Layers.Environment);
+            int layerMask = LayerMask.GetMask(Layers.Environment);
             //Debug.Log("Layer mask: " + layerMask);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 1000f, layerMask))
