@@ -2,15 +2,22 @@
 using System.Collections;
 
 
-[RequireComponent(typeof(MeshFilter))]
 public class PlanetVertexFinder : MonoBehaviour
 {
     [SerializeField] int m_framesToSpreadOver = 6;
 
     private Transform m_playerTransform;
-    private Mesh m_mesh;
+    private Mesh[] m_meshes;
+    private Transform[] m_meshTransforms;
+    private Vector3[] m_meshPositions;
+    private Vector3[][] m_verticesSet;
     private Vector3[] m_vertices;
     private Vector3 m_closestPoint;
+
+    private Transform m_closestMeshTransform;
+
+    private int m_length;
+    private int m_vertexSetIndex;
     private int m_closestVertexIndex;
 
     private bool m_iterating;
@@ -20,9 +27,22 @@ public class PlanetVertexFinder : MonoBehaviour
     {
         m_playerTransform = GameObject.FindGameObjectWithTag(Tags.Player).transform;
 
-        var meshFilter = GetComponentInChildren<MeshFilter>();
-        m_mesh = meshFilter.mesh;
-        m_vertices = m_mesh.vertices;
+        var meshFilters = GetComponentsInChildren<MeshFilter>();
+
+        m_length = meshFilters.Length;
+        m_meshes = new Mesh[m_length];
+        m_meshTransforms = new Transform[m_length];
+        m_meshPositions = new Vector3[m_length];
+        m_verticesSet = new Vector3[m_length][];
+
+        for (int i = 0; i < m_length; i++)
+        {
+            var meshFilter = meshFilters[i];
+            m_meshes[i] = meshFilter.mesh;
+            m_meshTransforms[i] = meshFilter.transform;
+            m_meshPositions[i] = meshFilter.GetComponent<MeshRenderer>().bounds.center;
+            m_verticesSet[i] = m_meshes[i].vertices;
+        }
 
         //print(name + " mesh has " + m_vertices.Length + " vertices");
     }
@@ -31,7 +51,32 @@ public class PlanetVertexFinder : MonoBehaviour
     void Update()
     {
         if (!m_iterating)
+        {
+            FindClosestMeshTransform();
             StartCoroutine(IterateToClosestVertex());
+        }
+    }
+
+
+    private void FindClosestMeshTransform()
+    {
+        float minDistanceSqr = Mathf.Infinity;
+        int closestIndex = 0;
+
+        for (int i = 0; i < m_length; i++)
+        {
+            float distSq = (m_playerTransform.position - m_meshPositions[i]).sqrMagnitude;
+
+            if (distSq < minDistanceSqr)
+            {
+                closestIndex = i;
+                minDistanceSqr = distSq;
+            }
+        }
+
+        m_vertexSetIndex = closestIndex;
+        m_closestMeshTransform = m_meshTransforms[m_vertexSetIndex];
+        m_vertices = m_verticesSet[m_vertexSetIndex];
     }
 
 
@@ -52,7 +97,7 @@ public class PlanetVertexFinder : MonoBehaviour
             //print("Frame: " + frame + " min: " + min + ", max: " + max);
 
             // convert point to local space
-            var point = transform.InverseTransformPoint(m_playerTransform.position);
+            var point = m_closestMeshTransform.InverseTransformPoint(m_playerTransform.position);
 
             // scan all vertices to find nearest
             for (int i = min; i < max; i += 1)
@@ -78,7 +123,7 @@ public class PlanetVertexFinder : MonoBehaviour
         }
 
         // convert nearest vertex back to world space
-        closestVertex = transform.TransformPoint(closestVertex);
+        closestVertex = m_closestMeshTransform.TransformPoint(closestVertex);
 
         m_closestPoint = closestVertex;
         m_closestVertexIndex = closestVertexIndex;  

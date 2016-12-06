@@ -64,18 +64,24 @@ public class PropControllerBase : MonoBehaviour, IActivatable
 
     void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag(Tags.Player))
-            return;
-
-        m_canBeActivated = true;
+        if (IsPlayer(other))
+        {
+            m_canBeActivated = true;
+        }
     }
 
 
     void OnTriggerExit(Collider other)
     {
-        if (!other.CompareTag(Tags.Player))
-            return;
+        if (IsPlayer(other))
+        {
+            m_canBeActivated = false;
+        }
+    }
 
-        m_canBeActivated = false;
+
+    private bool IsPlayer(Collider other)
+    {
+        return other.CompareTag(Tags.Player) || (other.transform.parent != null && other.transform.parent.CompareTag(Tags.Player));
     }
 }
