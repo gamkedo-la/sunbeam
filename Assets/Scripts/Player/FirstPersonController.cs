@@ -136,7 +136,7 @@ public class FirstPersonController : MonoBehaviour
 
         var moveDirection = transform.TransformDirection(m_moveAmount);
 
-        Debug.DrawRay(transform.position + transform.up *0.5f, moveDirection);
+        Debug.DrawRay(transform.position + transform.up * 0.5f, moveDirection);
         m_slopeMovementDot = Vector3.Dot(m_slopeNormal, moveDirection);
 
         m_canClimb = false;
@@ -162,7 +162,16 @@ public class FirstPersonController : MonoBehaviour
         }
 
         if (m_slope > m_maxSlope && m_slopeMovementDot < 0 && !m_canClimb)
-            return;
+        {
+            m_slopeMovementDot = -m_slopeMovementDot;
+
+            var tangent = Vector3.Cross(m_slopeNormal, transform.up).normalized;
+            var dotMoveTangent = Vector3.Dot(moveDirection, tangent);
+
+            moveDirection = tangent * dotMoveTangent;
+
+            Debug.DrawRay(transform.position + transform.up * 0.5f, moveDirection, Color.cyan);
+        }
         
         m_rigidbody.MovePosition(m_rigidbody.position + moveDirection * Time.deltaTime);
         ProgressStepCycle();
@@ -175,7 +184,7 @@ public class FirstPersonController : MonoBehaviour
         m_slopeNormal = contact.normal;
         m_contact = contact.point;
 
-        //Debug.DrawRay(contact.point, m_slopeNormal, Color.red);
+        Debug.DrawRay(contact.point, m_slopeNormal, Color.yellow);
 
         m_slope = Vector3.Angle(transform.up, m_slopeNormal);
         m_step = Vector3.Dot(m_contact - transform.position, transform.up);
