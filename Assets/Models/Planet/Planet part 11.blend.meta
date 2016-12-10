@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 50956a7d553b3e34a96b5cdaac6e005d
-timeCreated: 1481023141
+guid: 4559b98ec606dd049be88c4852ea44ed
+timeCreated: 1481361394
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -10,7 +10,6 @@ ModelImporter:
     2300000: //RootNode
     3300000: //RootNode
     4300000: Planet_part_11
-    4300002: Planet_part_04
     7400000: Default Take
     9500000: //RootNode
   materials:
