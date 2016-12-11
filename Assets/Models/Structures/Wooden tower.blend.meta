@@ -8,17 +8,22 @@ ModelImporter:
     100000: //RootNode
     100002: Cube
     100004: Wooden_tower
+    100006: Wooden_tower_platform
     400000: //RootNode
     400002: Cube
     400004: Wooden_tower
+    400006: Wooden_tower_platform
     2300000: //RootNode
     2300002: Cube
     2300004: Wooden_tower
+    2300006: Wooden_tower_platform
     3300000: //RootNode
     3300002: Cube
     3300004: Wooden_tower
+    3300006: Wooden_tower_platform
     4300000: Cube
     4300002: Wooden_tower
+    4300004: Wooden_tower_platform
     7400000: Default Take
     9500000: //RootNode
   materials:
