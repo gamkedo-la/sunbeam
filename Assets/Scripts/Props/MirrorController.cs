@@ -36,9 +36,9 @@ public class MirrorController : PropControllerBase
     }
 
 
-    protected override void Update()
+    void Update()
     {
-        base.Update();
+        //base.Update();
 
         if (!m_active)
             return;

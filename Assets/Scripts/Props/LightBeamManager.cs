@@ -23,7 +23,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
     {
         if (m_lightSource == null)
         {
-            m_lightSource = GameObject.FindGameObjectWithTag(Tags.Sky).GetComponent<Light>();
+            m_lightSource = GameObject.FindGameObjectWithTag(Tags.Sky).GetComponentInChildren<Light>();
             m_skyManager = m_lightSource.GetComponent<SkyManager>();
             m_lightSourceIsSun = true;
         }

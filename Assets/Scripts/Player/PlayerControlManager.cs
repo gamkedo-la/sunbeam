@@ -25,6 +25,7 @@ public class PlayerControlManager : MonoBehaviour
 
     private void MirrorActivated(Transform newCameraPoint)
     {
+        //print("Mirror activated");
         m_newCameraPoint = newCameraPoint;
         m_totalDistance = Vector3.Distance(m_cameraAnchor.position, newCameraPoint.position);
 
@@ -32,7 +33,7 @@ public class PlayerControlManager : MonoBehaviour
         m_camera.parent = null;
         
         StopAllCoroutines();
-        StartCoroutine(MoveCamera(m_cameraAnchor, newCameraPoint));
+        StartCoroutine(MoveCameraTo(newCameraPoint));
 
         var activatable = newCameraPoint.GetComponentInParent<IActivatable>();
 
@@ -41,13 +42,15 @@ public class PlayerControlManager : MonoBehaviour
     }
 
 
-    private IEnumerator MoveCamera(Transform from, Transform target)
+    private IEnumerator MoveCameraTo(Transform target)
     {
         var startPosition = m_camera.position;
         var startRotation = m_camera.rotation;
 
         float distanceToTarget = Vector3.Distance(startPosition, target.position);
         m_transitionTimeToTarget = m_transitionTime * distanceToTarget / m_totalDistance;
+
+        //print("Transition time: " + m_transitionTimeToTarget);
 
         float time = 0;
         float startTime = Time.time;
@@ -79,8 +82,9 @@ public class PlayerControlManager : MonoBehaviour
 
     private void MirrorDeactivated()
     {
+        //print("Mirror deactivated");
         StopAllCoroutines();
-        StartCoroutine(MoveCamera(m_newCameraPoint, m_cameraAnchor));
+        StartCoroutine(MoveCameraTo(m_cameraAnchor));
         StartCoroutine(EnablePlayerControl());
     }
 

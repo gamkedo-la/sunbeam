@@ -9,7 +9,6 @@ public class PropControllerBase : MonoBehaviour, IActivatable
 
 
     protected bool m_active;
-    protected bool m_canBeActivated;
     protected bool m_activationTiggered;
 
     
@@ -31,21 +30,27 @@ public class PropControllerBase : MonoBehaviour, IActivatable
     }
 	
 
-	protected virtual void Update()
+    public void TriggerActivatation()
     {
-        if (m_canBeActivated)
+        //print("Trigger activation called");
+        if (!m_activationTiggered)
         {
-            if (!m_activationTiggered && Input.GetAxisRaw("Submit") == 1)
-            {
-                m_activationTiggered = true;
-                EventManager.TriggerEvent(TransformEventName.PropActivated, m_cameraPoint);
-            }
-            else if (m_activationTiggered && Input.GetAxisRaw("Cancel") == 1)
-            {
-                m_active = false;
-                m_activationTiggered = false;
-                EventManager.TriggerEvent(StandardEventName.PropDeactivated);
-            }
+            //print("Trigger activation");
+            m_activationTiggered = true;
+            EventManager.TriggerEvent(TransformEventName.PropActivated, m_cameraPoint);
+        }
+    }
+
+
+    public void TriggerDeactivation()
+    {
+        //print("Trigger deactivation called");
+        if (m_activationTiggered)
+        {
+            //print("Trigger deactivation");
+            m_active = false;
+            m_activationTiggered = false;
+            EventManager.TriggerEvent(StandardEventName.PropDeactivated);
         }
     }
 
@@ -59,29 +64,5 @@ public class PropControllerBase : MonoBehaviour, IActivatable
     public void Deactivate()
     {
         m_active = false;
-    }
-
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (IsPlayer(other))
-        {
-            m_canBeActivated = true;
-        }
-    }
-
-
-    void OnTriggerExit(Collider other)
-    {
-        if (IsPlayer(other))
-        {
-            m_canBeActivated = false;
-        }
-    }
-
-
-    private bool IsPlayer(Collider other)
-    {
-        return other.CompareTag(Tags.Player) || (other.transform.parent != null && other.transform.parent.CompareTag(Tags.Player));
     }
 }

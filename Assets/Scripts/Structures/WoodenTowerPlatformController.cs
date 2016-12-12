@@ -8,23 +8,32 @@ public class WoodenTowerPlatformController : MonoBehaviour
     private Animator m_anim;
     private int m_up;
     private int m_down;
+    private Transform m_player;
 
 	
     void Awake()
     {
         m_anim = GetComponent<Animator>();
-        //m_up = 
+        m_up = Animator.StringToHash("Up");
+        m_down = Animator.StringToHash("Down");
+        m_player = GameObject.FindGameObjectWithTag(Tags.Player).transform;
     }
 
 
-    void OnTriggerEnter(Collider other)
+    public void PlatformUp()
     {
-        if (!other.CompareTag(Tags.PlayerBody))
-            return;
+        m_anim.SetTrigger(m_up);
+    }
 
-        // TODO: determine state of animator before triggering correct animation
 
-        print("Triggered by " + other.name);
-        m_anim.SetTrigger("Up");
+    public void PlatformDown()
+    {
+        m_anim.SetTrigger(m_down);
+    }
+
+
+    public void UnparentPlayer()
+    {
+        m_player.parent = null;
     }
 }
