@@ -82,9 +82,15 @@ public class SkyManager : MonoBehaviour
 
     public float GetEvaluationValue(Transform observer)
     {
+        float observerAltitude = observer.position.magnitude;
+
         var observerDirection = observer.position.normalized;
         float dotToObserver = Vector3.Dot(-transform.forward, observerDirection);
         float evaluationValue = 0.5f * (dotToObserver + 1f);
+
+        float altitudeEvaluationValue = Mathf.InverseLerp(m_playerAltitudeMinMax.x, m_playerAltitudeMinMax.y, observerAltitude);
+        float altitudeAdjustment = m_playerAltitudeAdjustment.Evaluate(altitudeEvaluationValue);
+        evaluationValue += altitudeAdjustment;
 
         return evaluationValue;
     }

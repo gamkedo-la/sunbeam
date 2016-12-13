@@ -3,11 +3,8 @@ using System.Collections;
 
 public class StarsManager : MonoBehaviour 
 {
-	[SerializeField] float m_degreesAboveHorizonForMinAlpha = -6f;
-	[SerializeField] float m_degreesAboveHorizonForMaxAlpha = -15f;
 	[SerializeField] Transform m_cameraTransform;
-    //[SerializeField] Transform m_sunTransform;
-
+    [SerializeField] AnimationCurve m_sunIntensityToAlpha;
 
     private SkyManager m_skyManager;
     private ParticleSystem m_stars;
@@ -26,40 +23,21 @@ public class StarsManager : MonoBehaviour
 
 		if (m_cameraTransform == null)
 			m_cameraTransform = Camera.main.transform;
-
-		//if (m_sunTransform == null)
-		//	m_sunTransform = GameObject.Find("Directional Light").transform;
 	}
 
 
 	void Update() 
 	{
-		float degreesAboveHorizon = m_skyManager.SunAngleAboveHorizon;
+        float evaluationValue = m_skyManager.GetEvaluationValue(m_cameraTransform);
+        float sunIntensity = m_skyManager.GetSunIntensity(evaluationValue);
 
-		float alpha = 1f;
-
-        if (degreesAboveHorizon > m_degreesAboveHorizonForMinAlpha)
-            alpha = 0f;
-        else if (degreesAboveHorizon < m_degreesAboveHorizonForMaxAlpha)
-            alpha = 1f;
-        else
-        {
-            float x = (degreesAboveHorizon - m_degreesAboveHorizonForMaxAlpha) /
-                (m_degreesAboveHorizonForMinAlpha - m_degreesAboveHorizonForMaxAlpha);
-
-            alpha = 1 - x;
-        }
-
-        //print ("Degrees: " + degreesAboveHorizon + " alpha: " + alpha);
+        float alpha = m_sunIntensityToAlpha.Evaluate(sunIntensity);
 
         m_colour.a = alpha;
 
 		m_renderer.material.SetColor("_TintColor", m_colour);
 
-		//transform.rotation = m_sunTransform.rotation;
-
 		m_position = m_cameraTransform.position;
-		//m_position.y = 0;
 
 		transform.position = m_position;
 	}
