@@ -31,20 +31,16 @@ public class SolarPanelManager : MonoBehaviour
     }
 
 
-    void LateUpdate()
-    {
-        m_charging = false;
-    }
-
-
     public void ChargeUp()
     {
         if (m_charged)
             return;
 
-        m_charging = true;
-
         m_chargeLevel += Time.deltaTime / m_chargeTime;
+
+        if (m_discharges)
+            m_chargeLevel += Time.deltaTime / m_dischargeTime;
+
         m_chargeLevel = Mathf.Clamp01(m_chargeLevel);
 
         UpdateChargeLevel();
@@ -59,7 +55,7 @@ public class SolarPanelManager : MonoBehaviour
 
     public void Discharge()
     {
-        if (m_charged || m_charging)
+        if (m_charged)
             return;
 
         m_chargeLevel -= Time.deltaTime / m_dischargeTime;
