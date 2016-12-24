@@ -28,6 +28,14 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] float m_maxSlope = 40f;
     [SerializeField] float m_maxStepHeight = 0.3f;
 
+    [Header("Sea blocking")]
+    [SerializeField] LayerMask m_seaRayMask;
+    [SerializeField] LayerMask m_groundRayMask;
+    [SerializeField] float m_seaRayForwardDistance = 0.5f; 
+    [SerializeField] float m_seaRayStartHeight = 1f;
+    [SerializeField] float m_seaRayLength = 1.2f;
+    [SerializeField] float m_groundRayLength = 1f;
+
     [Header("Free mode options")]
     [SerializeField] float m_freeModeStartSpeed = 10f;
     [Range(1, 2)]
@@ -41,6 +49,7 @@ public class FirstPersonController : MonoBehaviour
     private Collider m_collider;
 
     private Vector3 m_moveAmount;
+    private Vector3 m_moveDirection;
     private Vector3 m_smoothMoveVelocity;
     private bool m_grounded;
     private bool m_isRunning;
@@ -134,10 +143,20 @@ public class FirstPersonController : MonoBehaviour
         if (m_freeMode)
             return;
 
-        var moveDirection = transform.TransformDirection(m_moveAmount);
+        m_moveDirection = transform.TransformDirection(m_moveAmount);
 
-        Debug.DrawRay(transform.position + transform.up * 0.5f, moveDirection);
-        m_slopeMovementDot = Vector3.Dot(m_slopeNormal, moveDirection);
+        CheckForSlopesAndSteps();
+        CheckForSea();
+        
+        m_rigidbody.MovePosition(m_rigidbody.position + m_moveDirection * Time.deltaTime);
+        ProgressStepCycle();
+    }
+
+
+    private void CheckForSlopesAndSteps()
+    {
+        Debug.DrawRay(transform.position + transform.up * 0.5f, m_moveDirection);
+        m_slopeMovementDot = Vector3.Dot(m_slopeNormal, m_moveDirection);
 
         m_canClimb = false;
 
@@ -145,19 +164,19 @@ public class FirstPersonController : MonoBehaviour
         {
             float height = m_maxStepHeight - m_step;
             var rayStart = m_contact + height * transform.up;
-            var ray = new Ray(rayStart, moveDirection.normalized);
+            var ray = new Ray(rayStart, m_moveDirection.normalized);
             float distance = 2f * Mathf.Abs(height / Mathf.Tan(m_slope * Mathf.Deg2Rad));
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit, distance))
             {
                 m_canClimb = false;
-                Debug.DrawRay(rayStart, moveDirection.normalized * distance, Color.red);
+                Debug.DrawRay(rayStart, m_moveDirection.normalized * distance, Color.red);
             }
             else
             {
                 m_canClimb = true;
-                Debug.DrawRay(rayStart, moveDirection.normalized * distance, Color.green);
+                Debug.DrawRay(rayStart, m_moveDirection.normalized * distance, Color.green);
             }
         }
 
@@ -166,15 +185,39 @@ public class FirstPersonController : MonoBehaviour
             m_slopeMovementDot = -m_slopeMovementDot;
 
             var tangent = Vector3.Cross(m_slopeNormal, transform.up).normalized;
-            var dotMoveTangent = Vector3.Dot(moveDirection, tangent);
+            var dotMoveTangent = Vector3.Dot(m_moveDirection, tangent);
 
-            moveDirection = tangent * dotMoveTangent;
+            m_moveDirection = tangent * dotMoveTangent;
 
-            Debug.DrawRay(transform.position + transform.up * 0.5f, moveDirection, Color.cyan);
+            Debug.DrawRay(transform.position + transform.up * 0.5f, m_moveDirection, Color.cyan);
         }
-        
-        m_rigidbody.MovePosition(m_rigidbody.position + moveDirection * Time.deltaTime);
-        ProgressStepCycle();
+    }
+
+
+    private void CheckForSea()
+    {
+        var seaRayStart = transform.position + m_seaRayForwardDistance * m_moveDirection.normalized + transform.up * m_seaRayStartHeight;
+        var seaRay = new Ray(seaRayStart, -transform.up);
+
+        RaycastHit seaHit;
+        if (Physics.Raycast(seaRay, out seaHit, m_seaRayLength, m_seaRayMask))
+        {
+            if (seaHit.collider.CompareTag(Tags.Ground))
+            {
+                Debug.DrawRay(seaRayStart, -transform.up * m_seaRayLength, Color.green);
+            }
+            else if (seaHit.collider.CompareTag(Tags.WaterPart))
+            { 
+                Debug.DrawRay(seaRayStart, -transform.up * m_seaRayLength, Color.blue);
+
+                var groundRayStart = seaRayStart - transform.up * m_seaRayStartHeight;
+                var leftGroundRayDirection = Quaternion.AngleAxis(45f, transform.up) * (-m_moveDirection.normalized);
+                var rightGroundRayDirection = Quaternion.AngleAxis(-45f, transform.up) * (-m_moveDirection.normalized);
+
+                Debug.DrawRay(groundRayStart, leftGroundRayDirection * m_groundRayLength, Color.cyan);
+                Debug.DrawRay(groundRayStart, rightGroundRayDirection * m_groundRayLength, Color.green);
+            }
+        }
     }
 
 

@@ -9,4 +9,5 @@ public class Tags : MonoBehaviour
     public const string Planet = "Planet";
     public const string Environment = "Environment";
     public const string Sky = "Sky";
+    public const string WaterPart = "Water part";
 }
