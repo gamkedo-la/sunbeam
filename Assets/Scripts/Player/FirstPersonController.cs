@@ -214,8 +214,20 @@ public class FirstPersonController : MonoBehaviour
                 var leftGroundRayDirection = Quaternion.AngleAxis(45f, transform.up) * (-m_moveDirection.normalized);
                 var rightGroundRayDirection = Quaternion.AngleAxis(-45f, transform.up) * (-m_moveDirection.normalized);
 
-                Debug.DrawRay(groundRayStart, leftGroundRayDirection * m_groundRayLength, Color.cyan);
-                Debug.DrawRay(groundRayStart, rightGroundRayDirection * m_groundRayLength, Color.green);
+                var leftGroundRay = new Ray(groundRayStart, leftGroundRayDirection);
+                var rightGroundRay = new Ray(groundRayStart, rightGroundRayDirection);
+
+                RaycastHit leftGroundHit;
+                RaycastHit rightGroundHit;
+
+                bool leftGroundRayImpact = Physics.Raycast(leftGroundRay, out leftGroundHit, m_groundRayLength, m_groundRayMask);
+                bool rightGroundRayImpact = Physics.Raycast(rightGroundRay, out rightGroundHit, m_groundRayLength, m_groundRayMask);
+
+                Debug.DrawRay(groundRayStart, leftGroundRayDirection * m_groundRayLength, leftGroundRayImpact ? Color.green : Color.cyan);
+                Debug.DrawRay(groundRayStart, rightGroundRayDirection * m_groundRayLength, rightGroundRayImpact ? Color.green : Color.cyan);
+
+                
+            
             }
         }
     }
