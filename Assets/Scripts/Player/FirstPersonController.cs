@@ -223,13 +223,39 @@ public class FirstPersonController : MonoBehaviour
                 bool leftGroundRayImpact = Physics.Raycast(leftGroundRay, out leftGroundHit, m_groundRayLength, m_groundRayMask);
                 bool rightGroundRayImpact = Physics.Raycast(rightGroundRay, out rightGroundHit, m_groundRayLength, m_groundRayMask);
 
-                Debug.DrawRay(groundRayStart, leftGroundRayDirection * m_groundRayLength, leftGroundRayImpact ? Color.green : Color.cyan);
-                Debug.DrawRay(groundRayStart, rightGroundRayDirection * m_groundRayLength, rightGroundRayImpact ? Color.green : Color.cyan);
+                Debug.DrawRay(groundRayStart, leftGroundRayDirection * m_groundRayLength, leftGroundRayImpact ? Color.green : Color.red);
+                Debug.DrawRay(groundRayStart, rightGroundRayDirection * m_groundRayLength, rightGroundRayImpact ? Color.green : Color.red);
 
-                
-            
+                if (leftGroundRayImpact && rightGroundRayImpact)
+                {
+                    float leftDist = Vector3.Distance(transform.position, leftGroundHit.point);
+                    float rightDist = Vector3.Distance(transform.position, rightGroundHit.point);
+
+                    var validTarget = leftDist < rightDist ? leftGroundHit.point : rightGroundHit.point;
+
+                    AdjustMoveDirection(validTarget);
+                }
+                else if (leftGroundRayImpact)
+                {
+                    AdjustMoveDirection(leftGroundHit.point);
+                }
+                else if (rightGroundRayImpact)
+                {
+                    AdjustMoveDirection(rightGroundHit.point);
+                }
+                else
+                {
+                    m_moveDirection = Vector3.zero;
+                }
             }
         }
+    }
+
+
+    private void AdjustMoveDirection(Vector3 validTarget)
+    {
+        var validDirection = (validTarget - transform.position).normalized;
+        m_moveDirection = validDirection * Vector3.Dot(m_moveDirection, validDirection);
     }
 
 
