@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 6b211bd645101f04b84b82dc6e0c53d6
-timeCreated: 1481724117
+guid: 7f130e3cf2fee214789e7e5c373d93ad
+timeCreated: 1482927540
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -9,8 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Circle
-    4300002: Banana_plant
+    4300000: Tree_stump
     7400000: Default Take
     9500000: //RootNode
   materials:
