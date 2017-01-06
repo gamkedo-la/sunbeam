@@ -1,18 +1,30 @@
 fileFormatVersion: 2
-guid: c523aac675cc4fd469e4c153b9db4510
-timeCreated: 1480507803
+guid: 3a3cfeb74284a2445a19173c46b2d9ef
+timeCreated: 1483696096
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Cactus_tall_LOD0
+    100004: Cactus_tall_LOD1
+    100006: Cactus_tall_LOD2
     400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Circle
-    4300002: Cactus_01
+    400002: Cactus_tall_LOD0
+    400004: Cactus_tall_LOD1
+    400006: Cactus_tall_LOD2
+    2300000: Cactus_tall_LOD0
+    2300002: Cactus_tall_LOD1
+    2300004: Cactus_tall_LOD2
+    3300000: Cactus_tall_LOD0
+    3300002: Cactus_tall_LOD1
+    3300004: Cactus_tall_LOD2
+    4300000: Cactus_tall_LOD2
+    4300002: Cactus_tall_LOD1
+    4300004: Cactus_tall_LOD0
     7400000: Default Take
     9500000: //RootNode
+    20500000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -36,7 +48,10 @@ ModelImporter:
     clipAnimations: []
     isReadable: 1
   meshes:
-    lODScreenPercentages: []
+    lODScreenPercentages:
+    - 0.6030217
+    - 0.29757383
+    - 0.10372176
     globalScale: 1
     meshCompression: 0
     addColliders: 0
@@ -59,6 +74,7 @@ ModelImporter:
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
+    serializedVersion: 2
     human: []
     skeleton: []
     armTwist: 0.5
@@ -69,7 +85,10 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
   humanoidOversampling: 1

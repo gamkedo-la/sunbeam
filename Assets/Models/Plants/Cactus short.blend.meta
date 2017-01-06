@@ -1,31 +1,27 @@
 fileFormatVersion: 2
-guid: ac68b77660dac7246a7cb69b5e7ecce2
-timeCreated: 1483174632
+guid: b6a52e84306ed7f4daae37d72f42925a
+timeCreated: 1483697350
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
-    100002: Redwood_LOD0
-    100004: Redwood_LOD1
-    100006: Redwood_LOD2
+    100002: Cactus_short_LOD0
+    100004: Cactus_short_LOD1
+    100006: Cactus_short_LOD2
     400000: //RootNode
-    400002: Redwood_LOD0
-    400004: Redwood_LOD1
-    400006: Redwood_LOD2
-    2300000: //RootNode
-    2300002: Redwood_LOD0
-    2300004: Redwood_LOD1
-    2300006: Redwood_LOD2
-    3300000: //RootNode
-    3300002: Redwood_LOD0
-    3300004: Redwood_LOD1
-    3300006: Redwood_LOD2
-    4300000: Tree_stump
-    4300002: Redwood
-    4300004: Redwood_LOD2
-    4300006: Redwood_LOD1
-    4300008: Redwood_LOD0
+    400002: Cactus_short_LOD0
+    400004: Cactus_short_LOD1
+    400006: Cactus_short_LOD2
+    2300000: Cactus_short_LOD0
+    2300002: Cactus_short_LOD1
+    2300004: Cactus_short_LOD2
+    3300000: Cactus_short_LOD0
+    3300002: Cactus_short_LOD1
+    3300004: Cactus_short_LOD2
+    4300000: Cactus_short_LOD2
+    4300002: Cactus_short_LOD1
+    4300004: Cactus_short_LOD0
     7400000: Default Take
     9500000: //RootNode
     20500000: //RootNode
@@ -53,9 +49,9 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages:
-    - 0.25
-    - 0.125
-    - 0.01
+    - 0.19995125
+    - 0.10372176
+    - 0.033475727
     globalScale: 1
     meshCompression: 0
     addColliders: 0
