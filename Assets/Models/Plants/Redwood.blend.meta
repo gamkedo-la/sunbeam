@@ -9,23 +9,28 @@ ModelImporter:
     100002: Redwood_LOD0
     100004: Redwood_LOD1
     100006: Redwood_LOD2
+    100008: Redwood_LOD3
     400000: //RootNode
     400002: Redwood_LOD0
     400004: Redwood_LOD1
     400006: Redwood_LOD2
+    400008: Redwood_LOD3
     2300000: //RootNode
     2300002: Redwood_LOD0
     2300004: Redwood_LOD1
     2300006: Redwood_LOD2
+    2300008: Redwood_LOD3
     3300000: //RootNode
     3300002: Redwood_LOD0
     3300004: Redwood_LOD1
     3300006: Redwood_LOD2
+    3300008: Redwood_LOD3
     4300000: Tree_stump
     4300002: Redwood
     4300004: Redwood_LOD2
     4300006: Redwood_LOD1
     4300008: Redwood_LOD0
+    4300010: Redwood_LOD3
     7400000: Default Take
     9500000: //RootNode
     20500000: //RootNode
@@ -55,6 +60,7 @@ ModelImporter:
     lODScreenPercentages:
     - 0.25
     - 0.125
+    - 0.0625
     - 0.01
     globalScale: 1
     meshCompression: 0
