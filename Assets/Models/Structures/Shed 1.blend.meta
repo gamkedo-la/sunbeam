@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 3ece34faf598a724c93f7a980da982fa
-timeCreated: 1483697665
+guid: 8e39d41cd0b2565478827a93285d068f
+timeCreated: 1483871699
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -10,7 +10,6 @@ ModelImporter:
     2300000: //RootNode
     3300000: //RootNode
     4300000: Cube
-    4300002: Stone_steps
     7400000: Default Take
     9500000: //RootNode
   materials:
