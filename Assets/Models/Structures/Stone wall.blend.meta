@@ -1,33 +1,17 @@
 fileFormatVersion: 2
-guid: 7f130e3cf2fee214789e7e5c373d93ad
-timeCreated: 1482927540
+guid: 9e39d2772c76d704c8aa1474d84c2642
+timeCreated: 1483906192
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
-    100002: Tree_stump_LOD0
-    100004: Tree_stump_LOD1
-    100006: Tree_stump_LOD2
     400000: //RootNode
-    400002: Tree_stump_LOD0
-    400004: Tree_stump_LOD1
-    400006: Tree_stump_LOD2
     2300000: //RootNode
-    2300002: Tree_stump_LOD0
-    2300004: Tree_stump_LOD1
-    2300006: Tree_stump_LOD2
     3300000: //RootNode
-    3300002: Tree_stump_LOD0
-    3300004: Tree_stump_LOD1
-    3300006: Tree_stump_LOD2
-    4300000: Tree_stump
-    4300002: Tree_stump_LOD1
-    4300004: Tree_stump_LOD0
-    4300006: Tree_stump_LOD2
+    4300000: Stone_steps
     7400000: Default Take
     9500000: //RootNode
-    20500000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -51,10 +35,7 @@ ModelImporter:
     clipAnimations: []
     isReadable: 1
   meshes:
-    lODScreenPercentages:
-    - 0.25
-    - 0.125
-    - 0.01
+    lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
     addColliders: 0
