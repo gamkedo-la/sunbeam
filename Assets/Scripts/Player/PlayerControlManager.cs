@@ -10,7 +10,7 @@ public class PlayerControlManager : MonoBehaviour
     private FirstPersonController m_playerController;
     private Transform m_camera;
     private Transform m_cameraAnchor;
-    private Transform m_newCameraPoint;
+    //private Transform m_newCameraPoint;
     private float m_totalDistance;
     private float m_transitionTimeToTarget;
 
@@ -26,7 +26,7 @@ public class PlayerControlManager : MonoBehaviour
     private void MirrorActivated(Transform newCameraPoint)
     {
         //print("Mirror activated");
-        m_newCameraPoint = newCameraPoint;
+        //m_newCameraPoint = newCameraPoint;
         m_totalDistance = Vector3.Distance(m_cameraAnchor.position, newCameraPoint.position);
 
         m_playerController.enabled = false;

@@ -5,6 +5,7 @@ using System.Collections;
 public class PlanetVertexFinder : MonoBehaviour
 {
     [SerializeField] int m_framesToSpreadOver = 6;
+    [SerializeField] MeshFilter[] m_meshFilters;
 
     private Transform m_playerTransform;
     private Mesh[] m_meshes;
@@ -27,9 +28,10 @@ public class PlanetVertexFinder : MonoBehaviour
     {
         m_playerTransform = GameObject.FindGameObjectWithTag(Tags.Player).transform;
 
-        var meshFilters = GetComponentsInChildren<MeshFilter>();
+        if (m_meshFilters.Length == 0)
+            m_meshFilters = GetComponentsInChildren<MeshFilter>();
 
-        m_length = meshFilters.Length;
+        m_length = m_meshFilters.Length;
         m_meshes = new Mesh[m_length];
         m_meshTransforms = new Transform[m_length];
         m_meshPositions = new Vector3[m_length];
@@ -37,7 +39,7 @@ public class PlanetVertexFinder : MonoBehaviour
 
         for (int i = 0; i < m_length; i++)
         {
-            var meshFilter = meshFilters[i];
+            var meshFilter = m_meshFilters[i];
             m_meshes[i] = meshFilter.mesh;
             m_meshTransforms[i] = meshFilter.transform;
             m_meshPositions[i] = meshFilter.GetComponent<MeshRenderer>().bounds.center;
