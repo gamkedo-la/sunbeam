@@ -18,6 +18,7 @@ ModelImporter:
     100020: Bone_010
     100022: //RootNode
     100024: Cable
+    100026: Cable_5m
     400000: Armature
     400002: Bone
     400004: Bone_002
@@ -31,10 +32,13 @@ ModelImporter:
     400020: Bone_010
     400022: //RootNode
     400024: Cable
+    400026: Cable_5m
     4300000: Cable
+    4300002: Cable_5m
     7400000: Default Take
     9500000: //RootNode
     13700000: Cable
+    13700002: Cable_5m
   materials:
     importMaterials: 1
     materialName: 0

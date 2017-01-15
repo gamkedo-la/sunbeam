@@ -1,18 +1,40 @@
 fileFormatVersion: 2
-guid: 8e39d41cd0b2565478827a93285d068f
-timeCreated: 1483871699
+guid: 88bc2d38f8299684da8db8cb1adf1929
+timeCreated: 1484477954
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Cube
-    4300002: Shed_1
+    100000: Armature
+    100002: Bone
+    100004: Bone_002
+    100006: Bone_003
+    100008: Bone_004
+    100010: Bone_005
+    100012: Bone_006
+    100014: Bone_007
+    100016: Bone_008
+    100018: Bone_009
+    100020: Bone_010
+    100022: //RootNode
+    100024: Cable_10m
+    400000: Armature
+    400002: Bone
+    400004: Bone_002
+    400006: Bone_003
+    400008: Bone_004
+    400010: Bone_005
+    400012: Bone_006
+    400014: Bone_007
+    400016: Bone_008
+    400018: Bone_009
+    400020: Bone_010
+    400022: //RootNode
+    400024: Cable_10m
+    4300000: Cable_10m
     7400000: Default Take
     9500000: //RootNode
+    13700000: Cable_10m
   materials:
     importMaterials: 1
     materialName: 0
