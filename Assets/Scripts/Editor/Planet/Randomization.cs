@@ -19,7 +19,9 @@ public class Randomization : MonoBehaviour
 
     private static void RotateTransform(Transform myTransform)
     {
-        if (myTransform.childCount == 0 || myTransform.GetChild(0).GetComponent<MeshRenderer>() != null)
+        if (myTransform.childCount == 0 
+            || myTransform.GetChild(0).GetComponent<MeshRenderer>() != null
+            || myTransform.GetComponent<PlanetAlignFlag>() != null)
         {
             myTransform.Rotate(Vector3.up, Random.Range(0f, 360f), Space.Self);
         }
@@ -47,7 +49,9 @@ public class Randomization : MonoBehaviour
 
     private static void ScaleTransform(Transform myTransform)
     {
-        if (myTransform.childCount == 0 || myTransform.GetChild(0).GetComponent<MeshRenderer>() != null)
+        if (myTransform.childCount == 0
+            || myTransform.GetChild(0).GetComponent<MeshRenderer>() != null
+            || myTransform.GetComponent<PlanetAlignFlag>() != null)
         {
             float scale = Random.Range(0.95f, 1.0526f);
             myTransform.localScale = myTransform.localScale * scale;
@@ -76,7 +80,9 @@ public class Randomization : MonoBehaviour
 
     private static void ScatterTransform(Transform myTransform)
     {
-        if (myTransform.childCount == 0 || myTransform.GetChild(0).GetComponent<MeshRenderer>() != null)
+        if (myTransform.childCount == 0 
+            || myTransform.GetChild(0).GetComponent<MeshRenderer>() != null
+            || myTransform.GetComponent<PlanetAlignFlag>() != null)
         {
             //print("Scattering " + myTransform.name);
 

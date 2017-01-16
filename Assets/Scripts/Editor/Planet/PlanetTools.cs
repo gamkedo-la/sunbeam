@@ -33,7 +33,9 @@ public class PlanetTools : MonoBehaviour
 
     private static void AlignTransformWithPlanetSurface(Transform myTransform)
     {
-        if (myTransform.childCount == 0 || myTransform.GetChild(0).GetComponent<MeshRenderer>() != null)
+        if (myTransform.childCount == 0 
+            || myTransform.GetChild(0).GetComponent<MeshRenderer>() != null
+            || myTransform.GetComponent<PlanetAlignFlag>() != null)
         {
             var targetDirection = myTransform.position.normalized;
             var transformUp = myTransform.up;
@@ -65,7 +67,9 @@ public class PlanetTools : MonoBehaviour
 
     private static void SetTransformOnGround(Transform myTransform, int layerMask)
     {
-        if (myTransform.childCount == 0 || myTransform.GetChild(0).GetComponent<MeshRenderer>() != null)
+        if (myTransform.childCount == 0 
+            || myTransform.GetChild(0).GetComponent<MeshRenderer>() != null
+            || myTransform.GetComponent<PlanetAlignFlag>() != null)
         {
             RaycastHit hit;
             if (Physics.Raycast(myTransform.position + myTransform.up * 2f, -myTransform.up, out hit, 100f, layerMask))
