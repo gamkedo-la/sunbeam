@@ -18,7 +18,7 @@ public class SolarPanelSunDirectionChecker : MonoBehaviour
         var sky = GameObject.FindGameObjectWithTag(Tags.Sky);
 
         if (sky != null)
-            m_sun = sky.GetComponent<Light>().transform;
+            m_sun = sky.GetComponentInChildren<Light>().transform;
     }
 
 

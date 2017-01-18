@@ -20,6 +20,7 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] AudioClip[] m_footsteps;
 
     [Header("Jump")]
+    [SerializeField] bool m_allowJump;
     [SerializeField] float m_jumpForce = 5f;
     [SerializeField] LayerMask m_jumpMask;
     [SerializeField] float m_groundedRayDistance = 0.1f;
@@ -122,7 +123,7 @@ public class FirstPersonController : MonoBehaviour
 
         m_moveAmount = Vector3.SmoothDamp(m_moveAmount, targetMoveAmount, ref m_smoothMoveVelocity, m_moveSmooth);  
 
-        if (m_grounded && Input.GetButtonDown("Jump"))
+        if (m_allowJump && m_grounded && Input.GetButtonDown("Jump"))
         {
             m_rigidbody.AddForce(transform.up * m_jumpForce, ForceMode.Impulse);
         }

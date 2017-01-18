@@ -6,6 +6,7 @@ public class MirrorController : PropControllerBase
     [Header("Rotation")]
     [SerializeField] Transform m_rotationPoint;
     [SerializeField] float m_rotationSpeed = 20f;
+    [SerializeField] bool m_constrainRotation = true;
     [SerializeField] Vector2 m_rotationMinMax = new Vector2(-30, 30);
 
     [Header("Pitch")]
@@ -60,7 +61,11 @@ public class MirrorController : PropControllerBase
 
     private void ClampAngles()
     {
-        m_rotation = Mathf.Clamp(m_rotation, m_rotationMinMax.x, m_rotationMinMax.y);
+        if (m_constrainRotation)
+        {
+            m_rotation = Mathf.Clamp(m_rotation, m_rotationMinMax.x, m_rotationMinMax.y);
+        }
+
         m_rotationPoint.localEulerAngles = Vector3.up * m_rotation;
 
         m_pitch = Mathf.Clamp(m_pitch, m_pitchMinMax.x, m_pitchMinMax.y);
@@ -72,11 +77,14 @@ public class MirrorController : PropControllerBase
     {
         Gizmos.color = Color.blue;
 
-        var rotationMin = Quaternion.Euler(transform.up * m_rotationMinMax.x) * transform.forward;
-        var rotationMax = Quaternion.Euler(transform.up * m_rotationMinMax.y) * transform.forward;
+        if (m_constrainRotation)
+        {
+            var rotationMin = Quaternion.Euler(transform.up * m_rotationMinMax.x) * transform.forward;
+            var rotationMax = Quaternion.Euler(transform.up * m_rotationMinMax.y) * transform.forward;
 
-        Gizmos.DrawRay(m_rotationPoint.position + m_rotationPoint.up * 0.5f, rotationMin * m_gizmoLineLength);
-        Gizmos.DrawRay(m_rotationPoint.position + m_rotationPoint.up * 0.5f, rotationMax * m_gizmoLineLength);
+            Gizmos.DrawRay(m_rotationPoint.position + m_rotationPoint.up * 0.5f, rotationMin * m_gizmoLineLength);
+            Gizmos.DrawRay(m_rotationPoint.position + m_rotationPoint.up * 0.5f, rotationMax * m_gizmoLineLength);
+        }
 
         Gizmos.color = Color.cyan;
 
