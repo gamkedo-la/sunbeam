@@ -8,6 +8,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
     [SerializeField] LayerMask m_triggerMask;
     [SerializeField] Light m_lightSource;
     [SerializeField] float m_rayDistanceToSun = 500f;
+    [SerializeField] LayerMask m_blockingMask;
 
     private bool m_lightSourceIsSun;
     private float m_distance;
@@ -64,7 +65,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
         RaycastHit hit;
         var ray = new Ray(transform.position, direction);
 
-        if (Physics.Raycast(ray, out hit, m_rayDistanceToLightSource))
+        if (Physics.Raycast(ray, out hit, m_rayDistanceToLightSource, m_blockingMask))
         {
             float distance = Vector3.Distance(transform.position, hit.point);
 

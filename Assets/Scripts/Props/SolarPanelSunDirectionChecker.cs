@@ -6,6 +6,7 @@ public class SolarPanelSunDirectionChecker : MonoBehaviour
 {
     [SerializeField] float m_sunDotThreshold = 0.7f;
     [SerializeField] float m_sunRayDistance = 500f;
+    [SerializeField] LayerMask m_blockingMask;
 
     private SolarPanelManager m_solarPanelManager;
     private Transform m_sun;
@@ -33,7 +34,7 @@ public class SolarPanelSunDirectionChecker : MonoBehaviour
         RaycastHit hit;
         var ray = new Ray(transform.position, direction);
 
-        if (Physics.Raycast(ray, out hit, m_sunRayDistance))
+        if (Physics.Raycast(ray, out hit, m_sunRayDistance, m_blockingMask))
         {
             float distance = Vector3.Distance(transform.position, hit.point);
 
