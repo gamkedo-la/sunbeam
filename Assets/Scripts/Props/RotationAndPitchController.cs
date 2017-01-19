@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MirrorController : PropControllerBase
+public class RotationAndPitchController : PropControllerBase
 {
     [Header("Rotation")]
     [SerializeField] Transform m_rotationPoint;
@@ -23,12 +23,12 @@ public class MirrorController : PropControllerBase
 
     protected override void Awake()
     {
-        m_pitch = m_pitchPoint.localEulerAngles.x;
+        m_pitch = m_pitchPoint != null ? m_pitchPoint.localEulerAngles.x : 0f;
 
         if (m_pitch > 180f)
             m_pitch = 360f - m_pitch;
 
-        m_rotation = m_rotationPoint.localEulerAngles.y;
+        m_rotation = m_rotationPoint != null ? m_rotationPoint.localEulerAngles.y : 0;
 
         if (m_rotation > 180f)
             m_rotation = 360f - m_rotation;
@@ -66,10 +66,13 @@ public class MirrorController : PropControllerBase
             m_rotation = Mathf.Clamp(m_rotation, m_rotationMinMax.x, m_rotationMinMax.y);
         }
 
-        m_rotationPoint.localEulerAngles = Vector3.up * m_rotation;
+        if (m_rotationPoint != null)
+            m_rotationPoint.localEulerAngles = Vector3.up * m_rotation;
 
         m_pitch = Mathf.Clamp(m_pitch, m_pitchMinMax.x, m_pitchMinMax.y);
-        m_pitchPoint.localEulerAngles = Vector3.left * m_pitch;
+
+        if (m_pitchPoint != null)
+            m_pitchPoint.localEulerAngles = Vector3.left * m_pitch;
     }
 
 
@@ -82,8 +85,11 @@ public class MirrorController : PropControllerBase
             var rotationMin = Quaternion.Euler(transform.up * m_rotationMinMax.x) * transform.forward;
             var rotationMax = Quaternion.Euler(transform.up * m_rotationMinMax.y) * transform.forward;
 
-            Gizmos.DrawRay(m_rotationPoint.position + m_rotationPoint.up * 0.5f, rotationMin * m_gizmoLineLength);
-            Gizmos.DrawRay(m_rotationPoint.position + m_rotationPoint.up * 0.5f, rotationMax * m_gizmoLineLength);
+            if (m_rotationPoint != null)
+            {
+                Gizmos.DrawRay(m_rotationPoint.position + m_rotationPoint.up * 0.5f, rotationMin * m_gizmoLineLength);
+                Gizmos.DrawRay(m_rotationPoint.position + m_rotationPoint.up * 0.5f, rotationMax * m_gizmoLineLength);
+            }
         }
 
         Gizmos.color = Color.cyan;
@@ -91,7 +97,10 @@ public class MirrorController : PropControllerBase
         var pitchMin = Quaternion.Euler(-transform.right * m_pitchMinMax.x) * transform.forward;
         var pitchMax = Quaternion.Euler(-transform.right * m_pitchMinMax.y) * transform.forward;
 
-        Gizmos.DrawRay(m_pitchPoint.position, pitchMin * m_gizmoLineLength);
-        Gizmos.DrawRay(m_pitchPoint.position, pitchMax * m_gizmoLineLength);
+        if (m_pitchPoint != null)
+        {
+            Gizmos.DrawRay(m_pitchPoint.position, pitchMin * m_gizmoLineLength);
+            Gizmos.DrawRay(m_pitchPoint.position, pitchMax * m_gizmoLineLength);
+        }
     }
 }
