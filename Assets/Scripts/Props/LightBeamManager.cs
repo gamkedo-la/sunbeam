@@ -67,6 +67,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
 
         if (Physics.Raycast(ray, out hit, m_rayDistanceToLightSource, m_blockingMask))
         {
+            //print("Blocked by " + hit.transform.name);
             float distance = Vector3.Distance(transform.position, hit.point);
 
             Debug.DrawRay(transform.position, direction * distance, Color.red);
@@ -77,7 +78,10 @@ public class LightBeamManager : MonoBehaviour, IActivatable
             if (IsWithinLightCone(direction))
             {
                 Debug.DrawRay(transform.position, direction * m_rayDistanceToLightSource, Color.green);
-                Activate();
+                if (m_lightSource.enabled)
+                    Activate();
+                else
+                    Deactivate();
             }
             else
             {
