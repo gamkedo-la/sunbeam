@@ -203,7 +203,7 @@ public class FirstPersonController : MonoBehaviour
         RaycastHit seaHit;
         if (Physics.Raycast(seaRay, out seaHit, m_seaRayLength, m_seaRayMask))
         {
-            if (seaHit.collider.CompareTag(Tags.Ground))
+            if (!seaHit.collider.CompareTag(Tags.WaterPart))
             {
                 Debug.DrawRay(seaRayStart, -transform.up * m_seaRayLength, Color.green);
             }

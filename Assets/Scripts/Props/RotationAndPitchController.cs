@@ -23,15 +23,15 @@ public class RotationAndPitchController : PropControllerBase
 
     protected override void Awake()
     {
-        m_pitch = m_pitchPoint != null ? m_pitchPoint.localEulerAngles.x : 0f;
+        m_pitch = m_pitchPoint != null ? 360f - m_pitchPoint.localEulerAngles.x : 0f;
 
         if (m_pitch > 180f)
-            m_pitch = 360f - m_pitch;
+            m_pitch = m_pitch - 360f;
 
         m_rotation = m_rotationPoint != null ? m_rotationPoint.localEulerAngles.y : 0;
 
         if (m_rotation > 180f)
-            m_rotation = 360f - m_rotation;
+            m_rotation = m_rotation - 360f;
 
         ClampAngles();
     }
