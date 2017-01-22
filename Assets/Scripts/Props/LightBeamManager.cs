@@ -115,6 +115,9 @@ public class LightBeamManager : MonoBehaviour, IActivatable
 
         transform.position = m_mirror.position + m_distance * reflection;
         transform.rotation = Quaternion.LookRotation(reflection);
+        var localRotation = transform.localEulerAngles;
+        localRotation.z = 0;
+        transform.localEulerAngles = localRotation;
 
         float dot = Vector3.Dot(-directionToSource, m_mirror.up);
 

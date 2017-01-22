@@ -4,6 +4,7 @@ using System.Collections;
 public class RotationAndPitchController : PropControllerBase
 {
     [Header("Rotation")]
+    [SerializeField] bool m_reverseDirection;
     [SerializeField] Transform m_rotationPoint;
     [SerializeField] float m_rotationSpeed = 20f;
     [SerializeField] bool m_constrainRotation = true;
@@ -52,7 +53,10 @@ public class RotationAndPitchController : PropControllerBase
         float h = Mathf.Clamp(h1 + h2, -1f, 1f);
         float v = Mathf.Clamp(v1 + v2, -1f, 1f);
 
-        m_rotation += h * m_rotationSpeed * Time.deltaTime;
+        float rotationToAdd = h * m_rotationSpeed * Time.deltaTime;
+        rotationToAdd = m_reverseDirection ? -rotationToAdd : rotationToAdd;
+
+        m_rotation += rotationToAdd;
         m_pitch += v * m_pitchSpeed * Time.deltaTime;
 
         ClampAngles();
