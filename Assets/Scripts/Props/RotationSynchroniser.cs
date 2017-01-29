@@ -7,15 +7,13 @@ public class RotationSynchroniser : MonoBehaviour
     [SerializeField] Transform m_transformToSyncWith;
     [SerializeField] float m_rotationMultiplier = 1f;
 
-    private float m_startRotation;
     private float m_startSyncRotation;
     private float m_previousSyncRotation;
 
 
     void Awake()
     {
-        m_startRotation = transform.rotation.y;
-        m_startSyncRotation = m_transformToSyncWith != null ? m_transformToSyncWith.rotation.y : 0f;
+        m_startSyncRotation = m_transformToSyncWith != null ? m_transformToSyncWith.rotation.eulerAngles.y : 0f;
         m_previousSyncRotation = m_startSyncRotation;
     }
 
