@@ -9,6 +9,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
     [SerializeField] Light m_lightSource;
     [SerializeField] float m_rayDistanceToSun = 500f;
     [SerializeField] LayerMask m_blockingMask;
+    //[SerializeField] bool m_fixRotation;
 
     private bool m_lightSourceIsSun;
     private float m_distance;
@@ -115,9 +116,17 @@ public class LightBeamManager : MonoBehaviour, IActivatable
 
         transform.position = m_mirror.position + m_distance * reflection;
         transform.rotation = Quaternion.LookRotation(reflection);
-        var localRotation = transform.localEulerAngles;
-        localRotation.z = 0;
-        transform.localEulerAngles = localRotation;
+        //var localRotation = transform.localEulerAngles;
+        //localRotation.z = 0;
+        //transform.localEulerAngles = localRotation;
+
+        //if (m_fixRotation)
+        //{
+            var projectOntoMirror = Vector3.ProjectOnPlane(transform.up, m_mirror.up);
+            float angle = Vector3.Angle(projectOntoMirror, m_mirror.forward);
+            print(angle);
+            transform.Rotate(0f, 0f, -angle);
+        //}
 
         float dot = Vector3.Dot(-directionToSource, m_mirror.up);
 
