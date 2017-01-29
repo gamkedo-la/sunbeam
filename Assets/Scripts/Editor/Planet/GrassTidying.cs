@@ -70,7 +70,6 @@ public class GrassTidying : MonoBehaviour
         }
 
         DestroyGameObjects();
-
         DeleteEmptyGameObjects();
     }
 
@@ -109,6 +108,7 @@ public class GrassTidying : MonoBehaviour
         }
 
         DestroyGameObjects();
+        //DeleteEmptyGameObjects();
     }
 
 

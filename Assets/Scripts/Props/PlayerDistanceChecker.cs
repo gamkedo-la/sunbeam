@@ -6,6 +6,8 @@ public class PlayerDistanceChecker : MonoBehaviour
     [SerializeField] float m_playerDistanceThreshold = 50f;
     [SerializeField] GameObject[] m_objectsToManage;
 	[SerializeField] float m_distanceCheckInterval = 0.5f;
+    //[SerializeField] bool m_checkLineOfSight;
+    //[SerializeField] LayerMask m_lineOfSightMask;
 
     private WaitForSeconds m_interval;
     private Transform m_player;
