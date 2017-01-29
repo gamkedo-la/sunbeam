@@ -124,7 +124,6 @@ public class LightBeamManager : MonoBehaviour, IActivatable
         //{
             var projectOntoMirror = Vector3.ProjectOnPlane(transform.up, m_mirror.up);
             float angle = Vector3.Angle(projectOntoMirror, m_mirror.forward);
-            print(angle);
             transform.Rotate(0f, 0f, -angle);
         //}
 
