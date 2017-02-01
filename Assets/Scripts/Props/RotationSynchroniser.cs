@@ -9,6 +9,7 @@ public class RotationSynchroniser : MonoBehaviour
 
     private float m_startSyncRotation;
     private float m_previousSyncRotation;
+    private float m_difference;
 
 
     void Awake()
@@ -24,8 +25,16 @@ public class RotationSynchroniser : MonoBehaviour
             return;
 
         float syncRotation = m_transformToSyncWith.rotation.eulerAngles.y;
-        float rotateAmount = m_rotationMultiplier * (syncRotation - m_previousSyncRotation);
+        float difference = syncRotation - m_previousSyncRotation;
 
+        if (difference > 180f)
+            difference = (difference - 360f) % 360f;
+        else if (difference < -180f)
+            difference = (difference + 360f) % 360f;
+
+        //print(difference);
+        float rotateAmount = m_rotationMultiplier * difference;
+        
         transform.Rotate(0f, rotateAmount, 0f);
 
         m_previousSyncRotation = syncRotation;
