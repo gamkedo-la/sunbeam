@@ -18,10 +18,10 @@ public class GameController : MonoBehaviour
 
     void Awake()
     {
-        OnUnpause();
-
         m_mainCamera = Camera.main;
         m_timeScale = Time.timeScale;
+
+        OnUnpause();
     }
 
 
@@ -29,25 +29,25 @@ public class GameController : MonoBehaviour
     {
         m_firstPersonController = m_mainCamera.GetComponentInParent<FirstPersonController>();
 
-        StartCoroutine(CheckForAxisInput("Free camera", ToggleFreeCamera));
-        StartCoroutine(CheckForAxisInput("Pause", TogglePause));
+        StartCoroutine(CheckForAxisInput("Free camera", ToggleFreeCamera, false));
+        StartCoroutine(CheckForAxisInput("Pause", TogglePause, true));
     }
 
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (m_paused && Input.GetKeyDown(KeyCode.Escape))
             QuitGame();
     }
 
 
-    private IEnumerator CheckForAxisInput(string axisName, Action action)
+    private IEnumerator CheckForAxisInput(string axisName, Action action, bool ignoreCheatModeFlag)
     {
         bool buttonPressedPreviously = false;
 
         while (true)
         {
-            if (AllowCheatMode)
+            if (ignoreCheatModeFlag || AllowCheatMode)
             {
                 bool buttonPressed = Input.GetAxisRaw(axisName) == 1f;
 
@@ -64,11 +64,11 @@ public class GameController : MonoBehaviour
 
     private void TogglePause()
     {
-        if (m_freeCameraEnabled)
-        {
+        //if (m_freeCameraEnabled)
+        //{
             m_paused = !m_paused;
             SetTimeScale();
-        }
+        //}
     }
 
 
@@ -103,7 +103,10 @@ public class GameController : MonoBehaviour
 
     private void SetTimeScale()
     {
-        Time.timeScale = m_paused ? 0 : m_timeScale;
+        if (m_paused)
+            OnPause();
+        else
+            OnUnpause();
     }
 
 
@@ -120,14 +123,20 @@ public class GameController : MonoBehaviour
     private void OnPause()
     {
         Time.timeScale = 0;
-        //print("Pause");
+        print("Pause");
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
 
     private void OnUnpause()
     {
-        Time.timeScale = 1;
-        //print("Unpause");
+        Time.timeScale = m_timeScale;
+        print("Unpause");
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
 
