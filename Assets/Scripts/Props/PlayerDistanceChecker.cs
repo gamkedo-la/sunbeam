@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerDistanceChecker : MonoBehaviour
 {
-    [SerializeField] float m_playerDistanceThreshold = 50f;
+    [SerializeField] float m_playerDistanceThreshold = 40f;
     [SerializeField] GameObject[] m_objectsToManage;
 	[SerializeField] float m_distanceCheckInterval = 0.5f;
     //[SerializeField] bool m_checkLineOfSight;
