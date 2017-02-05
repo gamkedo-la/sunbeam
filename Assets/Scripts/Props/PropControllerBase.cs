@@ -37,7 +37,7 @@ public class PropControllerBase : MonoBehaviour, IActivatable
         {
             //print("Trigger activation");
             m_activationTiggered = true;
-            EventManager.TriggerEvent(TransformEventName.PropActivated, m_cameraPoint);
+            EventManager.TriggerEvent(TransformEventName.PropActivated, m_cameraPoint, this);
         }
     }
 

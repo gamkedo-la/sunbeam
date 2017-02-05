@@ -11,7 +11,7 @@ public class EventManager : MonoBehaviour
     private Dictionary<TwoFloatsEventName, UnityEvent<float, float>> m_eventWithTwoFloatsDictionary;
     private Dictionary<StringEventName, UnityEvent<string>> m_eventWithStringDictionary;
     private Dictionary<IntegerEventName, UnityEvent<int>> m_eventWithIntDictionary;
-    private Dictionary<TransformEventName, UnityEvent<Transform>> m_eventWithTransformDictionary;
+    private Dictionary<TransformEventName, UnityEvent<Transform, IActivatable>> m_eventWithTransformDictionary;
 
     private static EventManager m_eventManager;
 
@@ -60,7 +60,7 @@ public class EventManager : MonoBehaviour
             m_eventWithIntDictionary = new Dictionary<IntegerEventName, UnityEvent<int>>();
 
         if (m_eventWithTransformDictionary == null)
-            m_eventWithTransformDictionary = new Dictionary<TransformEventName, UnityEvent<Transform>>();
+            m_eventWithTransformDictionary = new Dictionary<TransformEventName, UnityEvent<Transform, IActivatable>>();
     }
 
 
@@ -292,9 +292,9 @@ public class EventManager : MonoBehaviour
     }
 
 
-    public static void StartListening(TransformEventName eventName, UnityAction<Transform> listener)
+    public static void StartListening(TransformEventName eventName, UnityAction<Transform, IActivatable> listener)
     {
-        UnityEvent<Transform> thisEvent = null;
+        UnityEvent<Transform, IActivatable> thisEvent = null;
         if (Instance.m_eventWithTransformDictionary.TryGetValue(eventName, out thisEvent))
         {
             thisEvent.AddListener(listener);
@@ -308,11 +308,11 @@ public class EventManager : MonoBehaviour
     }
 
 
-    public static void StopListening(TransformEventName eventName, UnityAction<Transform> listener)
+    public static void StopListening(TransformEventName eventName, UnityAction<Transform, IActivatable> listener)
     {
         if (m_eventManager == null) return;
 
-        UnityEvent<Transform> thisEvent = null;
+        UnityEvent<Transform, IActivatable> thisEvent = null;
         if (Instance.m_eventWithTransformDictionary.TryGetValue(eventName, out thisEvent))
         {
             thisEvent.RemoveListener(listener);
@@ -320,12 +320,12 @@ public class EventManager : MonoBehaviour
     }
 
 
-    public static void TriggerEvent(TransformEventName eventName, Transform argument)
+    public static void TriggerEvent(TransformEventName eventName, Transform argument, IActivatable caller)
     {
-        UnityEvent<Transform> thisEvent = null;
+        UnityEvent<Transform, IActivatable> thisEvent = null;
         if (Instance.m_eventWithTransformDictionary.TryGetValue(eventName, out thisEvent))
         {
-            thisEvent.Invoke(argument);
+            thisEvent.Invoke(argument, caller);
         }
     }
 
@@ -360,7 +360,7 @@ public class EventManager : MonoBehaviour
     }
 
 
-    public class TransformEvent : UnityEvent<Transform>
+    public class TransformEvent : UnityEvent<Transform, IActivatable>
     {
 
     }

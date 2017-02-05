@@ -9,7 +9,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
     [SerializeField] Light m_lightSource;
     [SerializeField] float m_rayDistanceToSun = 500f;
     [SerializeField] LayerMask m_blockingMask;
-    //[SerializeField] bool m_printRotation;
+    [SerializeField] bool m_printBlocking;
 
     private bool m_lightSourceIsSun;
     private float m_distance;
@@ -155,22 +155,34 @@ public class LightBeamManager : MonoBehaviour, IActivatable
 
     private void CastRayAlongBeam()
     {
-        RaycastHit hit;
+        RaycastHit hitTrigger;
+        RaycastHit hitBlock;
         var ray = new Ray(transform.position, transform.forward);
 
-        if (Physics.Raycast(ray, out hit, m_range, m_triggerMask))
+        if (Physics.Raycast(ray, out hitTrigger, m_range, m_triggerMask))
         {
-            float distance = Vector3.Distance(transform.position, hit.point);
-            var solarPanelManager = hit.transform.GetComponentInParent<SolarPanelManager>();
-
-            if (solarPanelManager != null)
+            float distance = Vector3.Distance(transform.position, hitTrigger.point);
+            
+            if (Physics.Raycast(ray, out hitBlock, distance, m_blockingMask))
             {
-                solarPanelManager.ChargeUp();
-                Debug.DrawRay(transform.position, transform.forward * distance, Color.green);
+                if (m_printBlocking)
+                    print("Blocked by " + hitBlock.collider.name);
+
+                Debug.DrawRay(transform.position, transform.forward * distance, Color.cyan);
             }
             else
             {
-                Debug.DrawRay(transform.position, transform.forward * distance, Color.magenta);
+                var solarPanelManager = hitTrigger.transform.GetComponentInParent<SolarPanelManager>();
+
+                if (solarPanelManager != null)
+                {
+                    solarPanelManager.ChargeUp();
+                    Debug.DrawRay(transform.position, transform.forward * distance, Color.green);
+                }
+                else
+                {
+                    Debug.DrawRay(transform.position, transform.forward * distance, Color.magenta);
+                }
             }
         }
         else

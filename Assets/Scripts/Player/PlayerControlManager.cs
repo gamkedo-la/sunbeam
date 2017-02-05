@@ -23,7 +23,7 @@ public class PlayerControlManager : MonoBehaviour
     }
 
 
-    private void MirrorActivated(Transform newCameraPoint)
+    private void MirrorActivated(Transform newCameraPoint, IActivatable activatable)
     {
         //print("Mirror activated");
         //m_newCameraPoint = newCameraPoint;
@@ -35,7 +35,7 @@ public class PlayerControlManager : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(MoveCameraTo(newCameraPoint));
 
-        var activatable = newCameraPoint.GetComponentInParent<IActivatable>();
+        //var activatable = newCameraPoint.GetComponentInParent<IActivatable>();
 
         if (activatable != null)
             StartCoroutine(ActivateAfterTransition(activatable));
