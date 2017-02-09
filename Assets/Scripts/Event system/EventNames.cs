@@ -23,6 +23,7 @@ public enum BooleanEventName
     None = 0,
 
     SwitchTorch = 1,
+    Interact = 2,
 }
 
 

@@ -18,9 +18,10 @@ public class PlayerTriggerable : MonoBehaviour
     private Transform m_cameraAnchor;
     private bool m_active;
     private bool m_canBeTriggered;
+    private bool m_canBeTriggeredPreviousFrame;
     private bool m_actionsTrggered;
     private bool m_activationTiggered;
-
+    
 
     void Awake()
     {
@@ -39,6 +40,7 @@ public class PlayerTriggerable : MonoBehaviour
             {
                 m_activationTiggered = true;
                 TriggerActivateActions();
+                EventManager.TriggerEvent(BooleanEventName.Interact, false);
 
                 if (m_resetAfterDelay)
                     StartCoroutine(Reset());
@@ -47,8 +49,11 @@ public class PlayerTriggerable : MonoBehaviour
             {
                 m_activationTiggered = false;
                 TriggerDeactivateActions();
+                EventManager.TriggerEvent(BooleanEventName.Interact, true);
             }
         }
+
+        m_canBeTriggeredPreviousFrame = m_canBeTriggered;
     }
 
 
@@ -63,12 +68,22 @@ public class PlayerTriggerable : MonoBehaviour
         float angle = Vector3.Angle(cameraLookDirection, cameraToTrigger);
 
         m_canBeTriggered = angle <= m_playerLookMaxAngle;
+
+        if (m_activationTiggered)
+            return;
+
+        if (m_canBeTriggered && !m_canBeTriggeredPreviousFrame)
+            EventManager.TriggerEvent(BooleanEventName.Interact, true);
+        else if (!m_canBeTriggered && m_canBeTriggeredPreviousFrame)
+            EventManager.TriggerEvent(BooleanEventName.Interact, false);
     }
 
 
     void OnTriggerExit(Collider other)
     {
         m_canBeTriggered = false;
+
+        EventManager.TriggerEvent(BooleanEventName.Interact, false);
     }
 
 
