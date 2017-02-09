@@ -6,7 +6,7 @@ using UnityEditor;
 public class GrassTidying : MonoBehaviour
 {
     private static float SeaLevel = 148.9f;
-    private static float MaxSlope = 20f;
+    private static float MaxSlope = 30f;
     private static List<GameObject> ObjectsToDestory;
 
 
@@ -114,19 +114,52 @@ public class GrassTidying : MonoBehaviour
 
     private static void DeleteGameObjectOnSlope(Transform myTransform, int layerMask)
     {
+        var meshRenderer = myTransform.childCount == 0 ? null : myTransform.GetChild(0).GetComponent<MeshRenderer>();
+
         if (myTransform.childCount == 0
-            || myTransform.GetChild(0).GetComponent<MeshRenderer>() != null
+            || meshRenderer != null
             || myTransform.GetComponent<PlanetAlignFlag>() != null)
         {
-            RaycastHit hit;
-            if (Physics.Raycast(myTransform.position + myTransform.up, -myTransform.up, out hit, 10f, layerMask))
+            var testPositions = new List<Vector3>();
+
+            if (meshRenderer != null)
             {
-                var groundNormal = hit.normal;
+                var bounds = meshRenderer.bounds;
+                var min = bounds.min;
+                var max = bounds.max;
 
-                float angle = Vector3.Angle(groundNormal, myTransform.up);
+                testPositions.Add(min);
+                testPositions.Add(max);
+                testPositions.Add(new Vector3(min.x, min.y, max.z));
+                testPositions.Add(new Vector3(min.x, max.y, min.z));
+                testPositions.Add(new Vector3(max.x, min.y, min.z));
+                testPositions.Add(new Vector3(min.x, max.y, max.z));
+                testPositions.Add(new Vector3(max.x, max.y, min.z));
+                testPositions.Add(new Vector3(max.x, min.y, max.z));
+            }
+            else
+            {
+                testPositions.Add(myTransform.position);
+            }
 
-                if (angle > MaxSlope)
-                    ObjectsToDestory.Add(myTransform.gameObject);
+            foreach (var testPosition in testPositions)
+            {
+                RaycastHit hit;
+                if (Physics.Raycast(testPosition + myTransform.position.normalized, -myTransform.position.normalized, out hit, 10f, layerMask))
+                {
+                    var groundNormal = hit.normal;
+
+                    float angle = Vector3.Angle(groundNormal, myTransform.position);
+
+                    //Debug.Log(hit.transform.name);
+                    //Debug.Log(angle);
+
+                    if (angle > MaxSlope)
+                    {
+                        ObjectsToDestory.Add(myTransform.gameObject);
+                        continue;
+                    }
+                }
             }
         }
         else
