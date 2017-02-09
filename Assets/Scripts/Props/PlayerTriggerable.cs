@@ -20,11 +20,13 @@ public class PlayerTriggerable : MonoBehaviour
     private bool m_canBeTriggered;
     private bool m_canBeTriggeredPreviousFrame;
     private bool m_actionsTrggered;
-    private bool m_activationTiggered;
+    private static bool m_activationTriggered;
+    private static int m_howManyCanBeTriggered;
     
 
     void Awake()
     {
+        m_howManyCanBeTriggered = 0;
         m_player = GameObject.FindGameObjectWithTag(Tags.Player).transform;
         m_cameraAnchor = Camera.main.transform.parent;
 
@@ -36,20 +38,19 @@ public class PlayerTriggerable : MonoBehaviour
     {
         if (m_canBeTriggered)
         {
-            if (!m_activationTiggered && Input.GetAxisRaw("Submit") == 1)
+            if (!m_activationTriggered && Input.GetAxisRaw("Submit") == 1)
             {
-                m_activationTiggered = true;
+                m_activationTriggered = true;
                 TriggerActivateActions();
                 EventManager.TriggerEvent(BooleanEventName.Interact, false);
 
                 if (m_resetAfterDelay)
                     StartCoroutine(Reset());
             }
-            else if (m_activationTiggered && Input.GetAxisRaw("Cancel") == 1)
+            else if (m_activationTriggered && Input.GetAxisRaw("Cancel") == 1)
             {
-                m_activationTiggered = false;
+                m_activationTriggered = false;
                 TriggerDeactivateActions();
-                EventManager.TriggerEvent(BooleanEventName.Interact, true);
             }
         }
 
@@ -69,13 +70,19 @@ public class PlayerTriggerable : MonoBehaviour
 
         m_canBeTriggered = angle <= m_playerLookMaxAngle;
 
-        if (m_activationTiggered)
-            return;
-
         if (m_canBeTriggered && !m_canBeTriggeredPreviousFrame)
-            EventManager.TriggerEvent(BooleanEventName.Interact, true);
-        else if (!m_canBeTriggered && m_canBeTriggeredPreviousFrame)
-            EventManager.TriggerEvent(BooleanEventName.Interact, false);
+        {
+            m_howManyCanBeTriggered++;
+            print(m_howManyCanBeTriggered);
+        }
+        else if (m_canBeTriggeredPreviousFrame && !m_canBeTriggered)
+        {
+            m_howManyCanBeTriggered--;
+            print(m_howManyCanBeTriggered);
+        }
+
+        if (!m_activationTriggered)
+            EventManager.TriggerEvent(BooleanEventName.Interact, m_howManyCanBeTriggered > 0);
     }
 
 
@@ -83,7 +90,16 @@ public class PlayerTriggerable : MonoBehaviour
     {
         m_canBeTriggered = false;
 
-        EventManager.TriggerEvent(BooleanEventName.Interact, false);
+        if (m_canBeTriggeredPreviousFrame)
+        {
+            m_howManyCanBeTriggered--;
+            print(m_howManyCanBeTriggered);
+        }
+
+        if (m_howManyCanBeTriggered == 0)
+        {
+            EventManager.TriggerEvent(BooleanEventName.Interact, false);
+        }
     }
 
 
@@ -109,7 +125,7 @@ public class PlayerTriggerable : MonoBehaviour
     {
         yield return new WaitForSeconds(m_resetAfterSeconds);
 
-        m_activationTiggered = false;
+        m_activationTriggered = false;
     }
 
 
