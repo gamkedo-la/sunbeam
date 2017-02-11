@@ -19,6 +19,14 @@ public class MirrorReflection : MonoBehaviour
     private int m_OldReflectionTextureSize = 0;
 
     private static bool s_InsideRendering = false;
+    //private bool m_renderThisFrame;
+
+
+    //void Awake()
+    //{
+    //    m_renderThisFrame = Random.value > 0.5f;
+    //}
+
 
     // This is called when it's known that the object will be rendered by some
     // camera. We render reflections and do other updates here.

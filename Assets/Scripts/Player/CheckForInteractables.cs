@@ -16,21 +16,25 @@ public class CheckForInteractables : MonoBehaviour
     {
         var ray = new Ray(transform.position, transform.forward);
         RaycastHit hit;
-
+    
         if (Physics.Raycast(ray, out hit, m_checkDistance, m_mask))
         {
             if (m_playerTriggereable == null)
             {
-                m_playerTriggereable = hit.transform.GetComponent<PlayerTriggerable>();
+                m_playerTriggereable = hit.transform.GetComponentInChildren<PlayerTriggerable>();
 
                 if (m_playerTriggereable != null && m_playerTriggereable.Active)
                 {
                     m_playerTriggereable.SetCanBeTriggered(true);
                     m_canBeTriggered = true;
                 }
-            }
 
-            Debug.DrawRay(transform.position, transform.forward * m_checkDistance, Color.black);          
+                Debug.DrawRay(transform.position, transform.forward * m_checkDistance, Color.gray);
+            }
+            else
+            {
+                Debug.DrawRay(transform.position, transform.forward * m_checkDistance, Color.black);
+            }       
         }
         else
         {

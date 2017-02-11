@@ -19,24 +19,33 @@ public class CompassManager : MonoBehaviour
         if (planetObject != null)
             m_planet = planetObject.transform;   
     }
-    
 
-	void Update()
+
+    void Update()
     {
-        // http://www.movable-type.co.uk/scripts/latlong-vectors.html
+        float theta = 0;
 
-        var n = m_planet.up;
-        var a = m_player.position;
-        var b = m_player.position + m_player.forward;
+        if (m_planet == null)
+        {
+            theta = m_player.rotation.eulerAngles.y;
+        }
+        else
+        {
+            // http://www.movable-type.co.uk/scripts/latlong-vectors.html
 
-        var c1 = Vector3.Cross(a, b);
-        var c2 = Vector3.Cross(a, n);
-        var c1CrossC2 = Vector3.Cross(c1, c2);
+            var n = m_planet.up;
+            var a = m_player.position;
+            var b = m_player.position + m_player.forward;
 
-        float sinTheta = c1CrossC2.magnitude * Mathf.Sign(Vector3.Dot(c1CrossC2, a));
-        float cosTheta = Vector3.Dot(c1, c2);
+            var c1 = Vector3.Cross(a, b);
+            var c2 = Vector3.Cross(a, n);
+            var c1CrossC2 = Vector3.Cross(c1, c2);
 
-        float theta = -Mathf.Atan2(sinTheta, cosTheta) * Mathf.Rad2Deg;
+            float sinTheta = c1CrossC2.magnitude * Mathf.Sign(Vector3.Dot(c1CrossC2, a));
+            float cosTheta = Vector3.Dot(c1, c2);
+
+            theta = -Mathf.Atan2(sinTheta, cosTheta) * Mathf.Rad2Deg;
+        }
 
         m_compassImage.rectTransform.rotation = Quaternion.Euler(0, 0, theta);
 	}
