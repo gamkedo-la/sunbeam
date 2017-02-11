@@ -15,7 +15,7 @@ public class PlayerTriggerable : MonoBehaviour
     [SerializeField] UnityEvent m_actionsOnDeactivate;
 
     private Transform m_player;
-    private Transform m_cameraAnchor;
+    //private Transform m_cameraAnchor;
     private bool m_active;
     private bool m_canBeTriggered;
     private bool m_canBeTriggeredPreviousFrame;
@@ -28,7 +28,7 @@ public class PlayerTriggerable : MonoBehaviour
     {
         m_howManyCanBeTriggered = 0;
         m_player = GameObject.FindGameObjectWithTag(Tags.Player).transform;
-        m_cameraAnchor = Camera.main.transform.parent;
+        //m_cameraAnchor = Camera.main.transform.parent;
 
         m_active = m_startActive;
     }
@@ -50,6 +50,7 @@ public class PlayerTriggerable : MonoBehaviour
             else if (m_activationTriggered && Input.GetAxisRaw("Cancel") == 1)
             {
                 m_activationTriggered = false;
+                EventManager.TriggerEvent(BooleanEventName.Interact, true);
                 TriggerDeactivateActions();
             }
         }
@@ -58,49 +59,61 @@ public class PlayerTriggerable : MonoBehaviour
     }
 
 
-    void OnTriggerStay(Collider other)
+    public void SetCanBeTriggered(bool canBeTriggered)
     {
-        if (!m_active)
-            return;
-
-        var cameraLookDirection = m_cameraAnchor.forward;
-        var cameraToTrigger = transform.position - m_cameraAnchor.position;
-
-        float angle = Vector3.Angle(cameraLookDirection, cameraToTrigger);
-
-        m_canBeTriggered = angle <= m_playerLookMaxAngle;
-
-        if (m_canBeTriggered && !m_canBeTriggeredPreviousFrame)
-        {
-            m_howManyCanBeTriggered++;
-            print(m_howManyCanBeTriggered);
-        }
-        else if (m_canBeTriggeredPreviousFrame && !m_canBeTriggered)
-        {
-            m_howManyCanBeTriggered--;
-            print(m_howManyCanBeTriggered);
-        }
-
-        if (!m_activationTriggered)
-            EventManager.TriggerEvent(BooleanEventName.Interact, m_howManyCanBeTriggered > 0);
+        m_canBeTriggered = canBeTriggered;
     }
 
 
-    void OnTriggerExit(Collider other)
+    public bool Active
     {
-        m_canBeTriggered = false;
-
-        if (m_canBeTriggeredPreviousFrame)
-        {
-            m_howManyCanBeTriggered--;
-            print(m_howManyCanBeTriggered);
-        }
-
-        if (m_howManyCanBeTriggered == 0)
-        {
-            EventManager.TriggerEvent(BooleanEventName.Interact, false);
-        }
+        get { return m_active; }
     }
+
+
+    //void OnTriggerStay(Collider other)
+    //{
+    //    if (!m_active)
+    //        return;
+
+    //    var cameraLookDirection = m_cameraAnchor.forward;
+    //    var cameraToTrigger = transform.position - m_cameraAnchor.position;
+
+    //    float angle = Vector3.Angle(cameraLookDirection, cameraToTrigger);
+
+    //    m_canBeTriggered = angle <= m_playerLookMaxAngle;
+
+    //    if (m_canBeTriggered && !m_canBeTriggeredPreviousFrame)
+    //    {
+    //        m_howManyCanBeTriggered++;
+    //        print(m_howManyCanBeTriggered);
+    //    }
+    //    else if (m_canBeTriggeredPreviousFrame && !m_canBeTriggered)
+    //    {
+    //        m_howManyCanBeTriggered--;
+    //        print(m_howManyCanBeTriggered);
+    //    }
+
+    //    if (!m_activationTriggered)
+    //        EventManager.TriggerEvent(BooleanEventName.Interact, m_howManyCanBeTriggered > 0);
+    //}
+
+
+    //void OnTriggerExit(Collider other)
+    //{
+    //    m_canBeTriggered = false;
+
+    //    if (m_canBeTriggeredPreviousFrame)
+    //    {
+    //        m_howManyCanBeTriggered--;
+    //        print(m_howManyCanBeTriggered);
+    //    }
+
+    //    if (m_howManyCanBeTriggered == 0)
+    //    {
+    //        EventManager.TriggerEvent(BooleanEventName.Interact, false);
+    //    }
+    //}
 
 
     private void TriggerActivateActions()

@@ -9,6 +9,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
     [SerializeField] Light m_lightSource;
     [SerializeField] float m_rayDistanceToSun = 500f;
     [SerializeField] LayerMask m_blockingMask;
+    [SerializeField] bool m_lightAlwaysOff;
     [SerializeField] bool m_printBlocking;
 
     private bool m_lightSourceIsSun;
@@ -19,6 +20,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
     private MeshRenderer m_volumetricLightRenderer;
     private float m_rayDistanceToLightSource;
     private SkyManager m_skyManager;
+    private LightBeamManager m_lightSourceManager;
 
 
     void Awake()
@@ -30,6 +32,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
             m_lightSourceIsSun = true;
         }
 
+        m_lightSourceManager = m_lightSource.GetComponent<LightBeamManager>();
         m_distance = Vector3.Distance(m_mirror.position, transform.position);
         m_light = GetComponent<Light>();
         m_range = m_light.range;
@@ -40,6 +43,9 @@ public class LightBeamManager : MonoBehaviour, IActivatable
             : Vector3.Distance(m_lightSource.transform.position, transform.position) - 0.2f;
             
         m_active = true;
+
+        if (m_lightAlwaysOff)
+            m_light.enabled = false;
 
         UpdateLightBeam();
     }
@@ -79,7 +85,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
             if (IsWithinLightCone(direction))
             {
                 Debug.DrawRay(transform.position, direction * m_rayDistanceToLightSource, Color.green);
-                if (m_lightSource.enabled)
+                if (m_lightSource.enabled || (m_lightSourceManager != null && m_lightSourceManager.m_active))
                     Activate();
                 else
                     Deactivate();
@@ -198,7 +204,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
             return;
 
         m_active = true;
-        m_light.enabled = true;
+        m_light.enabled = m_lightAlwaysOff ? false : true;
 
         if (m_volumetricLightRenderer != null)
             m_volumetricLightRenderer.enabled = true;
@@ -218,8 +224,8 @@ public class LightBeamManager : MonoBehaviour, IActivatable
     }
 
 
-    public Light LightSource
-    {
-        get { return m_lightSource; }
-    }
+    //public Light LightSource
+    //{
+    //    get { return m_lightSource; }
+    //}
 }
