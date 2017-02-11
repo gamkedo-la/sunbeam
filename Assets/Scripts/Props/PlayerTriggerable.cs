@@ -7,7 +7,7 @@ using UnityEngine.Events;
 public class PlayerTriggerable : MonoBehaviour
 {
     [SerializeField] bool m_startActive = true;
-    [SerializeField] float m_playerLookMaxAngle = 50f;
+    //[SerializeField] float m_playerLookMaxAngle = 50f;
     [SerializeField] bool m_resetAfterDelay;
     [SerializeField] float m_resetAfterSeconds = 1f;
     [SerializeField] Transform m_tranformToParentPlayerTo;
@@ -18,15 +18,15 @@ public class PlayerTriggerable : MonoBehaviour
     //private Transform m_cameraAnchor;
     private bool m_active;
     private bool m_canBeTriggered;
-    private bool m_canBeTriggeredPreviousFrame;
+    //private bool m_canBeTriggeredPreviousFrame;
     private bool m_actionsTrggered;
     private static bool m_activationTriggered;
-    private static int m_howManyCanBeTriggered;
+    //private static int m_howManyCanBeTriggered;
     
 
     void Awake()
     {
-        m_howManyCanBeTriggered = 0;
+        //m_howManyCanBeTriggered = 0;
         m_player = GameObject.FindGameObjectWithTag(Tags.Player).transform;
         //m_cameraAnchor = Camera.main.transform.parent;
 
@@ -55,7 +55,7 @@ public class PlayerTriggerable : MonoBehaviour
             }
         }
 
-        m_canBeTriggeredPreviousFrame = m_canBeTriggered;
+        //m_canBeTriggeredPreviousFrame = m_canBeTriggered;
     }
 
 
