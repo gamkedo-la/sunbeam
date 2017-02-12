@@ -6,6 +6,7 @@ public class SolarPanelManager : MonoBehaviour
 {
     [SerializeField] bool m_discharges;
     [SerializeField] bool m_startCharged;
+    [SerializeField] bool m_dischargesOnceCharged;
     [SerializeField] float m_chargeTime = 5f;
     [SerializeField] float m_dischargeTime = 3f;
     [SerializeField] Transform m_chargeBar;
@@ -51,7 +52,7 @@ public class SolarPanelManager : MonoBehaviour
 
     public void ChargeUp()
     {
-        if (m_charged && !m_discharges)
+        if (m_charged && (!m_discharges || !m_dischargesOnceCharged))
             return;
 
         m_chargeLevel += Time.deltaTime / m_chargeTime;
@@ -76,7 +77,7 @@ public class SolarPanelManager : MonoBehaviour
 
     public void Discharge()
     {
-        if (m_charged && !m_discharges)
+        if (m_charged && (!m_discharges || !m_dischargesOnceCharged))
             return;
 
         m_chargeLevel -= Time.deltaTime / m_dischargeTime;
