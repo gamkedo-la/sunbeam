@@ -14,7 +14,7 @@ public class RotationSynchroniser : MonoBehaviour
 
     void Awake()
     {
-        m_startSyncRotation = m_transformToSyncWith != null ? m_transformToSyncWith.rotation.eulerAngles.y : 0f;
+        m_startSyncRotation = m_transformToSyncWith != null ? m_transformToSyncWith.localEulerAngles.y : 0f;
         m_previousSyncRotation = m_startSyncRotation;
     }
 
@@ -24,7 +24,7 @@ public class RotationSynchroniser : MonoBehaviour
         if (m_transformToSyncWith == null)
             return;
 
-        float syncRotation = m_transformToSyncWith.rotation.eulerAngles.y;
+        float syncRotation = m_transformToSyncWith.localEulerAngles.y;
         float difference = syncRotation - m_previousSyncRotation;
 
         if (difference > 180f)
