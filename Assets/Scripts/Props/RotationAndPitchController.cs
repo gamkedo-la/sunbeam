@@ -15,11 +15,22 @@ public class RotationAndPitchController : PropControllerBase
     [SerializeField] float m_pitchSpeed = 10f;
     [SerializeField] Vector2 m_pitchMinMax = new Vector2(20, 40);   
 
+    [Header("Audio")]
+    [SerializeField] AudioSource m_rotationAudioSource;
+    [SerializeField] AudioSource m_pitchAudioSource;
+    [SerializeField] float m_fadeTime = 0.1f;
+
     [Header("Gizmos")]
     [SerializeField] float m_gizmoLineLength = 10f;
 
     private float m_rotation;
     private float m_pitch;
+    private float m_previousRotation;
+    private float m_previousPitch;
+    private float m_rotationAudioVolume;
+    private float m_pitchAudioVolume;
+    private Coroutine m_rotationAudioFade;
+    private Coroutine m_pitchAudioFade;
 
 
     protected override void Awake()
@@ -35,6 +46,21 @@ public class RotationAndPitchController : PropControllerBase
             m_rotation = m_rotation - 360f;
 
         ClampAngles();
+
+        if (m_rotationAudioSource != null)
+        {
+            m_rotationAudioVolume = m_rotationAudioSource.volume;
+            m_rotationAudioSource.volume = 0f;
+        }
+
+        if (m_pitchAudioSource != null)
+        {
+            m_pitchAudioVolume = m_pitchAudioSource.volume;
+            m_pitchAudioSource.volume = 0f;
+        }
+
+        m_previousRotation = m_rotation;
+        m_previousPitch = m_pitch;
     }
 
 
@@ -57,9 +83,79 @@ public class RotationAndPitchController : PropControllerBase
         rotationToAdd = m_reverseDirection ? -rotationToAdd : rotationToAdd;
 
         m_rotation += rotationToAdd;
-        m_pitch += v * m_pitchSpeed * Time.deltaTime;
+
+        float pitchToAdd = v * m_pitchSpeed * Time.deltaTime;
+        m_pitch += pitchToAdd;
 
         ClampAngles();
+
+        if (m_rotationAudioSource != null) 
+        {
+            bool rotating = m_previousRotation != m_rotation;
+            if (rotating && !m_rotationAudioSource.isPlaying)
+            {
+                if (m_rotationAudioFade != null)
+                    StopCoroutine(m_rotationAudioFade);
+
+                m_rotationAudioFade = StartCoroutine(FadeAudio(m_rotationAudioSource, m_rotationAudioVolume));
+            }
+            else if (!rotating && m_rotationAudioSource.isPlaying)
+            {
+                if (m_rotationAudioFade != null)
+                    StopCoroutine(m_rotationAudioFade);
+
+                m_rotationAudioFade = StartCoroutine(FadeAudio(m_rotationAudioSource, 0f));
+            }
+        }
+
+        if (m_pitchAudioSource != null)
+        {
+            bool pitching = m_previousPitch != m_pitch;
+            if (pitching && !m_pitchAudioSource.isPlaying)
+            {
+                if (m_pitchAudioFade != null)
+                    StopCoroutine(m_pitchAudioFade);
+
+                m_pitchAudioFade = StartCoroutine(FadeAudio(m_pitchAudioSource, m_pitchAudioVolume));
+            }
+            else if (!pitching && m_pitchAudioSource.isPlaying)
+            {
+                if (m_pitchAudioFade != null)
+                    StopCoroutine(m_pitchAudioFade);
+
+                m_pitchAudioFade = StartCoroutine(FadeAudio(m_pitchAudioSource, 0f));
+            }
+        }
+
+        m_previousRotation = m_rotation;
+        m_previousPitch = m_pitch;
+    }
+
+
+    private IEnumerator FadeAudio(AudioSource audioSource, float targetVolume)
+    {
+        if (targetVolume > 1e-6)
+            audioSource.Play();
+
+        float startVolume = audioSource.volume;
+        float time = 0;
+
+        while (time < m_fadeTime)
+        {
+            time += Time.deltaTime;
+
+            float frac = time / m_fadeTime;
+
+            float volume = Mathf.Lerp(startVolume, targetVolume, frac);
+            audioSource.volume = volume;
+
+            yield return null;
+        }
+
+        audioSource.volume = targetVolume;
+
+        if (targetVolume < 1e-6)
+            audioSource.Stop();
     }
 
 
