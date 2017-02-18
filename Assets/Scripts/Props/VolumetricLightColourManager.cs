@@ -5,24 +5,24 @@ using System.Collections;
 public class VolumetricLightColourManager : MonoBehaviour
 {
     private MeshRenderer m_meshRenderer;
-    private Light m_light;
+    private LightBeamManager m_lightBeamManager;
     private float m_alpha;
 
     void Awake()
     {
         m_meshRenderer = GetComponent<MeshRenderer>();
-        m_light = GetComponentInParent<Light>();
+        m_lightBeamManager = GetComponentInParent<LightBeamManager>();
         m_alpha = m_meshRenderer.material.GetColor("_TintColor").a;
     }
 
 
 	void Update()
     {
-        if (m_light == null)
+        if (m_lightBeamManager == null)
             return;
         
-        var colour = m_light.color;
-        colour.a = m_alpha * m_light.intensity;
+        var colour = m_lightBeamManager.LightColour;
+        colour.a = m_alpha * m_lightBeamManager.Intensity;
         m_meshRenderer.material.SetColor("_TintColor", colour);     
     }
 }
