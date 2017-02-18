@@ -80,7 +80,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
             //print("Blocked by " + hit.transform.name);
             float distance = Vector3.Distance(transform.position, hit.point);
 
-            Debug.DrawRay(transform.position, direction * distance, Color.red);
+            //Debug.DrawRay(transform.position, direction * distance, Color.red);
             Deactivate();
         }
         else
@@ -89,7 +89,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
             {
                 bool lightSourceEnabled = (m_lightSourceIsSun && m_sun.enabled) || m_lightSource.enabled;
 
-                Debug.DrawRay(transform.position, direction * m_rayDistanceToLightSource, Color.green);
+                //Debug.DrawRay(transform.position, direction * m_rayDistanceToLightSource, Color.green);
                 if (lightSourceEnabled || (m_lightSourceManager != null && m_lightSourceManager.m_active))
                     Activate();
                 else
@@ -97,7 +97,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
             }
             else
             {
-                Debug.DrawRay(transform.position, direction * m_rayDistanceToLightSource, Color.yellow);
+                //Debug.DrawRay(transform.position, direction * m_rayDistanceToLightSource, Color.yellow);
                 Deactivate();
             }
         }
@@ -110,12 +110,16 @@ public class LightBeamManager : MonoBehaviour, IActivatable
             return true;
 
         direction = -direction;
+
         float angleOfLightSource = Vector3.Angle(direction, m_lightSource.transform.forward);
         float distanceToLightSource = Vector3.Distance(transform.position, m_lightSource.transform.position);
         float distanceSideways = distanceToLightSource * angleOfLightSource * Mathf.Deg2Rad;
 
-        // Make sure the light source is covering at least half of this light beam
-        return distanceSideways <= 0.7f * m_lightSource.orthographicSize;
+        Debug.DrawRay(m_lightSource.transform.position, m_lightSource.transform.forward * distanceToLightSource, Color.white);
+        Debug.DrawRay(m_lightSource.transform.position, direction * distanceToLightSource, Color.black);
+
+        // Make sure the light source is covering at least half of this light beam, accounting for cookie
+        return distanceSideways <= 0.8f * m_lightSource.orthographicSize;
     }
 
 
@@ -183,7 +187,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
                 if (m_printBlocking)
                     print("Blocked by " + hitBlock.collider.name);
 
-                Debug.DrawRay(transform.position, transform.forward * distance, Color.cyan);
+                //Debug.DrawRay(transform.position, transform.forward * distance, Color.cyan);
             }
             else
             {
@@ -192,11 +196,11 @@ public class LightBeamManager : MonoBehaviour, IActivatable
                 if (solarPanelManager != null)
                 {
                     solarPanelManager.ChargeUp();
-                    Debug.DrawRay(transform.position, transform.forward * distance, Color.green);
+                    //Debug.DrawRay(transform.position, transform.forward * distance, Color.green);
                 }
                 else
                 {
-                    Debug.DrawRay(transform.position, transform.forward * distance, Color.magenta);
+                    //Debug.DrawRay(transform.position, transform.forward * distance, Color.magenta);
                 }
             }
         }
@@ -208,12 +212,12 @@ public class LightBeamManager : MonoBehaviour, IActivatable
             float distance = Vector3.Distance(transform.position, hitBlock.point);
             m_light.farClipPlane = distance + m_projectorFarClipPlaneBuffer;
 
-            Debug.DrawRay(transform.position, transform.forward * distance, Color.cyan);
+            //Debug.DrawRay(transform.position, transform.forward * distance, Color.cyan);
         }
         else
         {
             m_light.farClipPlane = m_range;
-            Debug.DrawRay(transform.position, transform.forward * m_range, Color.red);
+            //Debug.DrawRay(transform.position, transform.forward * m_range, Color.red);
         }
     }
 
