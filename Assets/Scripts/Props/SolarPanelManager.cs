@@ -13,6 +13,7 @@ public class SolarPanelManager : MonoBehaviour
     [SerializeField] GameObject m_chargedButton;
     [SerializeField] UnityEvent m_triggerActions;
     [SerializeField] UnityEvent m_dischargedTriggerActions;
+    [SerializeField] bool m_printChargeLevel;
 
     [Header("Audio")]
     [SerializeField] AudioSource m_chargingUpAudio;
@@ -54,14 +55,17 @@ public class SolarPanelManager : MonoBehaviour
 
     void Update()
     {
+        if (m_discharges)
+            Discharge();
+
         if (m_charging)
         {
             Charge();
             m_charging = false;
         }
 
-        if (m_discharges)
-            Discharge();
+        if (m_chargeLevel != m_previousChargeLevel)
+            UpdateChargeLevel();
 
         m_previousChargeLevel = m_chargeLevel;
     }
@@ -85,7 +89,7 @@ public class SolarPanelManager : MonoBehaviour
 
         m_chargeLevel = Mathf.Clamp01(m_chargeLevel);
 
-        UpdateChargeLevel();
+        //UpdateChargeLevel();
 
         if (m_chargeLevel >= 1f)
         {
@@ -106,7 +110,7 @@ public class SolarPanelManager : MonoBehaviour
         m_chargeLevel -= Time.deltaTime / m_dischargeTime;
         m_chargeLevel = Mathf.Clamp01(m_chargeLevel);
 
-        UpdateChargeLevel();
+        //UpdateChargeLevel();
 
         if (m_chargeLevel <= 0f)
         {
@@ -130,8 +134,25 @@ public class SolarPanelManager : MonoBehaviour
         else if (m_chargeLevel <= 0f && m_chargedButton.activeSelf == true)
             m_chargedButton.SetActive(false);
 
-        if (m_chargeLevel > m_previousChargeLevel)
+        if (m_printChargeLevel)
+            print(m_chargeLevel);
+
+        if (m_chargeLevel >= 1f)
         {
+            if (m_chargingUpAudio != null && m_chargingUpAudio.isPlaying)
+                m_chargingUpAudio.Stop();
+
+            if (m_poweringDownAudio != null && m_poweringDownAudio.isPlaying)
+                m_poweringDownAudio.Stop();
+        }
+        else if (m_chargeLevel <= 0f)
+        {
+            if (m_poweringDownAudio != null && m_poweringDownAudio.isPlaying)
+                m_poweringDownAudio.Stop();
+        }
+        else if (m_chargeLevel > m_previousChargeLevel)
+        {
+            //print("Charge up");
             if (m_poweringDownAudio != null && m_poweringDownAudio.isPlaying)
                 m_poweringDownAudio.Stop();
 
@@ -140,30 +161,22 @@ public class SolarPanelManager : MonoBehaviour
         }
         else if (m_chargeLevel < m_previousChargeLevel)
         {
+            //print("Power down");
             if (m_chargingUpAudio != null && m_chargingUpAudio.isPlaying)
                 m_chargingUpAudio.Stop();
 
+            if (m_chargedAudio != null && m_chargedAudio.isPlaying)
+                m_chargedAudio.Stop();
+
             if (m_poweringDownAudio != null && !m_poweringDownAudio.isPlaying)
                 m_poweringDownAudio.Play();   
-        }
-
-        if (m_chargeLevel == 0)
-        {
-            if (m_poweringDownAudio != null && m_poweringDownAudio.isPlaying)
-                m_poweringDownAudio.Stop();
-        }
+        }   
     }
 
 
     private void TriggerActions()
     {
         m_triggerActions.Invoke();
-
-        if (m_chargingUpAudio != null)
-            m_chargingUpAudio.Stop();
-
-        if (m_poweringDownAudio != null)
-            m_poweringDownAudio.Stop();
 
         if (m_actionsTriggeredAudio != null)
             m_actionsTriggeredAudio.Play();
