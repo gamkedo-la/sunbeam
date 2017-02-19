@@ -180,12 +180,13 @@ public class LightBeamManager : MonoBehaviour, IActivatable
         if (Physics.Raycast(ray, out hitTrigger, m_range, m_triggerMask))
         {
             float distance = Vector3.Distance(transform.position, hitTrigger.point);
-            m_light.farClipPlane = distance + m_projectorFarClipPlaneBuffer;
-
+  
             if (Physics.Raycast(ray, out hitBlock, distance, m_blockingMask))
             {
                 if (m_printBlocking)
                     print("Blocked by " + hitBlock.collider.name);
+
+                distance = Vector3.Distance(transform.position, hitBlock.point);
 
                 //Debug.DrawRay(transform.position, transform.forward * distance, Color.cyan);
             }
@@ -203,6 +204,8 @@ public class LightBeamManager : MonoBehaviour, IActivatable
                     //Debug.DrawRay(transform.position, transform.forward * distance, Color.magenta);
                 }
             }
+
+            m_light.farClipPlane = distance + m_projectorFarClipPlaneBuffer;
         }
         else if (Physics.Raycast(ray, out hitBlock, m_range, m_blockingMask))
         {
