@@ -28,7 +28,7 @@ public class StarsManager : MonoBehaviour
 
 	void Update() 
 	{
-        float evaluationValue = m_skyManager.GetEvaluationValue(m_cameraTransform);
+        float evaluationValue = m_skyManager.GetStarsIntensityEvaluationValue(m_cameraTransform);
         float sunIntensity = m_skyManager.GetSunIntensity(evaluationValue);
 
         float alpha = m_sunIntensityToAlpha.Evaluate(sunIntensity);

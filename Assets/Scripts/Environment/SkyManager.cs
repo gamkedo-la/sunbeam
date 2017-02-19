@@ -14,6 +14,7 @@ public class SkyManager : MonoBehaviour
     [SerializeField] AnimationCurve m_sunIntensity;
     [SerializeField] AnimationCurve m_playerAltitudeAdjustment;
     [SerializeField] Vector2 m_playerAltitudeMinMax = new Vector2(150f, 300f);
+    [SerializeField] float m_transitionToSpaceAltitude = 50f;
 
     private Transform m_player;
     private Transform m_sunImage;
@@ -25,6 +26,10 @@ public class SkyManager : MonoBehaviour
     private Color m_originalSunColour;
     private float m_sunDistanceFromPlayer;
     private float m_playerAltitude;
+    private float m_evaluationValue;
+    private float m_skyColourEvaluationValue;
+    private float m_sunEvaluationValue;
+    private float m_spaceFraction;
 
 
 	void Awake()
@@ -57,23 +62,40 @@ public class SkyManager : MonoBehaviour
         float dotToPlayer = Vector3.Dot(-transform.forward, playerDirection);
         SunAngleAboveHorizon = Vector3.Angle(transform.forward, playerDirection) - 90f;
 
-        float evaluationValue = 0.5f * (dotToPlayer + 1f);
+        m_evaluationValue = 0.5f * (dotToPlayer + 1f);
+
+        bool playerInSpace = m_playerAltitude > m_playerAltitudeMinMax.y;
 
         float altitudeEvaluationValue = Mathf.InverseLerp(m_playerAltitudeMinMax.x, m_playerAltitudeMinMax.y, m_playerAltitude);
         float altitudeAdjustment = m_playerAltitudeAdjustment.Evaluate(altitudeEvaluationValue);
-        evaluationValue += altitudeAdjustment;
+        m_evaluationValue += altitudeAdjustment;
+        m_evaluationValue = Mathf.Clamp01(m_evaluationValue);
 
-        var skyColour = m_skyColour.Evaluate(evaluationValue);
+        m_skyColourEvaluationValue = m_evaluationValue;
+        m_sunEvaluationValue = m_evaluationValue;
+
+        if (playerInSpace)
+        {
+            float spaceMin = m_playerAltitudeMinMax.y;
+            float spaceMax = m_playerAltitudeMinMax.y + m_transitionToSpaceAltitude;
+            m_spaceFraction = Mathf.InverseLerp(spaceMin, spaceMax, m_playerAltitude);
+            m_skyColourEvaluationValue -= m_spaceFraction;
+            m_sunEvaluationValue += m_spaceFraction;
+            m_skyColourEvaluationValue = Mathf.Clamp01(m_skyColourEvaluationValue);
+            m_sunEvaluationValue = Mathf.Clamp01(m_sunEvaluationValue);
+        }
+
+        var skyColour = m_skyColour.Evaluate(m_skyColourEvaluationValue);
         m_skybox.SetColor("_Tint", skyColour);
 
-        RenderSettings.ambientLight = m_ambientColour.Evaluate(evaluationValue);
-        m_sunLight.intensity = m_sunIntensity.Evaluate(evaluationValue);
+        RenderSettings.ambientLight = m_ambientColour.Evaluate(m_skyColourEvaluationValue);
+        m_sunLight.intensity = m_sunIntensity.Evaluate(m_sunEvaluationValue);
 
-        var sunColour = m_sunColour.Evaluate(evaluationValue);
+        var sunColour = m_sunColour.Evaluate(m_sunEvaluationValue);
         m_sunLight.color = sunColour;
         m_sunMaterial.SetColor("_TintColor", sunColour);
 
-        var sunFlairColour = m_sunFlairColour.Evaluate(evaluationValue);
+        var sunFlairColour = m_sunFlairColour.Evaluate(m_sunEvaluationValue);
         m_flair.color = sunFlairColour;
        
         m_sunImage.position = m_player.position - transform.forward * m_sunDistanceFromPlayer;
@@ -91,6 +113,27 @@ public class SkyManager : MonoBehaviour
         float altitudeEvaluationValue = Mathf.InverseLerp(m_playerAltitudeMinMax.x, m_playerAltitudeMinMax.y, observerAltitude);
         float altitudeAdjustment = m_playerAltitudeAdjustment.Evaluate(altitudeEvaluationValue);
         evaluationValue += altitudeAdjustment;
+        evaluationValue = Mathf.Clamp01(evaluationValue);
+
+        return evaluationValue;
+    }
+
+
+    public float GetStarsIntensityEvaluationValue(Transform observer)
+    {
+        float evaluationValue = GetEvaluationValue(observer);
+        float observerAltitude = observer.position.magnitude;
+        bool observerInSpace = observerAltitude > m_playerAltitudeMinMax.y;
+
+        if (observerInSpace)
+        {
+            float spaceMin = m_playerAltitudeMinMax.y;
+            float spaceMax = m_playerAltitudeMinMax.y + m_transitionToSpaceAltitude;
+            float spaceFraction = Mathf.InverseLerp(spaceMin, spaceMax, observerAltitude);
+            evaluationValue -= spaceFraction;
+        }
+
+        evaluationValue = Mathf.Clamp01(evaluationValue);
 
         return evaluationValue;
     }
