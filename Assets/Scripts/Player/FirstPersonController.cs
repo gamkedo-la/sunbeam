@@ -40,7 +40,7 @@ public class FirstPersonController : MonoBehaviour
     [Header("Free mode options")]
     [SerializeField] float m_freeModeStartSpeed = 10f;
     [Range(1, 2)]
-    [SerializeField] float m_speedMultiplier = 1.5f;
+    [SerializeField] float m_speedMultiplier = 1.0f;
 
     private MouseLook m_mouseLook;
     private JoystickLook m_joystickLook;
@@ -98,6 +98,12 @@ public class FirstPersonController : MonoBehaviour
         if (m_freeMode)
         {
             float u = Input.GetAxisRaw("Elevation");
+
+            if (Input.GetKeyDown(KeyCode.Z))
+                m_speed /= 1.1f;
+
+            if (Input.GetKeyDown(KeyCode.X))
+                m_speed *= 1.1f;
 
             if (h != 0 || v != 0 || u != 0)
             {
