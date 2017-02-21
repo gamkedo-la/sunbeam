@@ -419,6 +419,11 @@ public class FirstPersonController : MonoBehaviour
             m_speed = m_freeModeStartSpeed;
 
         if (m_freeMode)
-            m_rigidbody.velocity = Vector3.zero;  
+            m_rigidbody.velocity = Vector3.zero;
+
+        var bodyRenderer = GetComponentInChildren<MeshRenderer>();
+
+        if (bodyRenderer != null)
+            bodyRenderer.enabled = !active;
     }
 }
