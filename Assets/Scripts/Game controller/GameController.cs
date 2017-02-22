@@ -38,6 +38,9 @@ public class GameController : MonoBehaviour
     {
         if (m_paused && Input.GetKeyDown(KeyCode.Escape))
             QuitGame();
+
+        if (m_paused && Input.GetMouseButton(0))
+            TogglePause();
     }
 
 
