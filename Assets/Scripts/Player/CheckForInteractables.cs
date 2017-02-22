@@ -42,9 +42,10 @@ public class CheckForInteractables : MonoBehaviour
 
             if (m_playerTriggereable != null && m_playerTriggereable.Active)
             {
-                m_playerTriggereable.SetCanBeTriggered(false);
-                m_playerTriggereable = null;
+                m_playerTriggereable.SetCanBeTriggered(false);         
             }
+
+            m_playerTriggereable = null;
 
             Debug.DrawRay(transform.position, transform.forward * m_checkDistance, Color.white);
         }

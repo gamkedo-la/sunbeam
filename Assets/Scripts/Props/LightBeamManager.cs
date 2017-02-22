@@ -10,12 +10,15 @@ public class LightBeamManager : MonoBehaviour, IActivatable
     [SerializeField] float m_projectorFarClipPlaneBuffer = 1.0f;
     [SerializeField] float m_rayDistanceToSun = 500f;
     [SerializeField] LayerMask m_blockingMask;
+    [SerializeField] LayerMask m_projectorBlockingMask;
     [SerializeField] bool m_printBlocking;
+    [SerializeField] bool m_printLightSourceBlocking;
 
     private Light m_sun;
     private bool m_lightSourceIsSun;
     private float m_distance;
     private Projector m_light;
+    
     private Color m_lightColour;
     private float m_intensity;
     private bool m_active;
@@ -77,10 +80,12 @@ public class LightBeamManager : MonoBehaviour, IActivatable
 
         if (Physics.Raycast(ray, out hit, m_rayDistanceToLightSource, m_blockingMask))
         {
-            //print("Blocked by " + hit.transform.name);
-            //float distance = Vector3.Distance(transform.position, hit.point);
+            if (m_printLightSourceBlocking)
+                print("Light source blocked by " + hit.transform.name);
 
-            //Debug.DrawRay(transform.position, direction * distance, Color.red);
+            float distance = Vector3.Distance(transform.position, hit.point);
+
+            Debug.DrawRay(transform.position, direction * distance, Color.red);
             Deactivate();
         }
         else
@@ -89,7 +94,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
             {
                 bool lightSourceEnabled = (m_lightSourceIsSun && m_sun.enabled) || m_lightSource.enabled;
 
-                //Debug.DrawRay(transform.position, direction * m_rayDistanceToLightSource, Color.green);
+                Debug.DrawRay(transform.position, direction * m_rayDistanceToLightSource, Color.green);
                 if (lightSourceEnabled || (m_lightSourceManager != null && m_lightSourceManager.m_active))
                     Activate();
                 else
@@ -97,7 +102,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
             }
             else
             {
-                //Debug.DrawRay(transform.position, direction * m_rayDistanceToLightSource, Color.yellow);
+                Debug.DrawRay(transform.position, direction * m_rayDistanceToLightSource, Color.yellow);
                 Deactivate();
             }
         }
@@ -115,8 +120,8 @@ public class LightBeamManager : MonoBehaviour, IActivatable
         float distanceToLightSource = Vector3.Distance(transform.position, m_lightSource.transform.position);
         float distanceSideways = distanceToLightSource * angleOfLightSource * Mathf.Deg2Rad;
 
-        Debug.DrawRay(m_lightSource.transform.position, m_lightSource.transform.forward * distanceToLightSource, Color.white);
-        Debug.DrawRay(m_lightSource.transform.position, direction * distanceToLightSource, Color.black);
+        //Debug.DrawRay(m_lightSource.transform.position, m_lightSource.transform.forward * distanceToLightSource, Color.white);
+        //Debug.DrawRay(m_lightSource.transform.position, direction * distanceToLightSource, Color.black);
 
         // Make sure the light source is covering at least half of this light beam, accounting for cookie
         return distanceSideways <= 0.8f * m_lightSource.orthographicSize;
@@ -146,6 +151,9 @@ public class LightBeamManager : MonoBehaviour, IActivatable
         float dot = Vector3.Dot(-directionToSource, m_mirror.up);
 
         dot = Mathf.Clamp01(dot);
+
+        //if (!m_active)
+        //    return;
 
         if (!m_lightSourceIsSun)
         {
@@ -186,8 +194,7 @@ public class LightBeamManager : MonoBehaviour, IActivatable
                 if (m_printBlocking)
                     print("Blocked by " + hitBlock.collider.name);
 
-                distance = Vector3.Distance(transform.position, hitBlock.point);
-
+                //distance = Vector3.Distance(transform.position, hitBlock.point);
                 //Debug.DrawRay(transform.position, transform.forward * distance, Color.cyan);
             }
             else
@@ -212,10 +219,15 @@ public class LightBeamManager : MonoBehaviour, IActivatable
             if (m_printBlocking)
                 print("Blocked by " + hitBlock.collider.name);
 
-            float distance = Vector3.Distance(transform.position, hitBlock.point);
-            m_light.farClipPlane = distance + m_projectorFarClipPlaneBuffer;
-
+            //float distance = Vector3.Distance(transform.position, hitBlock.point);
             //Debug.DrawRay(transform.position, transform.forward * distance, Color.cyan);
+        }
+
+        RaycastHit hitBlockProjector;
+        if (Physics.Raycast(ray, out hitBlockProjector, m_range, m_projectorBlockingMask))
+        {
+            float distance = Vector3.Distance(transform.position, hitBlockProjector.point);
+            m_light.farClipPlane = distance + m_projectorFarClipPlaneBuffer;
         }
         else
         {
