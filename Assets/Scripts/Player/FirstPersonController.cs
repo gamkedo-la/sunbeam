@@ -313,9 +313,19 @@ public class FirstPersonController : MonoBehaviour
             }
 
             if (validJoystick)
+            {
+                if (!m_useJoystickLook)
+                    EventManager.TriggerEvent(StandardEventName.ActivateJoypadControls);
+
                 m_useJoystickLook = true;
+            }
             else
+            {
+                if (m_useJoystickLook)
+                    EventManager.TriggerEvent(StandardEventName.ActivateMouseControls);
+
                 m_useJoystickLook = false;
+            }
 
             yield return new WaitForSeconds(1f);
         }

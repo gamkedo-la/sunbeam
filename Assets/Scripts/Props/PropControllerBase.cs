@@ -42,7 +42,7 @@ public class PropControllerBase : MonoBehaviour, IActivatable
     }
 
 
-    public void TriggerDeactivation()
+    public virtual void TriggerDeactivation()
     {
         //print("Trigger deactivation called");
         if (m_activationTiggered)

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,6 +14,7 @@ public class PlayerTriggerable : MonoBehaviour
     [SerializeField] Transform m_tranformToParentPlayerTo;
     [SerializeField] UnityEvent m_actionsOnActivate;
     [SerializeField] UnityEvent m_actionsOnDeactivate;
+    public bool m_showControls;
 
     private Transform m_player;
     //private Transform m_cameraAnchor;
@@ -22,6 +24,8 @@ public class PlayerTriggerable : MonoBehaviour
     private bool m_actionsTrggered;
     private static bool m_activationTriggered;
     //private static int m_howManyCanBeTriggered;
+    private bool m_submit;
+    private bool m_cancel;
     
 
     void Awake()
@@ -34,28 +38,75 @@ public class PlayerTriggerable : MonoBehaviour
     }
 
 
+    void Start()
+    {
+        StartCoroutine(CheckForAxisInput("Submit", SetSubmit));
+        StartCoroutine(CheckForAxisInput("Cancel", SetCancel));
+    }
+
+
     protected virtual void Update()
     {
         if (m_canBeTriggered)
         {
-            if (!m_activationTriggered && Input.GetAxisRaw("Submit") == 1)
+            if (!m_activationTriggered && m_submit)
             {
                 m_activationTriggered = true;
                 TriggerActivateActions();
                 EventManager.TriggerEvent(BooleanEventName.Interact, false);
 
+                if (m_showControls)
+                    EventManager.TriggerEvent(BooleanEventName.ShowRotationControls, true);
+
                 if (m_resetAfterDelay)
                     StartCoroutine(Reset());
             }
-            else if (m_activationTriggered && Input.GetAxisRaw("Cancel") == 1)
+            else if (m_activationTriggered && (m_submit || m_cancel))
             {
                 m_activationTriggered = false;
                 EventManager.TriggerEvent(BooleanEventName.Interact, true);
                 TriggerDeactivateActions();
+
+                if (m_showControls)
+                    EventManager.TriggerEvent(BooleanEventName.ShowRotationControls, false);
+
             }
         }
 
+        m_submit = false;
+        m_cancel = false;
+
         //m_canBeTriggeredPreviousFrame = m_canBeTriggered;
+    }
+
+
+    private IEnumerator CheckForAxisInput(string axisName, Action action)
+    {
+        bool buttonPressedPreviously = false;
+
+        while (true)
+        {
+            bool buttonPressed = Input.GetAxisRaw(axisName) == 1f;
+
+            if (buttonPressed && !buttonPressedPreviously)
+                action.Invoke();
+
+            buttonPressedPreviously = buttonPressed;
+
+            yield return null;
+        }
+    }
+
+
+    private void SetSubmit()
+    {
+        m_submit = true;
+    }
+
+
+    private void SetCancel()
+    {
+        m_cancel = true;
     }
 
 

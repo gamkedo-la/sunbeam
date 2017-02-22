@@ -19,10 +19,8 @@ public class SolarPanelManager : MonoBehaviour
     [SerializeField] AudioSource m_chargingUpAudio;
     [SerializeField] AudioSource m_poweringDownAudio;
     [SerializeField] AudioSource m_actionsTriggeredAudio;
-    //[SerializeField] float m_actionsTriggeredDistanceThreshold = 40f;
     [SerializeField] AudioSource m_chargedAudio;
 
-    private Transform m_camera;
     private float m_chargeLevel;
     private float m_previousChargeLevel;
     private bool m_charging;
@@ -34,8 +32,6 @@ public class SolarPanelManager : MonoBehaviour
 
     void Awake()
     {
-        m_camera = Camera.main.transform;
-
         if (m_startCharged)
         {
             m_chargeLevel = 1f;
@@ -183,12 +179,7 @@ public class SolarPanelManager : MonoBehaviour
         m_triggerActions.Invoke();
 
         if (m_actionsTriggeredAudio != null)
-        {
-            //float distance = Vector3.Distance(m_actionsTriggeredAudio.transform.position, m_camera.position);
-            //print(distance);
-            //if (distance < m_actionsTriggeredDistanceThreshold)
-                m_actionsTriggeredAudio.Play();
-        }
+            m_actionsTriggeredAudio.Play();
 
         if (m_chargedAudio != null)
             m_chargedAudio.Play();

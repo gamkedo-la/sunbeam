@@ -12,6 +12,8 @@ public enum StandardEventName
     Pause = 1,
     Unpause = 2,
     PropDeactivated = 3,
+    ActivateMouseControls = 4,
+    ActivateJoypadControls = 5,
 }
 
 
@@ -24,6 +26,8 @@ public enum BooleanEventName
 
     SwitchTorch = 1,
     Interact = 2,
+    ShowInteractControls = 3,
+    ShowRotationControls = 4,
 }
 
 

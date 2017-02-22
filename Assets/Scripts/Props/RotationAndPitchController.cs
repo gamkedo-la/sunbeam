@@ -29,6 +29,8 @@ public class RotationAndPitchController : PropControllerBase
     private float m_previousPitch;
     private float m_rotationAudioVolume;
     private float m_pitchAudioVolume;
+    private float m_targetRotationVolume;
+    private float m_targetPitchVolume;   
     private Coroutine m_rotationAudioFade;
     private Coroutine m_pitchAudioFade;
 
@@ -67,7 +69,6 @@ public class RotationAndPitchController : PropControllerBase
     void Update()
     {
         //base.Update();
-
         if (!m_active)
             return;
 
@@ -92,43 +93,71 @@ public class RotationAndPitchController : PropControllerBase
         if (m_rotationAudioSource != null) 
         {
             bool rotating = m_previousRotation != m_rotation;
-            if (rotating && !m_rotationAudioSource.isPlaying)
+            if (rotating && !m_rotationAudioSource.isPlaying && m_targetRotationVolume != m_rotationAudioVolume)
             {
                 if (m_rotationAudioFade != null)
                     StopCoroutine(m_rotationAudioFade);
 
-                m_rotationAudioFade = StartCoroutine(FadeAudio(m_rotationAudioSource, m_rotationAudioVolume));
+                m_targetRotationVolume = m_rotationAudioVolume;
+                m_rotationAudioFade = StartCoroutine(FadeAudio(m_rotationAudioSource, m_targetRotationVolume));
             }
-            else if (!rotating && m_rotationAudioSource.isPlaying)
+            else if (!rotating && m_rotationAudioSource.isPlaying && m_targetRotationVolume != 0f)
             {
                 if (m_rotationAudioFade != null)
                     StopCoroutine(m_rotationAudioFade);
 
-                m_rotationAudioFade = StartCoroutine(FadeAudio(m_rotationAudioSource, 0f));
+                m_targetRotationVolume = 0f;
+                m_rotationAudioFade = StartCoroutine(FadeAudio(m_rotationAudioSource, m_targetRotationVolume));
             }
         }
 
         if (m_pitchAudioSource != null)
         {
             bool pitching = m_previousPitch != m_pitch;
-            if (pitching && !m_pitchAudioSource.isPlaying)
+            if (pitching && !m_pitchAudioSource.isPlaying && m_targetPitchVolume != m_pitchAudioVolume)
             {
                 if (m_pitchAudioFade != null)
                     StopCoroutine(m_pitchAudioFade);
 
-                m_pitchAudioFade = StartCoroutine(FadeAudio(m_pitchAudioSource, m_pitchAudioVolume));
+                m_targetPitchVolume = m_pitchAudioVolume;
+                m_pitchAudioFade = StartCoroutine(FadeAudio(m_pitchAudioSource, m_targetPitchVolume));
             }
-            else if (!pitching && m_pitchAudioSource.isPlaying)
+            else if (!pitching && m_pitchAudioSource.isPlaying && m_targetPitchVolume != 0f)
             {
-                if (m_pitchAudioFade != null)
+                if (m_pitchAudioFade != null) 
                     StopCoroutine(m_pitchAudioFade);
-
-                m_pitchAudioFade = StartCoroutine(FadeAudio(m_pitchAudioSource, 0f));
+                
+                m_targetPitchVolume = 0f;
+                m_pitchAudioFade = StartCoroutine(FadeAudio(m_pitchAudioSource, m_targetPitchVolume));
             }
         }
 
         m_previousRotation = m_rotation;
         m_previousPitch = m_pitch;
+    }
+
+
+    public override void TriggerDeactivation()
+    {
+        base.TriggerDeactivation();
+
+        if (m_rotationAudioSource != null && m_rotationAudioSource.isPlaying)
+        {
+            if (m_rotationAudioFade != null)
+                StopCoroutine(m_rotationAudioFade);
+
+            m_targetRotationVolume = 0f;
+            StartCoroutine(FadeAudio(m_rotationAudioSource, m_targetRotationVolume));
+        }
+
+        if (m_pitchAudioSource != null && m_pitchAudioSource.isPlaying)
+        {
+            if (m_pitchAudioFade != null)
+                StopCoroutine(m_pitchAudioFade);
+
+            m_targetPitchVolume = 0f;
+            StartCoroutine(FadeAudio(m_pitchAudioSource, m_targetPitchVolume));
+        }
     }
 
 
@@ -154,7 +183,7 @@ public class RotationAndPitchController : PropControllerBase
 
         audioSource.volume = targetVolume;
 
-        if (targetVolume < 1e-6)
+        if (targetVolume < 1e-4)
             audioSource.Stop();
     }
 

@@ -53,6 +53,9 @@ public class CheckForInteractables : MonoBehaviour
         {
             //print("Can be triggered: " + m_canBeTriggered);
             EventManager.TriggerEvent(BooleanEventName.Interact, m_canBeTriggered);
+
+            if (m_playerTriggereable == null || m_playerTriggereable.m_showControls)
+                EventManager.TriggerEvent(BooleanEventName.ShowInteractControls, m_canBeTriggered);
         }
 
         m_canBeTriggeredLastFrame = m_canBeTriggered;
