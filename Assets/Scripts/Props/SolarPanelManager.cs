@@ -26,7 +26,7 @@ public class SolarPanelManager : MonoBehaviour
     private bool m_charging;
     private bool m_charged;
     private bool m_discharged;
-    private bool m_chargedActionsTrggered;
+    private bool m_chargedActionsTriggered;
     private bool m_dischargedActionsTriggered;
 
 
@@ -35,14 +35,14 @@ public class SolarPanelManager : MonoBehaviour
         if (m_startCharged)
         {
             m_chargeLevel = 1f;
-            m_chargedActionsTrggered = true;
+            m_chargedActionsTriggered = true;
             m_dischargedActionsTriggered = false;
             m_discharged = false;
         }
         else
         {
             m_chargeLevel = 0f;
-            m_chargedActionsTrggered = false;
+            m_chargedActionsTriggered = false;
             m_dischargedActionsTriggered = true;
             m_discharged = true;
         }
@@ -97,7 +97,7 @@ public class SolarPanelManager : MonoBehaviour
             m_discharged = false;
         }
 
-        if (m_charged && !m_chargedActionsTrggered)
+        if (m_charged && !m_chargedActionsTriggered)
             TriggerActions();
     }
 
@@ -184,7 +184,7 @@ public class SolarPanelManager : MonoBehaviour
         if (m_chargedAudio != null)
             m_chargedAudio.Play();
         
-        m_chargedActionsTrggered = true;
+        m_chargedActionsTriggered = true;
         m_dischargedActionsTriggered = false;
     }
 
@@ -193,7 +193,7 @@ public class SolarPanelManager : MonoBehaviour
     {
         m_dischargedTriggerActions.Invoke();
 
-        m_chargedActionsTrggered = false;
+        m_chargedActionsTriggered = false;
         m_dischargedActionsTriggered = true;
     }
 }
