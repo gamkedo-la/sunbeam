@@ -4,8 +4,16 @@ using UnityEngine;
 
 public class RotationSynchroniser : MonoBehaviour
 {
+    public enum Axis
+    {
+        X,
+        Y,
+        Z
+    }
+
     [SerializeField] Transform m_transformToSyncWith;
     [SerializeField] float m_rotationMultiplier = 1f;
+    [SerializeField] Axis m_axisToSynchWith = Axis.Y;
 
     private float m_startSyncRotation;
     private float m_previousSyncRotation;
@@ -14,8 +22,31 @@ public class RotationSynchroniser : MonoBehaviour
 
     void Awake()
     {
-        m_startSyncRotation = m_transformToSyncWith != null ? m_transformToSyncWith.localEulerAngles.y : 0f;
+        m_startSyncRotation = m_transformToSyncWith != null ? GetAngle() : 0f;
         m_previousSyncRotation = m_startSyncRotation;
+    }
+
+
+    private float GetAngle()
+    {
+        float angle = 0;
+
+        switch (m_axisToSynchWith)
+        {
+            case (Axis.X):
+                angle = m_transformToSyncWith.localEulerAngles.x;
+                break;
+
+            case (Axis.Y):
+                angle = m_transformToSyncWith.localEulerAngles.y;
+                break;
+
+            case (Axis.Z):
+                angle = m_transformToSyncWith.localEulerAngles.z;
+                break;
+        }
+
+        return angle;
     }
 
 
@@ -24,7 +55,7 @@ public class RotationSynchroniser : MonoBehaviour
         if (m_transformToSyncWith == null)
             return;
 
-        float syncRotation = m_transformToSyncWith.localEulerAngles.y;
+        float syncRotation = GetAngle();
         float difference = syncRotation - m_previousSyncRotation;
 
         if (difference > 180f)

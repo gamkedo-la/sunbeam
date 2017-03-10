@@ -11,6 +11,7 @@ public class RotationAndPitchController : PropControllerBase
     [SerializeField] Vector2 m_rotationMinMax = new Vector2(-30, 30);
 
     [Header("Pitch")]
+    [SerializeField] bool m_reversePitch;
     [SerializeField] Transform m_pitchPoint;
     [SerializeField] float m_pitchSpeed = 10f;
     [SerializeField] Vector2 m_pitchMinMax = new Vector2(20, 40);   
@@ -82,10 +83,10 @@ public class RotationAndPitchController : PropControllerBase
 
         float rotationToAdd = h * m_rotationSpeed * Time.deltaTime;
         rotationToAdd = m_reverseDirection ? -rotationToAdd : rotationToAdd;
-
         m_rotation += rotationToAdd;
 
         float pitchToAdd = v * m_pitchSpeed * Time.deltaTime;
+        pitchToAdd = m_reversePitch ? -pitchToAdd : pitchToAdd;
         m_pitch += pitchToAdd;
 
         ClampAngles();
