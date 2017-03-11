@@ -8,7 +8,7 @@ public class PlayerAngleChecker : MonoBehaviour
     [SerializeField] float m_checkInterval = 0.1f;
 
     private WaitForSeconds m_interval;
-    private Transform m_player;
+    private Transform m_camera;
     private MeshRenderer m_meshRenderer;
 
 
@@ -16,7 +16,7 @@ public class PlayerAngleChecker : MonoBehaviour
     {
         m_interval = new WaitForSeconds(m_checkInterval);
 
-        m_player = Camera.main.transform;
+        m_camera = Camera.main.transform;
 
         m_meshRenderer = GetComponent<MeshRenderer>();
     }
@@ -37,7 +37,7 @@ public class PlayerAngleChecker : MonoBehaviour
 
     private void CheckPlayerAngle()
     {
-        var playerDirection = (m_player.position - transform.position).normalized;
+        var playerDirection = (m_camera.position - transform.position).normalized;
 
         float dot = Vector3.Dot(transform.up, playerDirection);
 
@@ -45,14 +45,22 @@ public class PlayerAngleChecker : MonoBehaviour
     }
 
 
+    private void SwitchCamera(Transform camera, IActivatable activatable)
+    {
+        m_camera = camera;
+    }
+
+
     void OnEnable()
     {
+        EventManager.StartListening(TransformEventName.CameraActivated, SwitchCamera);
         StartCoroutine(CheckPlayerAngleCoroutine());
     }
 
 
     void OnDisable()
     {
+        EventManager.StopListening(TransformEventName.CameraActivated, SwitchCamera);
         StopAllCoroutines();
     }
 }

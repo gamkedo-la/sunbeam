@@ -10,7 +10,7 @@ public class PlayerDistanceChecker : MonoBehaviour
     //[SerializeField] LayerMask m_lineOfSightMask;
 
     private WaitForSeconds m_interval;
-    private Transform m_player;
+    private Transform m_camera;
     private float m_previousPlayerDistance;
 
 
@@ -18,16 +18,13 @@ public class PlayerDistanceChecker : MonoBehaviour
     {
         m_interval = new WaitForSeconds(m_distanceCheckInterval);
 
-        var playerObject = GameObject.FindGameObjectWithTag(Tags.Player);
-
-        if (playerObject != null)
-            m_player = playerObject.transform;
+        m_camera = Camera.main.transform;
     }
 
 	
     void Start()
     {
-        if (m_player == null)
+        if (m_camera == null)
             return;
 
         CheckPlayerDistance();
@@ -52,7 +49,7 @@ public class PlayerDistanceChecker : MonoBehaviour
 
     private void CheckPlayerDistance()
     {
-        float playerDistance = Vector3.Distance(transform.position, m_player.position);
+        float playerDistance = Vector3.Distance(transform.position, m_camera.position);
 
         if (playerDistance > m_playerDistanceThreshold
             && m_previousPlayerDistance <= m_playerDistanceThreshold)
@@ -68,5 +65,23 @@ public class PlayerDistanceChecker : MonoBehaviour
         }
 
         m_previousPlayerDistance = playerDistance;
+    }
+
+
+    private void SwitchCamera(Transform camera, IActivatable activatable)
+    {
+        m_camera = camera;
+    }
+
+
+    void OnEnable()
+    {
+        EventManager.StartListening(TransformEventName.CameraActivated, SwitchCamera);
+    }
+
+
+    void OnDisable()
+    {
+        EventManager.StopListening(TransformEventName.CameraActivated, SwitchCamera);
     }
 }

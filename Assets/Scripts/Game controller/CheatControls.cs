@@ -7,10 +7,14 @@ public class CheatControls : MonoBehaviour
     [SerializeField] string m_skyRotationAxisName = "Sky rotation";
     [SerializeField] float m_skyRotationSpeed = 30f;
     [SerializeField] Transform[] m_spawnPoints;
+    [SerializeField] GameObject m_orbitCamera;
 
     private Transform m_player;
+    private Camera m_mainCamera;
+    private FirstPersonController m_firstPersonController;
     private Rigidbody m_playerRigidbody;
     private Transform m_sky;
+    private bool m_orbitCameraEnabled;
 
 
     void Awake()
@@ -18,6 +22,8 @@ public class CheatControls : MonoBehaviour
         m_player = GameObject.FindGameObjectWithTag(Tags.Player).transform;
         m_playerRigidbody = m_player.GetComponent<Rigidbody>();
         m_sky = GameObject.FindGameObjectWithTag(Tags.Sky).transform;
+        m_mainCamera = Camera.main;
+        m_firstPersonController = m_mainCamera.GetComponentInParent<FirstPersonController>();
     }
 
 
@@ -25,6 +31,36 @@ public class CheatControls : MonoBehaviour
     {
         if (!GameController.AllowCheatMode)
             return;
+
+        if (m_orbitCamera != null && Input.GetKeyDown(KeyCode.O))
+        {
+            m_orbitCameraEnabled = !m_orbitCameraEnabled;
+            m_firstPersonController.FreeMode(m_orbitCameraEnabled);
+
+            var orbitCamera = m_orbitCamera.GetComponentInChildren<Camera>();
+            orbitCamera.enabled = m_orbitCameraEnabled;
+
+            var torchManager = m_player.GetComponentInChildren<TorchManager>();
+
+            if (torchManager != null)
+                torchManager.enabled = !m_orbitCameraEnabled;
+
+            var rotate = m_orbitCamera.GetComponent<IActivatable>();
+
+            if (rotate != null)
+            {
+                if (m_orbitCameraEnabled)
+                {
+                    EventManager.TriggerEvent(TransformEventName.CameraActivated, orbitCamera.transform, null);
+                    rotate.Activate();
+                }
+                else
+                {
+                    EventManager.TriggerEvent(TransformEventName.CameraActivated, m_mainCamera.transform, null);
+                    rotate.Deactivate();
+                }
+            }
+        }
 
         if (Input.GetKeyDown(KeyCode.Alpha1) && m_spawnPoints.Length > 0)
         {

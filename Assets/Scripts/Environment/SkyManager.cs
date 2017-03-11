@@ -16,7 +16,7 @@ public class SkyManager : MonoBehaviour
     [SerializeField] Vector2 m_playerAltitudeMinMax = new Vector2(150f, 300f);
     [SerializeField] float m_transitionToSpaceAltitude = 50f;
 
-    private Transform m_player;
+    private Transform m_camera;
     private Transform m_sunImage;
     private Light m_sunLight;
     private LensFlare m_flair;
@@ -34,7 +34,7 @@ public class SkyManager : MonoBehaviour
 
 	void Awake()
     {
-        m_player = GameObject.FindGameObjectWithTag(Tags.Player).transform;
+        m_camera = Camera.main.transform;
         m_sunLight = GetComponent<Light>();
         m_flair = GetComponent<LensFlare>();
 
@@ -47,17 +47,17 @@ public class SkyManager : MonoBehaviour
         m_originalSkyboxColour = m_skybox.GetColor("_Tint");
         m_originalSunColour = m_sunMaterial.GetColor("_TintColor");
 
-        m_sunDistanceFromPlayer = Vector3.Distance(m_player.position, m_sunImage.position);
+        m_sunDistanceFromPlayer = Vector3.Distance(m_camera.position, m_sunImage.position);
 
-        var playerDirection = m_player.position.normalized;
+        var playerDirection = m_camera.position.normalized;
         SunAngleAboveHorizon = Vector3.Angle(transform.forward, playerDirection) - 90f;
     }
 	
 
 	void Update()
     {
-        m_playerAltitude = m_player.position.magnitude;
-        var playerDirection = m_player.position.normalized;
+        m_playerAltitude = m_camera.position.magnitude;
+        var playerDirection = m_camera.position.normalized;
         
         float dotToPlayer = Vector3.Dot(-transform.forward, playerDirection);
         SunAngleAboveHorizon = Vector3.Angle(transform.forward, playerDirection) - 90f;
@@ -98,7 +98,7 @@ public class SkyManager : MonoBehaviour
         var sunFlairColour = m_sunFlairColour.Evaluate(m_sunEvaluationValue);
         m_flair.color = sunFlairColour;
        
-        m_sunImage.position = m_player.position - transform.forward * m_sunDistanceFromPlayer;
+        m_sunImage.position = m_camera.position - transform.forward * m_sunDistanceFromPlayer;
 	}
 
 
@@ -152,6 +152,24 @@ public class SkyManager : MonoBehaviour
         float intensity = m_sunIntensity.Evaluate(evaluationValue);
 
         return intensity;
+    }
+
+
+    private void SwitchCamera(Transform camera, IActivatable activatable)
+    {
+        m_camera = camera;
+    }
+
+
+    void OnEnable()
+    {
+        EventManager.StartListening(TransformEventName.CameraActivated, SwitchCamera);
+    }
+
+
+    void OnDisable()
+    {
+        EventManager.StopListening(TransformEventName.CameraActivated, SwitchCamera);
     }
 
 

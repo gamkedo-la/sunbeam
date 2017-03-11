@@ -79,4 +79,5 @@ public enum TransformEventName
     None = 0,
 
     PropActivated = 1,
+    CameraActivated = 2
 }
