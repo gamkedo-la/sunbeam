@@ -9,6 +9,7 @@ public class PlayerTriggerable : MonoBehaviour
 {
     [SerializeField] bool m_startActive = true;
     //[SerializeField] float m_playerLookMaxAngle = 50f;
+    [SerializeField] bool m_dontHideInteractIconOnActivate;
     [SerializeField] bool m_resetAfterDelay;
     [SerializeField] float m_resetAfterSeconds = 1f;
     [SerializeField] Transform m_tranformToParentPlayerTo;
@@ -53,7 +54,9 @@ public class PlayerTriggerable : MonoBehaviour
             {
                 m_activationTriggered = true;
                 TriggerActivateActions();
-                EventManager.TriggerEvent(BooleanEventName.Interact, false);
+
+                if (!m_dontHideInteractIconOnActivate)
+                    EventManager.TriggerEvent(BooleanEventName.Interact, false);
 
                 if (m_showControls)
                     EventManager.TriggerEvent(BooleanEventName.ShowRotationControls, true);
@@ -64,9 +67,10 @@ public class PlayerTriggerable : MonoBehaviour
             else if (m_activationTriggered && (m_submit || m_cancel))
             {
                 m_activationTriggered = false;
-                EventManager.TriggerEvent(BooleanEventName.Interact, true);
                 TriggerDeactivateActions();
 
+                EventManager.TriggerEvent(BooleanEventName.Interact, true);
+                
                 if (m_showControls)
                     EventManager.TriggerEvent(BooleanEventName.ShowRotationControls, false);
 
