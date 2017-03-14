@@ -122,6 +122,7 @@ public class FirstPersonController : MonoBehaviour
         else
         {
             m_speed = m_isRunning ? m_runSpeed : m_walkSpeed;
+            m_speed = m_grounded ? m_speed : 0.5f * m_walkSpeed;
         }
 
         var moveDirection = new Vector3(h, 0, v).normalized;
