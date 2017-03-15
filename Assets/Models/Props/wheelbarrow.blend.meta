@@ -1,22 +1,79 @@
 fileFormatVersion: 2
-guid: 72ccdd0165695b44796ba8dd05a8fc07
-timeCreated: 1489112214
+guid: ffadafaab2330914aaee4dda3154f4bb
+timeCreated: 1489570482
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: //RootNode
-    100002: moai
-    100004: torso
-    400000: //RootNode
-    400002: moai
-    400004: torso
-    2300000: moai
-    2300002: torso
-    3300000: moai
-    3300002: torso
-    4300000: moai
-    4300002: torso
+    100000: Cube
+    100002: Cube_001
+    100004: Cube_002
+    100006: Cube_003
+    100008: Cube_004
+    100010: Cube_005
+    100012: Cube_006
+    100014: Cube_007
+    100016: Cube_008
+    100018: Cylinder
+    100020: Cylinder_001
+    100022: Cylinder_002
+    100024: Cylinder_003
+    100026: //RootNode
+    400000: Cube
+    400002: Cube_001
+    400004: Cube_002
+    400006: Cube_003
+    400008: Cube_004
+    400010: Cube_005
+    400012: Cube_006
+    400014: Cube_007
+    400016: Cube_008
+    400018: Cylinder
+    400020: Cylinder_001
+    400022: Cylinder_002
+    400024: Cylinder_003
+    400026: //RootNode
+    2300000: Cube
+    2300002: Cube_001
+    2300004: Cube_002
+    2300006: Cube_003
+    2300008: Cube_004
+    2300010: Cube_005
+    2300012: Cube_006
+    2300014: Cube_007
+    2300016: Cube_008
+    2300018: Cylinder
+    2300020: Cylinder_001
+    2300022: Cylinder_002
+    2300024: Cylinder_003
+    3300000: Cube
+    3300002: Cube_001
+    3300004: Cube_002
+    3300006: Cube_003
+    3300008: Cube_004
+    3300010: Cube_005
+    3300012: Cube_006
+    3300014: Cube_007
+    3300016: Cube_008
+    3300018: Cylinder
+    3300020: Cylinder_001
+    3300022: Cylinder_002
+    3300024: Cylinder_003
+    4300000: Cube_008
+    4300002: Cube_007
+    4300004: Cube_006
+    4300006: Cube_005
+    4300008: Cube_004
+    4300010: Cube_003
+    4300012: Cube_002
+    4300014: Cylinder_003
+    4300016: Cylinder_002
+    4300018: Cylinder_001
+    4300020: Cylinder
+    4300022: Cube_001
+    4300024: Cube
+    7400000: Default Take
+    9500000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -41,7 +98,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.2
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
@@ -79,7 +136,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
