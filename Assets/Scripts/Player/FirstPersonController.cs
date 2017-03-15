@@ -6,6 +6,12 @@ using System.Collections;
 [RequireComponent(typeof(JoystickLook))]
 public class FirstPersonController : MonoBehaviour
 {
+    public enum WalkSfxType
+    {
+        Footsteps = 0,
+        Motor = 1
+    }
+
     [Header("Look")]
     [SerializeField] Transform m_camera;
     [SerializeField] Vector2 m_verticalLookMinMax = new Vector2(-90f, 90f);
@@ -17,7 +23,10 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] bool m_toggleRun = true;
     [SerializeField] float m_walkStepDistance = 1f;
     [SerializeField] float m_runStepDistance = 2f;
+    [SerializeField] WalkSfxType m_walkSfxType = WalkSfxType.Footsteps;
     [SerializeField] AudioClip[] m_footsteps;
+    [SerializeField] AudioClip m_motorClip;
+    [SerializeField] Vector2 m_motorPitchMinMax = new Vector2(0.5f, 1.5f);
 
     [Header("Jump")]
     [SerializeField] bool m_allowJump;
@@ -61,6 +70,7 @@ public class FirstPersonController : MonoBehaviour
     private AudioSource m_audioSource;
     private float m_stepCycle;
     private float m_nextStep;
+    private float m_maxVolume;
 
     private Vector3 m_contact;
     private float m_slope;
@@ -82,6 +92,15 @@ public class FirstPersonController : MonoBehaviour
         m_mouseLook = GetComponent<MouseLook>();
         m_joystickLook = GetComponent<JoystickLook>();
         m_gravityBody = GetComponent<GravityBody>();
+
+        if (m_walkSfxType == WalkSfxType.Motor && m_motorClip != null)
+        {
+            m_maxVolume = m_audioSource.volume;
+            m_audioSource.clip = m_motorClip;
+            m_audioSource.volume = 0f;
+            m_audioSource.loop = true;
+            m_audioSource.Play();
+        }
 
         StartCoroutine(GetSprint());
         StartCoroutine(CheckForJoysticks());
@@ -157,7 +176,11 @@ public class FirstPersonController : MonoBehaviour
         CheckForSea();
         
         m_rigidbody.MovePosition(m_rigidbody.position + m_moveDirection * Time.deltaTime);
-        ProgressStepCycle();
+
+        if (m_walkSfxType == WalkSfxType.Footsteps)
+            ProgressStepCycle();
+        else
+            PlayMotorAudio();
     }
 
 
@@ -413,6 +436,16 @@ public class FirstPersonController : MonoBehaviour
         //    m_FootstepSoundsMid[n] = m_FootstepSoundsMid[0];
         //    m_FootstepSoundsMid[0] = m_AudioSource.clip;
         //}
+    }
+
+
+    private void PlayMotorAudio()
+    {
+        float speed = m_moveDirection.magnitude;
+
+        float frac = speed / m_runSpeed;
+        m_audioSource.volume = m_maxVolume * frac;
+        m_audioSource.pitch = Mathf.Lerp(m_motorPitchMinMax.x, m_motorPitchMinMax.y, frac);
     }
 
 
