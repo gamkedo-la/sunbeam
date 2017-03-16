@@ -465,9 +465,11 @@ public class FirstPersonController : MonoBehaviour
         if (m_freeMode)
             m_rigidbody.velocity = Vector3.zero;
 
-        var bodyRenderer = GetComponentInChildren<MeshRenderer>();
+        var bodyRenderers = GetComponentsInChildren<MeshRenderer>();
 
-        if (bodyRenderer != null)
-            bodyRenderer.enabled = !active;
+        for (int i = 0; i < bodyRenderers.Length; i++)
+        {
+            bodyRenderers[i].enabled = !active;
+        }      
     }
 }
