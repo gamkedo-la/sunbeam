@@ -27,6 +27,7 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] AudioClip[] m_footsteps;
     [SerializeField] AudioClip m_motorClip;
     [SerializeField] Vector2 m_motorPitchMinMax = new Vector2(0.5f, 1.5f);
+    [SerializeField] float m_motorVolumeSmooth = 1f;
 
     [Header("Jump")]
     [SerializeField] bool m_allowJump;
@@ -443,7 +444,8 @@ public class FirstPersonController : MonoBehaviour
     {
         float speed = m_moveDirection.magnitude;
 
-        float frac = speed / m_runSpeed;
+        float volumeFrac = m_audioSource.volume / m_maxVolume;
+        float frac = Mathf.Lerp(volumeFrac, speed / m_runSpeed, Time.unscaledDeltaTime * m_motorVolumeSmooth);
         m_audioSource.volume = m_maxVolume * frac;
         m_audioSource.pitch = Mathf.Lerp(m_motorPitchMinMax.x, m_motorPitchMinMax.y, frac);
     }
