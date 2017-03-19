@@ -13,6 +13,8 @@ ModelImporter:
     100010: //RootNode
     100012: tail
     100014: torso
+    100016: headdress_front
+    100018: headdress_side
     400000: backleg
     400002: base
     400004: frontleg
@@ -21,6 +23,8 @@ ModelImporter:
     400010: //RootNode
     400012: tail
     400014: torso
+    400016: headdress_front
+    400018: headdress_side
     2300000: backleg
     2300002: base
     2300004: frontleg
@@ -28,6 +32,7 @@ ModelImporter:
     2300008: headdress
     2300010: tail
     2300012: torso
+    2300014: headdress_front
     3300000: backleg
     3300002: base
     3300004: frontleg
@@ -35,6 +40,7 @@ ModelImporter:
     3300008: headdress
     3300010: tail
     3300012: torso
+    3300014: headdress_front
     4300000: head
     4300002: base
     4300004: headdress
@@ -42,6 +48,7 @@ ModelImporter:
     4300008: backleg
     4300010: torso
     4300012: tail
+    4300014: headdress_front
   materials:
     importMaterials: 1
     materialName: 0
