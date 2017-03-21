@@ -73,7 +73,6 @@ public class PlayerTriggerable : MonoBehaviour
                 
                 if (m_showControls)
                     EventManager.TriggerEvent(BooleanEventName.ShowRotationControls, false);
-
             }
         }
 

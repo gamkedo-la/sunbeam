@@ -105,6 +105,9 @@ public class FirstPersonController : MonoBehaviour
 
         StartCoroutine(GetSprint());
         StartCoroutine(CheckForJoysticks());
+
+        if (m_walkSfxType == WalkSfxType.Motor)
+            StartCoroutine(PlayMotorAudio());
     }
 	
 
@@ -180,8 +183,6 @@ public class FirstPersonController : MonoBehaviour
 
         if (m_walkSfxType == WalkSfxType.Footsteps)
             ProgressStepCycle();
-        else
-            PlayMotorAudio();
     }
 
 
@@ -440,14 +441,19 @@ public class FirstPersonController : MonoBehaviour
     }
 
 
-    private void PlayMotorAudio()
+    private IEnumerator PlayMotorAudio()
     {
-        float speed = m_moveDirection.magnitude;
+        while (true)
+        {
+            float speed = m_moveDirection.magnitude;
 
-        float volumeFrac = m_audioSource.volume / m_maxVolume;
-        float frac = Mathf.Lerp(volumeFrac, speed / m_runSpeed, Time.unscaledDeltaTime * m_motorVolumeSmooth);
-        m_audioSource.volume = m_maxVolume * frac;
-        m_audioSource.pitch = Mathf.Lerp(m_motorPitchMinMax.x, m_motorPitchMinMax.y, frac);
+            float volumeFrac = m_audioSource.volume / m_maxVolume;
+            float frac = Mathf.Lerp(volumeFrac, speed / m_runSpeed, Time.unscaledDeltaTime * m_motorVolumeSmooth);
+            m_audioSource.volume = m_maxVolume * frac;
+            m_audioSource.pitch = Mathf.Lerp(m_motorPitchMinMax.x, m_motorPitchMinMax.y, frac);
+
+            yield return null;
+        }
     }
 
 
@@ -473,5 +479,12 @@ public class FirstPersonController : MonoBehaviour
         {
             bodyRenderers[i].enabled = !active;
         }      
+    }
+
+
+    void OnDisable()
+    {
+        m_moveAmount = Vector2.zero;
+        m_moveDirection = Vector2.zero;
     }
 }
