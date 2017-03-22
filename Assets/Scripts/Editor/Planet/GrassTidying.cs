@@ -6,6 +6,7 @@ using UnityEditor;
 public class GrassTidying : MonoBehaviour
 {
     private static float SeaLevel = 148.9f;
+    private static float SeaLevelForReeds = 148.8f;
     private static float MaxSlope = 30f;
     private static List<GameObject> ObjectsToDestory;
 
@@ -93,7 +94,43 @@ public class GrassTidying : MonoBehaviour
     }
 
 
-    [MenuItem("Planet/Delete game objects on slope", false, 103)]
+    [MenuItem("Planet/Delete game objects above sea level", false, 103)]
+    static void DeleteGameObjectsAboveSeaLevel()
+    {
+        ObjectsToDestory = new List<GameObject>();
+
+        Transform[] transforms = Selection.transforms;
+
+        foreach (Transform myTransform in transforms)
+        {
+            DeleteGameObjectAboveSeaLevel(myTransform);
+        }
+
+        DestroyGameObjects();
+        DeleteEmptyGameObjects();
+    }
+
+
+    private static void DeleteGameObjectAboveSeaLevel(Transform myTransform)
+    {
+        if (myTransform.childCount == 0
+            || myTransform.GetChild(0).GetComponent<MeshRenderer>() != null
+            || myTransform.GetComponent<PlanetAlignFlag>() != null)
+        {
+            float distanceFromCentre = myTransform.position.magnitude;
+
+            if (distanceFromCentre > SeaLevelForReeds)
+                ObjectsToDestory.Add(myTransform.gameObject);
+        }
+
+        for (int i = 0; i < myTransform.childCount; i++)
+        {
+            DeleteGameObjectAboveSeaLevel(myTransform.GetChild(i));
+        }
+    }
+
+
+    [MenuItem("Planet/Delete game objects on slope", false, 104)]
     static void DeleteGameObjectsOnSlope()
     {
         ObjectsToDestory = new List<GameObject>();
