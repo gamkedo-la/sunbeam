@@ -16,6 +16,7 @@ public class PlayerTriggerable : MonoBehaviour
     [SerializeField] UnityEvent m_actionsOnActivate;
     [SerializeField] UnityEvent m_actionsOnDeactivate;
     public bool m_showControls;
+    [SerializeField] bool m_dontShowRotationControls;
 
     private Transform m_player;
     //private Transform m_cameraAnchor;
@@ -58,7 +59,7 @@ public class PlayerTriggerable : MonoBehaviour
                 if (!m_dontHideInteractIconOnActivate)
                     EventManager.TriggerEvent(BooleanEventName.Interact, false);
 
-                if (m_showControls)
+                if (m_showControls && !m_dontShowRotationControls)
                     EventManager.TriggerEvent(BooleanEventName.ShowRotationControls, true);
 
                 if (m_resetAfterDelay)
@@ -71,7 +72,7 @@ public class PlayerTriggerable : MonoBehaviour
 
                 EventManager.TriggerEvent(BooleanEventName.Interact, true);
                 
-                if (m_showControls)
+                if (m_showControls && !m_dontShowRotationControls)
                     EventManager.TriggerEvent(BooleanEventName.ShowRotationControls, false);
             }
         }
