@@ -55,7 +55,9 @@ public class GameController : MonoBehaviour
                 bool buttonPressed = Input.GetAxisRaw(axisName) == 1f;
 
                 if (buttonPressed && !buttonPressedPreviously)
+                {
                     action.Invoke();
+                }
 
                 buttonPressedPreviously = buttonPressed;
             }
@@ -111,14 +113,20 @@ public class GameController : MonoBehaviour
             if (m_paused)
                 OnPause();
             else
+            {
                 OnUnpause();
+            }
         }
         else
         {
             if (m_paused)
+            {
                 EventManager.TriggerEvent(StandardEventName.Pause);
+            }
             else
+            {
                 EventManager.TriggerEvent(StandardEventName.Unpause);
+            }
         }
     }
 
@@ -137,7 +145,7 @@ public class GameController : MonoBehaviour
     {
         m_paused = true;
         Time.timeScale = 0;
-        print("Pause");
+        //print("Pause");
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -148,7 +156,7 @@ public class GameController : MonoBehaviour
     {
         m_paused = false;
         Time.timeScale = m_timeScale;
-        print("Unpause");
+        //print("Unpause");
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;

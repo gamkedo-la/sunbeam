@@ -18,16 +18,7 @@ public class MirrorReflection : MonoBehaviour
     private RenderTexture m_ReflectionTexture = null;
     private int m_OldReflectionTextureSize = 0;
 
-    private FlareLayer m_flairLayer;
-
     private static bool s_InsideRendering = false;
-    //private bool m_renderThisFrame;
-
-
-    //void Awake()
-    //{
-    //    m_renderThisFrame = Random.value > 0.5f;
-    //}
 
 
     // This is called when it's known that the object will be rendered by some
@@ -178,7 +169,7 @@ public class MirrorReflection : MonoBehaviour
             reflectionCamera.enabled = false;
             reflectionCamera.transform.position = transform.position;
             reflectionCamera.transform.rotation = transform.rotation;
-            m_flairLayer = reflectionCamera.gameObject.AddComponent<FlareLayer>();
+            reflectionCamera.gameObject.AddComponent<FlareLayer>();
             go.hideFlags = HideFlags.HideAndDontSave;
             m_ReflectionCameras[currentCamera] = reflectionCamera;
         }

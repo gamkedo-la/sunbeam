@@ -42,7 +42,7 @@ public class PlayerTriggerable : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(CheckForAxisInput("Submit", SetSubmit));
+        StartCoroutine(CheckForAxisInput("Activate", SetSubmit));
         StartCoroutine(CheckForAxisInput("Cancel", SetCancel));
     }
 

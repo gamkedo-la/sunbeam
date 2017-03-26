@@ -5,21 +5,17 @@ using UnityEngine.UI;
 
 public class PauseMenuManager : MonoBehaviour
 {
-    [SerializeField] GameObject m_pauseManu;
+    [SerializeField] GameObject m_pauseMenu;
     [SerializeField] GameObject m_controlsScreen;
     [SerializeField] GameObject m_creditsScreen;
+
+    private GameController m_gameController;
 
 
     void Awake()
     {
-        if (m_pauseManu != null)
-            m_pauseManu.SetActive(false);
-
-        if (m_controlsScreen != null)
-            m_controlsScreen.SetActive(false);
-
-        if (m_creditsScreen != null)
-            m_creditsScreen.SetActive(false);
+        m_gameController = GameObject.FindObjectOfType<GameController>();
+        DeactivateAllPanels();
     }
 
 
@@ -39,29 +35,55 @@ public class PauseMenuManager : MonoBehaviour
     }
 
 
+    private void DeactivateAllPanels()
+    {
+        if (m_pauseMenu != null)
+            m_pauseMenu.SetActive(false);
+
+        if (m_controlsScreen != null)
+            m_controlsScreen.SetActive(false);
+
+        if (m_creditsScreen != null)
+            m_creditsScreen.SetActive(false);
+    }
+
+
+    public void ShowPauseMenu(bool active)
+    {
+        DeactivateAllPanels();
+
+        if (m_pauseMenu != null)
+            m_pauseMenu.SetActive(active);
+    }
+
+
     public void ShowControls()
     {
+        DeactivateAllPanels();
 
+        if (m_controlsScreen != null)
+            m_controlsScreen.SetActive(true);
     }
 
 
     public void ShowCredits()
     {
+        DeactivateAllPanels();
 
+        if (m_creditsScreen != null)
+            m_creditsScreen.SetActive(true);
     }
 
 
     private void OnPause()
     {
-        m_pauseManu.SetActive(true);
-        //print("Pause menu activated");
+        ShowPauseMenu(true);
     }
 
 
     private void OnUnpause()
     {
-        m_pauseManu.SetActive(false);
-        //print("Pause menu deactivated");
+        ShowPauseMenu(false);
     }
 
 
