@@ -34,14 +34,14 @@ public class GameController : MonoBehaviour
     }
 
 
-    void Update()
-    {
-        if (m_paused && Input.GetKeyDown(KeyCode.Escape))
-            QuitGame();
+    //void Update()
+    //{
+    //    if (m_paused && Input.GetKeyDown(KeyCode.Escape))
+    //        QuitGame();
 
-        if (m_paused && Input.GetMouseButton(0))
-            TogglePause();
-    }
+    //    if (m_paused && Input.GetMouseButton(0))
+    //        TogglePause();
+    //}
 
 
     private IEnumerator CheckForAxisInput(string axisName, Action action, bool ignoreCheatModeFlag)
@@ -107,9 +107,9 @@ public class GameController : MonoBehaviour
     private void SetTimeScale()
     {
         if (m_paused)
-            OnPause();
+            EventManager.TriggerEvent(StandardEventName.Pause);
         else
-            OnUnpause();
+            EventManager.TriggerEvent(StandardEventName.Unpause);
     }
 
 
@@ -125,6 +125,7 @@ public class GameController : MonoBehaviour
 
     private void OnPause()
     {
+        m_paused = true;
         Time.timeScale = 0;
         print("Pause");
 
@@ -135,6 +136,7 @@ public class GameController : MonoBehaviour
 
     private void OnUnpause()
     {
+        m_paused = false;
         Time.timeScale = m_timeScale;
         print("Unpause");
 
