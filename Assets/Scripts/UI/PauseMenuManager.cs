@@ -54,14 +54,14 @@ public class PauseMenuManager : MonoBehaviour
     private void OnPause()
     {
         m_pauseManu.SetActive(true);
-        print("Pause menu activated");
+        //print("Pause menu activated");
     }
 
 
     private void OnUnpause()
     {
         m_pauseManu.SetActive(false);
-        print("Pause menu deactivated");
+        //print("Pause menu deactivated");
     }
 
 

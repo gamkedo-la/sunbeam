@@ -66,6 +66,7 @@ public class FirstPersonController : MonoBehaviour
     private bool m_isRunning;
     private bool m_useJoystickLook;
     private bool m_freeMode;
+    private bool m_paused;
     private float m_speed;
 
     private AudioSource m_audioSource;
@@ -314,6 +315,9 @@ public class FirstPersonController : MonoBehaviour
 
     private void RotateView()
     {
+        if (m_paused && !m_freeMode)
+            return;
+
         if (m_useJoystickLook)
         {
             float deltaTime = m_freeMode ? Time.unscaledDeltaTime : Time.deltaTime;
@@ -464,6 +468,9 @@ public class FirstPersonController : MonoBehaviour
         if (m_gravityBody != null)
             m_gravityBody.useGravityAttractorGravity = !m_freeMode;
 
+        if (m_gravityBody.useGravity)
+            m_rigidbody.useGravity = !active;
+
         if (m_collider != null)
             m_collider.enabled = !m_freeMode;
 
@@ -482,9 +489,30 @@ public class FirstPersonController : MonoBehaviour
     }
 
 
+    private void OnPause()
+    {
+        m_paused = true;
+    }
+
+
+    private void OnUnpause()
+    {
+        m_paused = false;
+    }
+
+
+    void OnEnable()
+    {
+        EventManager.StartListening(StandardEventName.Pause, OnPause);
+        EventManager.StartListening(StandardEventName.Unpause, OnUnpause);
+    }
+
+
     void OnDisable()
     {
         m_moveAmount = Vector2.zero;
         m_moveDirection = Vector2.zero;
+        EventManager.StopListening(StandardEventName.Pause, OnPause);
+        EventManager.StopListening(StandardEventName.Unpause, OnUnpause);
     }
 }

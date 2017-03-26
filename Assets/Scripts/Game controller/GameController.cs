@@ -78,7 +78,7 @@ public class GameController : MonoBehaviour
     private void ToggleFreeCamera()
     {
         m_freeCameraEnabled = !m_freeCameraEnabled;
-        m_paused = m_freeCameraEnabled;
+        //m_paused = m_freeCameraEnabled;
 
         //if (m_freeCameraEnabled)
         //{
@@ -106,10 +106,20 @@ public class GameController : MonoBehaviour
 
     private void SetTimeScale()
     {
-        if (m_paused)
-            EventManager.TriggerEvent(StandardEventName.Pause);
+        if (m_freeCameraEnabled)
+        {
+            if (m_paused)
+                OnPause();
+            else
+                OnUnpause();
+        }
         else
-            EventManager.TriggerEvent(StandardEventName.Unpause);
+        {
+            if (m_paused)
+                EventManager.TriggerEvent(StandardEventName.Pause);
+            else
+                EventManager.TriggerEvent(StandardEventName.Unpause);
+        }
     }
 
 

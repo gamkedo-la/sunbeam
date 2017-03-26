@@ -5,6 +5,7 @@ using System.Collections;
 public class GravityBody : MonoBehaviour
 {
     public bool useGravityAttractorGravity = true;
+    [HideInInspector] public bool useGravity;
 
     private GravityAttractor m_gravityAttractor;
     private Rigidbody m_rigidBody;
@@ -23,6 +24,8 @@ public class GravityBody : MonoBehaviour
         }
         else
             m_rigidBody.useGravity = true;
+
+        useGravity = m_rigidBody.useGravity;
     }
 
 
