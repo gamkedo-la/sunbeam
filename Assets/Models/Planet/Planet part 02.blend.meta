@@ -8,18 +8,23 @@ ModelImporter:
     100000: //RootNode
     100002: HedgeMaze
     100004: Planet_part_02
+    100006: HedgeMazeGateCovers
     400000: //RootNode
     400002: HedgeMaze
     400004: Planet_part_02
+    400006: HedgeMazeGateCovers
     2300000: //RootNode
     2300002: HedgeMaze
     2300004: Planet_part_02
+    2300006: HedgeMazeGateCovers
     3300000: //RootNode
     3300002: HedgeMaze
     3300004: Planet_part_02
+    3300006: HedgeMazeGateCovers
     4300000: Planet_part_02
     4300002: Planet_part_08
     4300004: HedgeMaze
+    4300006: HedgeMazeGateCovers
     7400000: Default Take
     9500000: //RootNode
   materials:
