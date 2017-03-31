@@ -28,7 +28,8 @@ public class PlayerTriggerable : MonoBehaviour
     //private static int m_howManyCanBeTriggered;
     private bool m_submit;
     private bool m_cancel;
-    
+    private bool m_paused;
+
 
     void Awake()
     {
@@ -49,7 +50,7 @@ public class PlayerTriggerable : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (m_canBeTriggered)
+        if (m_canBeTriggered && !m_paused)
         {
             if (!m_activationTriggered && m_submit)
             {
@@ -200,5 +201,31 @@ public class PlayerTriggerable : MonoBehaviour
     public void Activate()
     {
         m_active = true;
+    }
+
+
+    private void OnPause()
+    {
+        m_paused = true;
+    }
+
+
+    private void OnUnpause()
+    {
+        m_paused = false;
+    }
+
+
+    void OnEnable()
+    {
+        EventManager.StartListening(StandardEventName.Pause, OnPause);
+        EventManager.StartListening(StandardEventName.Unpause, OnUnpause);
+    }
+
+
+    void OnDisable()
+    {
+        EventManager.StopListening(StandardEventName.Pause, OnPause);
+        EventManager.StopListening(StandardEventName.Unpause, OnUnpause);
     }
 }

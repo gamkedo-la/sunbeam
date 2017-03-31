@@ -48,6 +48,7 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] float m_groundRayLength = 1f;
 
     [Header("Free mode options")]
+    [SerializeField] Collider m_collider;
     [SerializeField] float m_freeModeStartSpeed = 10f;
     [Range(1, 2)]
     [SerializeField] float m_speedMultiplier = 1.0f;
@@ -57,7 +58,6 @@ public class FirstPersonController : MonoBehaviour
     private GravityBody m_gravityBody;
 
     private Rigidbody m_rigidbody;
-    private Collider m_collider;
 
     private Vector3 m_moveAmount;
     private Vector3 m_moveDirection;
@@ -84,16 +84,17 @@ public class FirstPersonController : MonoBehaviour
 
     void Start()
     {
-        m_rigidbody = GetComponent<Rigidbody>();
-        m_collider = GetComponent<Collider>();
+        m_rigidbody = GetComponent<Rigidbody>();     
         m_audioSource = GetComponent<AudioSource>();
-
-        if (m_camera == null)
-            m_camera = Camera.main.transform;
-
         m_mouseLook = GetComponent<MouseLook>();
         m_joystickLook = GetComponent<JoystickLook>();
         m_gravityBody = GetComponent<GravityBody>();
+
+        if (m_collider == null)
+            m_collider = GetComponentInChildren<Collider>();
+
+        if (m_camera == null)
+            m_camera = Camera.main.transform;
 
         if (m_walkSfxType == WalkSfxType.Motor && m_motorClip != null)
         {
