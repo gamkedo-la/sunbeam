@@ -6,8 +6,10 @@ using UnityEngine.UI;
 public class PauseMenuManager : MonoBehaviour
 {
     [SerializeField] GameObject m_pauseMenu;
+    [SerializeField] GameObject m_messagePodsScreen;
     [SerializeField] GameObject m_controlsScreen;
     [SerializeField] GameObject m_creditsScreen;
+    [SerializeField] GameObject m_messageScreen;
 
     private GameController m_gameController;
 
@@ -40,11 +42,17 @@ public class PauseMenuManager : MonoBehaviour
         if (m_pauseMenu != null)
             m_pauseMenu.SetActive(false);
 
+        if (m_messagePodsScreen != null)
+            m_messagePodsScreen.SetActive(false);
+
         if (m_controlsScreen != null)
             m_controlsScreen.SetActive(false);
 
         if (m_creditsScreen != null)
             m_creditsScreen.SetActive(false);
+
+        if (m_messageScreen != null)
+            m_messageScreen.SetActive(false);
     }
 
 
@@ -54,6 +62,15 @@ public class PauseMenuManager : MonoBehaviour
 
         if (m_pauseMenu != null)
             m_pauseMenu.SetActive(active);
+    }
+
+
+    public void ShowMessagePods()
+    {
+        DeactivateAllPanels();
+
+        if (m_messagePodsScreen != null)
+            m_messagePodsScreen.SetActive(true);
     }
 
 
@@ -72,6 +89,19 @@ public class PauseMenuManager : MonoBehaviour
 
         if (m_creditsScreen != null)
             m_creditsScreen.SetActive(true);
+    }
+
+
+    public void ShowMessage(MessagePodMenuDisplay messagePodMenuDisplay)
+    {
+        DeactivateAllPanels();
+
+        if (m_messageScreen != null)
+        {
+            var showMessage = m_messageScreen.GetComponent<ShowMessage>();
+            showMessage.SetMessageText(messagePodMenuDisplay.Message);
+            m_messageScreen.SetActive(true);
+        }
     }
 
 
