@@ -34,14 +34,15 @@ public class GameController : MonoBehaviour
     }
 
 
-    //void Update()
-    //{
-    //    if (m_paused && Input.GetKeyDown(KeyCode.Escape))
-    //        QuitGame();
+    void Update()
+    {
+        //if (m_paused && Input.GetKeyDown(KeyCode.Escape))
+        //    QuitGame();
 
-    //    if (m_paused && Input.GetMouseButton(0))
-    //        TogglePause();
-    //}
+        // Capture the mouse just in case it gets detached for some reason
+        if (!m_paused && Input.GetMouseButton(0))
+            OnUnpause();
+    }
 
 
     private IEnumerator CheckForAxisInput(string axisName, Action action, bool ignoreCheatModeFlag)
