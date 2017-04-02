@@ -14,6 +14,7 @@ public enum StandardEventName
     PropDeactivated = 3,
     ActivateMouseControls = 4,
     ActivateJoypadControls = 5,
+    DeleteSaveData = 6,
 }
 
 

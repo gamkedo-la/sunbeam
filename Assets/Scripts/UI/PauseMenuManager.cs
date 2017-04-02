@@ -105,6 +105,13 @@ public class PauseMenuManager : MonoBehaviour
     }
 
 
+    public void DeleteSaveData()
+    {
+        EventManager.TriggerEvent(StandardEventName.DeleteSaveData);
+        ShowMessagePods();
+    }
+
+
     private void OnPause()
     {
         ShowPauseMenu(true);
