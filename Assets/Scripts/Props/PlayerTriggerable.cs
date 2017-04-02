@@ -8,7 +8,6 @@ using UnityEngine.Events;
 public class PlayerTriggerable : MonoBehaviour
 {
     [SerializeField] bool m_startActive = true;
-    //[SerializeField] float m_playerLookMaxAngle = 50f;
     [SerializeField] bool m_dontHideInteractIconOnActivate;
     [SerializeField] bool m_resetAfterDelay;
     [SerializeField] float m_resetAfterSeconds = 1f;
@@ -19,13 +18,10 @@ public class PlayerTriggerable : MonoBehaviour
     [SerializeField] bool m_dontShowRotationControls;
 
     private Transform m_player;
-    //private Transform m_cameraAnchor;
     private bool m_active;
     private bool m_canBeTriggered;
-    //private bool m_canBeTriggeredPreviousFrame;
     private bool m_actionsTrggered;
-    private static bool m_activationTriggered;
-    //private static int m_howManyCanBeTriggered;
+    private bool m_activationTriggered;
     private bool m_submit;
     private bool m_cancel;
     private bool m_paused;
@@ -33,9 +29,7 @@ public class PlayerTriggerable : MonoBehaviour
 
     void Awake()
     {
-        //m_howManyCanBeTriggered = 0;
         m_player = GameObject.FindGameObjectWithTag(Tags.Player).transform;
-        //m_cameraAnchor = Camera.main.transform.parent;
 
         m_active = m_startActive;
     }
@@ -55,6 +49,7 @@ public class PlayerTriggerable : MonoBehaviour
             if (!m_activationTriggered && m_submit)
             {
                 m_activationTriggered = true;
+                //print("Trigger activate action");
                 TriggerActivateActions();
 
                 if (!m_dontHideInteractIconOnActivate)
@@ -69,6 +64,7 @@ public class PlayerTriggerable : MonoBehaviour
             else if (m_activationTriggered && (m_submit || m_cancel))
             {
                 m_activationTriggered = false;
+                //print("Trigger deactivate action");
                 TriggerDeactivateActions();
 
                 EventManager.TriggerEvent(BooleanEventName.Interact, true);
@@ -80,8 +76,6 @@ public class PlayerTriggerable : MonoBehaviour
 
         m_submit = false;
         m_cancel = false;
-
-        //m_canBeTriggeredPreviousFrame = m_canBeTriggered;
     }
 
 
@@ -94,7 +88,10 @@ public class PlayerTriggerable : MonoBehaviour
             bool buttonPressed = Input.GetAxisRaw(axisName) == 1f;
 
             if (buttonPressed && !buttonPressedPreviously)
+            {
+                //print(axisName + " pressed");
                 action.Invoke();
+            }
 
             buttonPressedPreviously = buttonPressed;
 
@@ -127,66 +124,17 @@ public class PlayerTriggerable : MonoBehaviour
     }
 
 
-    //void OnTriggerStay(Collider other)
-    //{
-    //    if (!m_active)
-    //        return;
-
-    //    var cameraLookDirection = m_cameraAnchor.forward;
-    //    var cameraToTrigger = transform.position - m_cameraAnchor.position;
-
-    //    float angle = Vector3.Angle(cameraLookDirection, cameraToTrigger);
-
-    //    m_canBeTriggered = angle <= m_playerLookMaxAngle;
-
-    //    if (m_canBeTriggered && !m_canBeTriggeredPreviousFrame)
-    //    {
-    //        m_howManyCanBeTriggered++;
-    //        print(m_howManyCanBeTriggered);
-    //    }
-    //    else if (m_canBeTriggeredPreviousFrame && !m_canBeTriggered)
-    //    {
-    //        m_howManyCanBeTriggered--;
-    //        print(m_howManyCanBeTriggered);
-    //    }
-
-    //    if (!m_activationTriggered)
-    //        EventManager.TriggerEvent(BooleanEventName.Interact, m_howManyCanBeTriggered > 0);
-    //}
-
-
-    //void OnTriggerExit(Collider other)
-    //{
-    //    m_canBeTriggered = false;
-
-    //    if (m_canBeTriggeredPreviousFrame)
-    //    {
-    //        m_howManyCanBeTriggered--;
-    //        print(m_howManyCanBeTriggered);
-    //    }
-
-    //    if (m_howManyCanBeTriggered == 0)
-    //    {
-    //        EventManager.TriggerEvent(BooleanEventName.Interact, false);
-    //    }
-    //}
-
 
     private void TriggerActivateActions()
     {
         m_player.parent = m_tranformToParentPlayerTo;
-        //print("Trigger activate actions");
         m_actionsOnActivate.Invoke();
-
-        //m_actionsTrggered = true;
     }
 
 
     private void TriggerDeactivateActions()
     {
         m_actionsOnDeactivate.Invoke();
-
-        //m_actionsTrggered = true;
     }
 
 
