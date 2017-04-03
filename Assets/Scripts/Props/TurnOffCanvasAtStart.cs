@@ -6,7 +6,6 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Canvas))]
 public class TurnOffCanvasAtStart : MonoBehaviour
 {
-
     private Canvas m_canvas;
 
 

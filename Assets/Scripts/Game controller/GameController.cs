@@ -31,6 +31,10 @@ public class GameController : MonoBehaviour
 
         StartCoroutine(CheckForAxisInput("Free camera", ToggleFreeCamera, false));
         StartCoroutine(CheckForAxisInput("Pause", TogglePause, true));
+
+        // This may need to be done after Start if anything ever gets set up in other Start methods that needs it to be unpaused,
+        // but so far it looks to be fine to do this here.
+        EventManager.TriggerEvent(StandardEventName.Pause);
     }
 
 
