@@ -15,6 +15,7 @@ public enum StandardEventName
     ActivateMouseControls = 4,
     ActivateJoypadControls = 5,
     DeleteSaveData = 6,
+    StartClosingCinematic = 7,
 }
 
 
