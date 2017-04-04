@@ -5,8 +5,6 @@ using System.Collections;
 [RequireComponent(typeof(Light), typeof(LensFlare))]
 public class SkyManager : MonoBehaviour
 {
-    public float SunAngleAboveHorizon;
-
     [SerializeField] Gradient m_skyColour;
     [SerializeField] Gradient m_ambientColour;
     [SerializeField] Gradient m_sunColour;
@@ -48,19 +46,15 @@ public class SkyManager : MonoBehaviour
         m_originalSunColour = m_sunMaterial.GetColor("_TintColor");
 
         m_sunDistanceFromPlayer = Vector3.Distance(m_camera.position, m_sunImage.position);
-
-        var playerDirection = m_camera.position.normalized;
-        SunAngleAboveHorizon = Vector3.Angle(transform.forward, playerDirection) - 90f;
     }
-	
 
-	void Update()
+
+    void Update()
     {
         m_playerAltitude = m_camera.position.magnitude;
         var playerDirection = m_camera.position.normalized;
         
         float dotToPlayer = Vector3.Dot(-transform.forward, playerDirection);
-        SunAngleAboveHorizon = Vector3.Angle(transform.forward, playerDirection) - 90f;
 
         m_evaluationValue = 0.5f * (dotToPlayer + 1f);
 
@@ -100,6 +94,17 @@ public class SkyManager : MonoBehaviour
        
         m_sunImage.position = m_camera.position - transform.forward * m_sunDistanceFromPlayer;
 	}
+
+
+    public float SunAngleAboveHorizon(Transform observer)
+    {
+        var observerDirection = observer.position.normalized;
+
+        float dotToObserver = Vector3.Dot(-transform.forward, observerDirection);
+        float sunAngleAboveHorizon = Vector3.Angle(transform.forward, observerDirection) - 90f;
+
+        return sunAngleAboveHorizon;
+    }
 
 
     public float GetEvaluationValue(Transform observer)

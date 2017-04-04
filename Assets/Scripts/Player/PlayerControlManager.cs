@@ -98,10 +98,18 @@ public class PlayerControlManager : MonoBehaviour
     }
 
 
+    private void TriggerClosingCinematic()
+    {
+        StopAllCoroutines();
+        m_playerController.enabled = false;
+    }
+
+
     void OnEnable()
     {
         EventManager.StartListening(TransformEventName.PropActivated, MirrorActivated);
         EventManager.StartListening(StandardEventName.PropDeactivated, MirrorDeactivated);
+        EventManager.StartListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
     }
 
 
@@ -109,5 +117,6 @@ public class PlayerControlManager : MonoBehaviour
     {
         EventManager.StopListening(TransformEventName.PropActivated, MirrorActivated);
         EventManager.StopListening(StandardEventName.PropDeactivated, MirrorDeactivated);
+        EventManager.StopListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
     }
 }

@@ -23,7 +23,7 @@ public class TorchManager : MonoBehaviour
 
         if (m_skyManager != null)
         {
-            m_previousSunAngle = m_skyManager.SunAngleAboveHorizon;
+            m_previousSunAngle = m_skyManager.SunAngleAboveHorizon(transform);
             m_activeManagement = true;
 
             if (m_previousSunAngle <= m_sunAngleForTorchToggle)
@@ -46,7 +46,7 @@ public class TorchManager : MonoBehaviour
         if (!m_activeManagement)
             return;
 
-        float sunAngle = m_skyManager.SunAngleAboveHorizon;
+        float sunAngle = m_skyManager.SunAngleAboveHorizon(transform);
 
         if (sunAngle <= m_sunAngleForTorchToggle
             && m_previousSunAngle > m_sunAngleForTorchToggle
@@ -105,14 +105,24 @@ public class TorchManager : MonoBehaviour
     }
 
 
+    private void TriggerClosingCinematic()
+    {
+        StopAllCoroutines();
+        m_activeManagement = false;
+        m_light.enabled = false;
+    }
+
+
     void OnEnable()
     {
         EventManager.StartListening(BooleanEventName.SwitchTorch, SwitchTorch);
+        EventManager.StartListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
     }
 
 
     void OnDisable()
     {
         EventManager.StopListening(BooleanEventName.SwitchTorch, SwitchTorch);
+        EventManager.StopListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
     }
 }

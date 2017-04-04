@@ -10,10 +10,14 @@ public class CheckForInteractables : MonoBehaviour
     private bool m_canBeTriggered;
     private bool m_canBeTriggeredLastFrame;
     private PlayerTriggerable m_playerTriggereable;
+    private bool m_active = true;
 	
 
     void Update()
     {
+        if (!m_active)
+            return;
+
         var ray = new Ray(transform.position, transform.forward);
         RaycastHit hit;
     
@@ -60,5 +64,23 @@ public class CheckForInteractables : MonoBehaviour
         }
 
         m_canBeTriggeredLastFrame = m_canBeTriggered;
+    }
+
+
+    private void TriggerClosingCinematic()
+    {
+        m_active = false;
+    }
+
+
+    void OnEnable()
+    {
+        EventManager.StartListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
+    }
+
+
+    void OnDisable()
+    {
+        EventManager.StopListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
     }
 }
