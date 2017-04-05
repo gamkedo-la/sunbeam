@@ -6,6 +6,7 @@ using UnityEngine.Events;
 
 public class TriggerCinematic : MonoBehaviour
 {
+    [SerializeField] float m_delay = 3f;
     [SerializeField] Transform m_cameraAnchor;
     [SerializeField] UnityEvent m_eventsToTrigger;
 
@@ -21,7 +22,13 @@ public class TriggerCinematic : MonoBehaviour
     void Update()
     {
         if (GameController.AllowCheatMode && Input.GetKeyDown(KeyCode.G))
-            EventManager.TriggerEvent(StandardEventName.TriggerClosingCinematic);
+            TriggerClosingCinematicDelayed();
+    }
+
+
+    public void TriggerClosingCinematicDelayed()
+    {
+        StartCoroutine(TriggerAfterDelay(m_delay));
     }
 
 
@@ -36,6 +43,14 @@ public class TriggerCinematic : MonoBehaviour
         }
 
         m_eventsToTrigger.Invoke();
+    }
+
+
+    private IEnumerator TriggerAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        EventManager.TriggerEvent(StandardEventName.TriggerClosingCinematic);
     }
 
 

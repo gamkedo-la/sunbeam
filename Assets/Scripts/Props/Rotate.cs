@@ -39,6 +39,20 @@ public class Rotate : MonoBehaviour, IActivatable
     }
 
 
+    public void Activate(float delay)
+    {
+        StartCoroutine(ActivateAfterDelay(delay));
+    }
+
+
+    private IEnumerator ActivateAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        Activate();
+    }
+
+
     public void Deactivate()
     {
         StopAllCoroutines();
