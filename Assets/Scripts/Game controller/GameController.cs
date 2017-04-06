@@ -9,6 +9,7 @@ public class GameController : MonoBehaviour
     private Camera m_mainCamera;
     private bool m_freeCameraEnabled = false;
     private bool m_paused = false;
+    private bool m_disableMouseCapture;
     private float m_timeScale;
 
     private FirstPersonController m_firstPersonController;
@@ -44,8 +45,20 @@ public class GameController : MonoBehaviour
         //    QuitGame();
 
         // Capture the mouse just in case it gets detached for some reason
-        if (!m_paused && Input.GetMouseButton(0))
+        if (!m_paused && !m_disableMouseCapture && Input.GetMouseButton(0))
             OnUnpause();
+    }
+
+
+    public void DisableMouseCapture()
+    {
+        m_disableMouseCapture = true;
+    }
+
+
+    private void OnContinueExploring()
+    {
+        m_disableMouseCapture = false;
     }
 
 
@@ -172,6 +185,7 @@ public class GameController : MonoBehaviour
     {
         EventManager.StartListening(StandardEventName.Pause, OnPause);
         EventManager.StartListening(StandardEventName.Unpause, OnUnpause);
+        EventManager.StartListening(StandardEventName.ContinueExploring, OnContinueExploring);
     }
 
 
@@ -179,6 +193,7 @@ public class GameController : MonoBehaviour
     {
         EventManager.StopListening(StandardEventName.Pause, OnPause);
         EventManager.StopListening(StandardEventName.Unpause, OnUnpause);
+        EventManager.StopListening(StandardEventName.ContinueExploring, OnContinueExploring);
 
         Time.timeScale = m_timeScale;
     }

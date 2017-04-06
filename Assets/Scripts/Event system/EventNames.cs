@@ -16,6 +16,7 @@ public enum StandardEventName
     ActivateJoypadControls = 5,
     DeleteSaveData = 6,
     TriggerClosingCinematic = 7,
+    ContinueExploring = 8,
 }
 
 

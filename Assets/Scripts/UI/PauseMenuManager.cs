@@ -10,6 +10,8 @@ public class PauseMenuManager : MonoBehaviour
     [SerializeField] GameObject m_controlsScreen;
     [SerializeField] GameObject m_creditsScreen;
     [SerializeField] GameObject m_messageScreen;
+    [SerializeField] GameObject m_thanksForPlayingText;
+    [SerializeField] GameObject m_continueExploringButton;
 
     private GameController m_gameController;
 
@@ -18,12 +20,20 @@ public class PauseMenuManager : MonoBehaviour
     {
         m_gameController = GameObject.FindObjectOfType<GameController>();
         DeactivateAllPanels();
+        DeactivateContinueExploring();
     }
 
 
     public void Resume()
     {
         EventManager.TriggerEvent(StandardEventName.Unpause);
+    }
+
+
+    public void ContinueExploring()
+    {
+        EventManager.TriggerEvent(StandardEventName.ContinueExploring);
+        DeactivateContinueExploring();
     }
 
 
@@ -34,6 +44,26 @@ public class PauseMenuManager : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+
+
+    private void DeactivateContinueExploring()
+    {
+        if (m_thanksForPlayingText != null)
+            m_thanksForPlayingText.SetActive(false);
+
+        if (m_continueExploringButton != null)
+            m_continueExploringButton.SetActive(false);
+    }
+
+
+    public void ShowContinueExploring()
+    {
+        if (m_thanksForPlayingText != null)
+            m_thanksForPlayingText.SetActive(true);
+
+        if (m_continueExploringButton != null)
+            m_continueExploringButton.SetActive(true);
     }
 
 
