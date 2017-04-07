@@ -105,11 +105,21 @@ public class PlayerControlManager : MonoBehaviour
     }
 
 
+    private void ContinueExploring()
+    {
+        m_camera.parent = m_cameraAnchor;
+        m_camera.localPosition = Vector3.zero;
+        m_camera.localRotation = Quaternion.identity;
+        m_playerController.enabled = true;
+    }
+
+
     void OnEnable()
     {
         EventManager.StartListening(TransformEventName.PropActivated, MirrorActivated);
         EventManager.StartListening(StandardEventName.PropDeactivated, MirrorDeactivated);
         EventManager.StartListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
+        EventManager.StartListening(StandardEventName.ContinueExploring, ContinueExploring);
     }
 
 
@@ -118,5 +128,6 @@ public class PlayerControlManager : MonoBehaviour
         EventManager.StopListening(TransformEventName.PropActivated, MirrorActivated);
         EventManager.StopListening(StandardEventName.PropDeactivated, MirrorDeactivated);
         EventManager.StopListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
+        EventManager.StopListening(StandardEventName.ContinueExploring, ContinueExploring);
     }
 }

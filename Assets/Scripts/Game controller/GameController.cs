@@ -59,6 +59,8 @@ public class GameController : MonoBehaviour
     private void OnContinueExploring()
     {
         m_disableMouseCapture = false;
+
+        OnUnpause();
     }
 
 

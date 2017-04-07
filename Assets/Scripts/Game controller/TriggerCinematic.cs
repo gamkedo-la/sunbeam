@@ -9,6 +9,7 @@ public class TriggerCinematic : MonoBehaviour
     [SerializeField] float m_delay = 3f;
     [SerializeField] Transform m_cameraAnchor;
     [SerializeField] UnityEvent m_eventsToTrigger;
+    [SerializeField] UnityEvent m_eventsForContinueExploring;
 
     private Transform m_camera;
 
@@ -46,6 +47,12 @@ public class TriggerCinematic : MonoBehaviour
     }
 
 
+    private void ContinueExploring()
+    {
+        m_eventsForContinueExploring.Invoke();
+    }
+
+
     private IEnumerator TriggerAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -57,11 +64,13 @@ public class TriggerCinematic : MonoBehaviour
     void OnEnable()
     {
         EventManager.StartListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
+        EventManager.StartListening(StandardEventName.ContinueExploring, ContinueExploring);
     }
 
 
     void OnDisable()
     {
         EventManager.StopListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
+        EventManager.StopListening(StandardEventName.ContinueExploring, ContinueExploring);
     }
 }

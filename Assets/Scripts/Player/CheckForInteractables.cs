@@ -73,14 +73,22 @@ public class CheckForInteractables : MonoBehaviour
     }
 
 
+    private void ContinueExploring()
+    {
+        m_active = true;
+    }
+
+
     void OnEnable()
     {
         EventManager.StartListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
+        EventManager.StartListening(StandardEventName.ContinueExploring, ContinueExploring);
     }
 
 
     void OnDisable()
     {
         EventManager.StopListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
+        EventManager.StopListening(StandardEventName.ContinueExploring, ContinueExploring);
     }
 }

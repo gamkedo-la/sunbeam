@@ -37,7 +37,8 @@ public class TorchManager : MonoBehaviour
             m_light.enabled = false;
         }
 
-        StartCoroutine(CheckForAxisInput("Torch", ToggleLight));
+        if (GameController.AllowCheatMode)
+            StartCoroutine(CheckForAxisInput("Torch", ToggleLight));
     }
 	
 
@@ -113,10 +114,20 @@ public class TorchManager : MonoBehaviour
     }
 
 
+    private void ContinueExploring()
+    {
+        m_activeManagement = true;
+
+        if (GameController.AllowCheatMode)
+            StartCoroutine(CheckForAxisInput("Torch", ToggleLight));
+    }
+
+
     void OnEnable()
     {
         EventManager.StartListening(BooleanEventName.SwitchTorch, SwitchTorch);
         EventManager.StartListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
+        EventManager.StartListening(StandardEventName.ContinueExploring, ContinueExploring);
     }
 
 
@@ -124,5 +135,6 @@ public class TorchManager : MonoBehaviour
     {
         EventManager.StopListening(BooleanEventName.SwitchTorch, SwitchTorch);
         EventManager.StopListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
+        EventManager.StopListening(StandardEventName.ContinueExploring, ContinueExploring);
     }
 }

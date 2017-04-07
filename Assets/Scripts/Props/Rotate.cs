@@ -60,6 +60,12 @@ public class Rotate : MonoBehaviour, IActivatable
     }
 
 
+    public void SetRotationRate(float rotationRate)
+    {
+        m_currentRotationRate = rotationRate;
+    }
+
+
     private IEnumerator Accelerate()
     {
         m_active = true;
