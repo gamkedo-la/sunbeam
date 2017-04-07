@@ -65,4 +65,25 @@ public class PropControllerBase : MonoBehaviour, IActivatable
     {
         m_active = false;
     }
+
+
+    protected virtual void TriggerClosingCinematic()
+    {
+        m_active = false;
+        m_activationTiggered = false;
+    }
+
+
+    void OnEnable()
+    {
+        EventManager.StartListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
+        //EventManager.StartListening(StandardEventName.ContinueExploring, ContinueExploring);
+    }
+
+
+    void OnDisable()
+    {
+        EventManager.StopListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
+        //EventManager.StopListening(StandardEventName.ContinueExploring, ContinueExploring);
+    }
 }

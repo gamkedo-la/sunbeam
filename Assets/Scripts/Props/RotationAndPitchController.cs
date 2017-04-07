@@ -142,6 +142,12 @@ public class RotationAndPitchController : PropControllerBase
     {
         base.TriggerDeactivation();
 
+        FadeAudioDown();
+    }
+
+
+    private void FadeAudioDown()
+    {
         if (m_rotationAudioSource != null && m_rotationAudioSource.isPlaying)
         {
             if (m_rotationAudioFade != null)
@@ -232,5 +238,13 @@ public class RotationAndPitchController : PropControllerBase
             Gizmos.DrawRay(m_pitchPoint.position, pitchMin * m_gizmoLineLength);
             Gizmos.DrawRay(m_pitchPoint.position, pitchMax * m_gizmoLineLength);
         }
+    }
+
+
+    protected override void TriggerClosingCinematic()
+    {
+        base.TriggerClosingCinematic();
+
+        FadeAudioDown();
     }
 }
