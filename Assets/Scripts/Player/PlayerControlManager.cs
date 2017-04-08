@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(FirstPersonController))]
+[RequireComponent(typeof(FirstPersonController), typeof(Rigidbody))]
 public class PlayerControlManager : MonoBehaviour
 {
     [SerializeField] float m_transitionTime = 1f;
     [SerializeField] AnimationCurve m_transitionCurve;
 
     private FirstPersonController m_playerController;
+    private Rigidbody m_rigidbody;
     private Transform m_camera;
     private Transform m_cameraAnchor;
     //private Transform m_newCameraPoint;
@@ -20,6 +21,7 @@ public class PlayerControlManager : MonoBehaviour
         m_playerController = GetComponent<FirstPersonController>();
         m_camera = Camera.main.transform;
         m_cameraAnchor = m_camera.parent;
+        m_rigidbody = GetComponent<Rigidbody>();
     }
 
 
@@ -30,6 +32,7 @@ public class PlayerControlManager : MonoBehaviour
         m_totalDistance = Vector3.Distance(m_cameraAnchor.position, newCameraPoint.position);
 
         m_playerController.enabled = false;
+        m_rigidbody.isKinematic = true;
         m_camera.parent = null;
         
         StopAllCoroutines();
@@ -95,6 +98,7 @@ public class PlayerControlManager : MonoBehaviour
 
         m_camera.parent = m_cameraAnchor;
         m_playerController.enabled = true;
+        m_rigidbody.isKinematic = false;
     }
 
 
@@ -102,6 +106,7 @@ public class PlayerControlManager : MonoBehaviour
     {
         StopAllCoroutines();
         m_playerController.enabled = false;
+        m_rigidbody.isKinematic = true;
     }
 
 
@@ -111,6 +116,7 @@ public class PlayerControlManager : MonoBehaviour
         m_camera.localPosition = Vector3.zero;
         m_camera.localRotation = Quaternion.identity;
         m_playerController.enabled = true;
+        m_rigidbody.isKinematic = false;
     }
 
 
