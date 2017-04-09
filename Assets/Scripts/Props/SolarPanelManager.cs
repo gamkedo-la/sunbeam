@@ -7,6 +7,8 @@ public class SolarPanelManager : MonoBehaviour
     [SerializeField] bool m_discharges;
     [SerializeField] bool m_startCharged;
     [SerializeField] bool m_dischargesOnceCharged;
+    [SerializeField] Material m_materialForDischargesOnceCharged;
+    [SerializeField] MeshRenderer m_panelFrame;
     [SerializeField] float m_chargeTime = 5f;
     [SerializeField] float m_dischargeTime = 3f;
     [SerializeField] Transform m_chargeBar;
@@ -46,6 +48,9 @@ public class SolarPanelManager : MonoBehaviour
             m_dischargedActionsTriggered = true;
             m_discharged = true;
         }
+
+        if (m_dischargesOnceCharged && m_materialForDischargesOnceCharged != null && m_panelFrame != null)
+            m_panelFrame.material = m_materialForDischargesOnceCharged;
 
         m_previousChargeLevel = m_chargeLevel;
 
