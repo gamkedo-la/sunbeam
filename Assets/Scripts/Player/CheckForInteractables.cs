@@ -11,6 +11,7 @@ public class CheckForInteractables : MonoBehaviour
     private bool m_canBeTriggeredLastFrame;
     private PlayerTriggerable m_playerTriggereable;
     private bool m_active = true;
+    private bool m_canBeTriggeredWhenCinematicStarted;
 	
 
     void Update()
@@ -70,12 +71,17 @@ public class CheckForInteractables : MonoBehaviour
     private void TriggerClosingCinematic()
     {
         m_active = false;
+        m_canBeTriggeredWhenCinematicStarted = m_canBeTriggered;
+        m_canBeTriggered = false;
+        m_canBeTriggeredLastFrame = false;
+        m_playerTriggereable = null;
     }
 
 
     private void ContinueExploring()
     {
         m_active = true;
+        m_canBeTriggered = m_canBeTriggeredWhenCinematicStarted;
     }
 
 

@@ -35,7 +35,7 @@ public class TriggerCinematic : MonoBehaviour
 
     private void TriggerClosingCinematic()
     {
-        print("Closing cinematic triggered");
+        //print("Closing cinematic triggered");
         if (m_cameraAnchor != null)
         {
             m_camera.parent = m_cameraAnchor;

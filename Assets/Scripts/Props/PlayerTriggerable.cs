@@ -27,6 +27,8 @@ public class PlayerTriggerable : MonoBehaviour
     private bool m_submit;
     private bool m_cancel;
     private bool m_paused;
+    private bool m_activeWhenCinemticStarted;
+    private bool m_canBeTriggeredWhenCinematicStarted;
 
 
     void Awake()
@@ -133,7 +135,6 @@ public class PlayerTriggerable : MonoBehaviour
     }
 
 
-
     private void TriggerActivateActions()
     {
         m_player.parent = m_tranformToParentPlayerTo;
@@ -173,10 +174,29 @@ public class PlayerTriggerable : MonoBehaviour
     }
 
 
+    private void TriggerClosingCinematic()
+    {
+        m_activeWhenCinemticStarted = m_active;
+        m_canBeTriggeredWhenCinematicStarted = m_canBeTriggered;
+        m_active = false;
+        m_canBeTriggered = false;
+        m_activationTriggered = false;
+    }
+
+
+    private void ContinueExploring()
+    {
+        m_active = m_activeWhenCinemticStarted;
+        m_canBeTriggered = m_canBeTriggeredWhenCinematicStarted;
+    }
+
+
     void OnEnable()
     {
         EventManager.StartListening(StandardEventName.Pause, OnPause);
         EventManager.StartListening(StandardEventName.Unpause, OnUnpause);
+        EventManager.StartListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
+        EventManager.StartListening(StandardEventName.ContinueExploring, ContinueExploring);
     }
 
 
@@ -184,5 +204,7 @@ public class PlayerTriggerable : MonoBehaviour
     {
         EventManager.StopListening(StandardEventName.Pause, OnPause);
         EventManager.StopListening(StandardEventName.Unpause, OnUnpause);
+        EventManager.StopListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
+        EventManager.StopListening(StandardEventName.ContinueExploring, ContinueExploring);
     }
 }
