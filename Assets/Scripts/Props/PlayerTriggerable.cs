@@ -8,7 +8,8 @@ using UnityEngine.Events;
 public class PlayerTriggerable : MonoBehaviour
 {
     [SerializeField] bool m_startActive = true;
-    [SerializeField] bool m_dontHideInteractIconOnActivate;
+    [SerializeField] bool m_dontTriggerCameraMovement;
+    [SerializeField] bool m_disableTriggerOnActivate;
     [SerializeField] bool m_resetAfterDelay;
     [SerializeField] float m_resetAfterSeconds = 1f;
     [SerializeField] Transform m_tranformToParentPlayerTo;
@@ -17,6 +18,7 @@ public class PlayerTriggerable : MonoBehaviour
     public bool m_showControls;
     [SerializeField] bool m_dontShowRotationControls;
 
+    private Collider m_trigger;
     private Transform m_player;
     private bool m_active;
     private bool m_canBeTriggered;
@@ -30,6 +32,7 @@ public class PlayerTriggerable : MonoBehaviour
     void Awake()
     {
         m_player = GameObject.FindGameObjectWithTag(Tags.Player).transform;
+        m_trigger = GetComponent<Collider>();
 
         m_active = m_startActive;
     }
@@ -52,7 +55,13 @@ public class PlayerTriggerable : MonoBehaviour
                 //print("Trigger activate action");
                 TriggerActivateActions();
 
-                if (!m_dontHideInteractIconOnActivate)
+                if (m_disableTriggerOnActivate && m_trigger != null)
+                {
+                    m_trigger.enabled = false;
+                    m_activationTriggered = false;
+                }
+
+                if (!m_dontTriggerCameraMovement)
                     EventManager.TriggerEvent(BooleanEventName.Interact, false);
 
                 if (m_showControls && !m_dontShowRotationControls)

@@ -9,7 +9,7 @@ public class TurnOffCanvasAtStart : MonoBehaviour
     private Canvas m_canvas;
 
 
-    void Start()
+    void Awake()
     {
         m_canvas = GetComponent<Canvas>();
         m_canvas.enabled = false;
