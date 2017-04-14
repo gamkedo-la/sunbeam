@@ -38,5 +38,7 @@ public class StartCinematicAnimation : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        EventManager.TriggerEvent(StandardEventName.ClosingCinematicEnd);
     }
 }

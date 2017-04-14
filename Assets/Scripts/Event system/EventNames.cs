@@ -17,6 +17,7 @@ public enum StandardEventName
     DeleteSaveData = 6,
     TriggerClosingCinematic = 7,
     ContinueExploring = 8,
+    ClosingCinematicEnd = 9,
 }
 
 

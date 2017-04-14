@@ -49,7 +49,7 @@ public class PlayerTriggerable : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (m_canBeTriggered && !m_paused)
+        if ((m_activationTriggered || m_canBeTriggered) && !m_paused)
         {
             if (!m_activationTriggered && m_submit)
             {

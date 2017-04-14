@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour
     private bool m_freeCameraEnabled = false;
     private bool m_paused = false;
     private bool m_disableMouseCapture;
+    private bool m_dontLockMouseOnUnPause;
     private float m_timeScale;
 
     private FirstPersonController m_firstPersonController;
@@ -59,8 +60,9 @@ public class GameController : MonoBehaviour
     private void OnContinueExploring()
     {
         m_disableMouseCapture = false;
+        m_dontLockMouseOnUnPause = false;
 
-        OnUnpause();
+        EventManager.TriggerEvent(StandardEventName.Unpause);
     }
 
 
@@ -178,8 +180,17 @@ public class GameController : MonoBehaviour
         Time.timeScale = m_timeScale;
         //print("Unpause");
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        if (!m_dontLockMouseOnUnPause)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+    }
+
+
+    private void ClosingCinematicEnd()
+    {
+        m_dontLockMouseOnUnPause = true;
     }
 
 
@@ -187,6 +198,7 @@ public class GameController : MonoBehaviour
     {
         EventManager.StartListening(StandardEventName.Pause, OnPause);
         EventManager.StartListening(StandardEventName.Unpause, OnUnpause);
+        EventManager.StartListening(StandardEventName.ClosingCinematicEnd, ClosingCinematicEnd);
         EventManager.StartListening(StandardEventName.ContinueExploring, OnContinueExploring);
     }
 
@@ -196,6 +208,7 @@ public class GameController : MonoBehaviour
         EventManager.StopListening(StandardEventName.Pause, OnPause);
         EventManager.StopListening(StandardEventName.Unpause, OnUnpause);
         EventManager.StopListening(StandardEventName.ContinueExploring, OnContinueExploring);
+        EventManager.StopListening(StandardEventName.ClosingCinematicEnd, ClosingCinematicEnd);
 
         Time.timeScale = m_timeScale;
     }
