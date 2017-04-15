@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class PauseMenuManager : MonoBehaviour
 {
@@ -14,11 +15,14 @@ public class PauseMenuManager : MonoBehaviour
     [SerializeField] GameObject m_continueExploringButton;
 
     private GameController m_gameController;
+    private GameObject m_lastSelectedButton;
+    private EventSystem m_eventSystem;
 
 
     void Awake()
     {
         m_gameController = GameObject.FindObjectOfType<GameController>();
+        m_eventSystem = FindObjectOfType<EventSystem>();
         DeactivateAllPanels();
         DeactivateContinueExploring();
     }
@@ -83,11 +87,15 @@ public class PauseMenuManager : MonoBehaviour
 
         if (m_messageScreen != null)
             m_messageScreen.SetActive(false);
+
+        m_lastSelectedButton = m_eventSystem.currentSelectedGameObject;
     }
 
 
     public void ShowPauseMenu(bool active)
     {
+        m_lastSelectedButton.GetComponent<Button>().Select();
+
         DeactivateAllPanels();
 
         if (m_pauseMenu != null)

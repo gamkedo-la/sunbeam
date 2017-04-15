@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour
     private bool m_paused = false;
     private bool m_disableMouseCapture;
     private bool m_dontLockMouseOnUnPause;
+    private bool m_useJoystickLook;
     private float m_timeScale;
 
     private FirstPersonController m_firstPersonController;
@@ -22,6 +23,13 @@ public class GameController : MonoBehaviour
     {
         m_mainCamera = Camera.main;
         m_timeScale = Time.timeScale;
+
+        var joystickNames = Input.GetJoystickNames();
+
+        bool m_useJoystickLook = false;
+
+        for (int i = 0; i < joystickNames.Length; i++)
+            m_useJoystickLook = m_useJoystickLook || !string.IsNullOrEmpty(joystickNames[i]);
 
         OnUnpause();
     }
@@ -194,12 +202,26 @@ public class GameController : MonoBehaviour
     }
 
 
+    private void SetMouseControls()
+    {
+        m_useJoystickLook = false;
+    }
+
+
+    private void SetJoypadControls()
+    {
+        m_useJoystickLook = true;
+    }
+
+
     void OnEnable()
     {
         EventManager.StartListening(StandardEventName.Pause, OnPause);
         EventManager.StartListening(StandardEventName.Unpause, OnUnpause);
         EventManager.StartListening(StandardEventName.ClosingCinematicEnd, ClosingCinematicEnd);
         EventManager.StartListening(StandardEventName.ContinueExploring, OnContinueExploring);
+        EventManager.StartListening(StandardEventName.ActivateMouseControls, SetMouseControls);
+        EventManager.StartListening(StandardEventName.ActivateJoypadControls, SetJoypadControls);
     }
 
 
@@ -209,6 +231,8 @@ public class GameController : MonoBehaviour
         EventManager.StopListening(StandardEventName.Unpause, OnUnpause);
         EventManager.StopListening(StandardEventName.ContinueExploring, OnContinueExploring);
         EventManager.StopListening(StandardEventName.ClosingCinematicEnd, ClosingCinematicEnd);
+        EventManager.StopListening(StandardEventName.ActivateMouseControls, SetMouseControls);
+        EventManager.StopListening(StandardEventName.ActivateJoypadControls, SetJoypadControls);
 
         Time.timeScale = m_timeScale;
     }
