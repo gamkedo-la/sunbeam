@@ -14,9 +14,11 @@ public class PauseMenuManager : MonoBehaviour
     [SerializeField] GameObject m_thanksForPlayingText;
     [SerializeField] GameObject m_continueExploringButton;
     [SerializeField] Button m_firstSelectedButton;
+    [SerializeField] Button m_firstSelectedButtonPodInventory;
 
     private GameController m_gameController;
-    private Button m_lastSelectedButton;
+    private Button m_lastSelectedButtonMainMenu;
+    private Button m_lastSelectedButtonPodInventory;
 
 
     void Awake()
@@ -24,6 +26,8 @@ public class PauseMenuManager : MonoBehaviour
         m_gameController = FindObjectOfType<GameController>();
         DeactivateAllPanels();
         DeactivateContinueExploring();
+        StoreLastMainMenuButton();
+        StoreLastPodInventoryButton();
     }
 
 
@@ -86,11 +90,28 @@ public class PauseMenuManager : MonoBehaviour
 
         if (m_messageScreen != null)
             m_messageScreen.SetActive(false);
+    }
 
-        if (m_lastSelectedButton == null)
-            m_lastSelectedButton = m_firstSelectedButton;
+
+    private void StoreLastMainMenuButton()
+    {
+        if (m_lastSelectedButtonMainMenu == null)
+            m_lastSelectedButtonMainMenu = m_firstSelectedButton;
         else
-            m_lastSelectedButton = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
+            m_lastSelectedButtonMainMenu = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
+
+        print("Storing last selected main menu button: " + m_lastSelectedButtonMainMenu.name);
+    }
+
+
+    private void StoreLastPodInventoryButton()
+    {
+        if (m_lastSelectedButtonPodInventory == null)
+            m_lastSelectedButtonPodInventory = m_firstSelectedButtonPodInventory;
+        else
+            m_lastSelectedButtonPodInventory = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
+
+        print("Storing last selected pod inventory button: " + m_lastSelectedButtonPodInventory.name);
     }
 
 
@@ -104,30 +125,49 @@ public class PauseMenuManager : MonoBehaviour
 
     public void ShowPauseMenu(bool active)
     {
-        if (m_lastSelectedButton != null)
-            m_lastSelectedButton.Select();
+        if (m_lastSelectedButtonMainMenu != null)
+            m_lastSelectedButtonMainMenu.Select();
 
         DeactivateAllPanels();
 
         if (m_pauseMenu != null)
             m_pauseMenu.SetActive(active);
 
-        StartCoroutine(SetSelectButtonLater(m_lastSelectedButton));
+        StartCoroutine(SetSelectButtonLater(m_lastSelectedButtonMainMenu));
     }
 
 
-    public void ShowMessagePods()
+    public void ShowMessagePods(bool returnFromMessageScreen)
     {
-        DeactivateAllPanels();
+        if (returnFromMessageScreen)
+            print("Returning to pod inventory from message screen");
+        else
+            print("Opening pod inventory from main menu");
+
+        if (!returnFromMessageScreen)
+            StoreLastMainMenuButton();
+
+        if (returnFromMessageScreen && m_lastSelectedButtonPodInventory != null)
+            m_lastSelectedButtonPodInventory.Select();
+        else if (m_firstSelectedButtonPodInventory != null)
+            m_firstSelectedButtonPodInventory.Select();
+
+        DeactivateAllPanels(); 
 
         if (m_messagePodsScreen != null)
             m_messagePodsScreen.SetActive(true);
+
+        if (returnFromMessageScreen && m_lastSelectedButtonPodInventory != null)
+            StartCoroutine(SetSelectButtonLater(m_lastSelectedButtonPodInventory));
+        else if(m_firstSelectedButtonPodInventory != null)
+            StartCoroutine(SetSelectButtonLater(m_firstSelectedButtonPodInventory));
     }
 
 
     public void ShowControls()
     {
         DeactivateAllPanels();
+        StoreLastMainMenuButton();
 
         if (m_controlsScreen != null)
             m_controlsScreen.SetActive(true);
@@ -137,6 +177,7 @@ public class PauseMenuManager : MonoBehaviour
     public void ShowCredits()
     {
         DeactivateAllPanels();
+        StoreLastMainMenuButton();
 
         if (m_creditsScreen != null)
             m_creditsScreen.SetActive(true);
@@ -146,6 +187,7 @@ public class PauseMenuManager : MonoBehaviour
     public void ShowMessage(MessagePodMenuDisplay messagePodMenuDisplay)
     {
         DeactivateAllPanels();
+        StoreLastPodInventoryButton();
 
         if (m_messageScreen != null)
         {
@@ -159,13 +201,13 @@ public class PauseMenuManager : MonoBehaviour
     public void DeleteSaveData()
     {
         EventManager.TriggerEvent(StandardEventName.DeleteSaveData);
-        ShowMessagePods();
+        ShowMessagePods(true);
     }
 
 
     private void OnPause()
     {
-        m_lastSelectedButton = m_firstSelectedButton;
+        m_lastSelectedButtonMainMenu = m_firstSelectedButton;
         ShowPauseMenu(true);
     }
 
