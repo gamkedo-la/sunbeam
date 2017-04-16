@@ -100,7 +100,7 @@ public class PauseMenuManager : MonoBehaviour
         else
             m_lastSelectedButtonMainMenu = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
 
-        print("Storing last selected main menu button: " + m_lastSelectedButtonMainMenu.name);
+        //print("Storing last selected main menu button: " + m_lastSelectedButtonMainMenu.name);
     }
 
 
@@ -111,7 +111,7 @@ public class PauseMenuManager : MonoBehaviour
         else
             m_lastSelectedButtonPodInventory = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
 
-        print("Storing last selected pod inventory button: " + m_lastSelectedButtonPodInventory.name);
+        //print("Storing last selected pod inventory button: " + m_lastSelectedButtonPodInventory.name);
     }
 
 
@@ -139,10 +139,10 @@ public class PauseMenuManager : MonoBehaviour
 
     public void ShowMessagePods(bool returnFromMessageScreen)
     {
-        if (returnFromMessageScreen)
-            print("Returning to pod inventory from message screen");
-        else
-            print("Opening pod inventory from main menu");
+        //if (returnFromMessageScreen)
+        //    print("Returning to pod inventory from message screen");
+        //else
+        //    print("Opening pod inventory from main menu");
 
         if (!returnFromMessageScreen)
             StoreLastMainMenuButton();
