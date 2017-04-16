@@ -32,7 +32,8 @@ public enum BooleanEventName
     Interact = 2,
     ShowInteractControls = 3,
     ShowRotationControls = 4,
-    ToggleInvertedY = 5
+    ToggleInvertedMouseLookY = 5,
+    ToggleInvertedJoypadLookY = 6,
 }
 
 
