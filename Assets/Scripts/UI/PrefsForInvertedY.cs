@@ -20,6 +20,12 @@ public class PrefsForInvertedY : MonoBehaviour
     }
 
 
+    void Start()
+    {
+        ToggleInvertedY(m_toggle.isOn);
+    }
+
+
     public void ToggleInvertedY(bool inverted)
     {
         int state = inverted ? 1 : 0;

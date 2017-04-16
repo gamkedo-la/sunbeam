@@ -2,12 +2,15 @@
 using System.Collections;
 
 [RequireComponent(typeof(FirstPersonController), typeof(Rigidbody))]
+[RequireComponent(typeof(MouseLook), typeof(JoystickLook))]
 public class PlayerControlManager : MonoBehaviour
 {
     [SerializeField] float m_transitionTime = 1f;
     [SerializeField] AnimationCurve m_transitionCurve;
 
     private FirstPersonController m_playerController;
+    private MouseLook m_mouseLook;
+    private JoystickLook m_joystickLook;
     private Rigidbody m_rigidbody;
     private Transform m_camera;
     private Transform m_cameraAnchor;
@@ -22,6 +25,8 @@ public class PlayerControlManager : MonoBehaviour
         m_camera = Camera.main.transform;
         m_cameraAnchor = m_camera.parent;
         m_rigidbody = GetComponent<Rigidbody>();
+        m_mouseLook = GetComponent<MouseLook>();
+        m_joystickLook = GetComponent<JoystickLook>();
     }
 
 
@@ -120,12 +125,26 @@ public class PlayerControlManager : MonoBehaviour
     }
 
 
+    private void ToggleInvertedMouseLookY(bool inverted)
+    {
+        m_mouseLook.invertedVertical = inverted;
+    }
+
+
+    private void ToggleInvertedJoypadLookY(bool inverted)
+    {
+        m_joystickLook.invertedVertical = inverted;
+    }
+
+
     void OnEnable()
     {
         EventManager.StartListening(TransformEventName.PropActivated, MirrorActivated);
         EventManager.StartListening(StandardEventName.PropDeactivated, MirrorDeactivated);
         EventManager.StartListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
         EventManager.StartListening(StandardEventName.ContinueExploring, ContinueExploring);
+        EventManager.StartListening(BooleanEventName.ToggleInvertedMouseLookY, ToggleInvertedMouseLookY);
+        EventManager.StartListening(BooleanEventName.ToggleInvertedJoypadLookY, ToggleInvertedJoypadLookY);
     }
 
 
@@ -135,5 +154,7 @@ public class PlayerControlManager : MonoBehaviour
         EventManager.StopListening(StandardEventName.PropDeactivated, MirrorDeactivated);
         EventManager.StopListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
         EventManager.StopListening(StandardEventName.ContinueExploring, ContinueExploring);
+        EventManager.StopListening(BooleanEventName.ToggleInvertedMouseLookY, ToggleInvertedMouseLookY);
+        EventManager.StopListening(BooleanEventName.ToggleInvertedJoypadLookY, ToggleInvertedJoypadLookY);
     }
 }

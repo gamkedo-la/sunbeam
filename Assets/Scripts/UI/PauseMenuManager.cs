@@ -24,13 +24,18 @@ public class PauseMenuManager : MonoBehaviour
     void Awake()
     {
         m_gameController = FindObjectOfType<GameController>();
+
+        // Forces the inverted y options to trigger
+        if (m_controlsScreen != null)
+            m_controlsScreen.SetActive(true);
+
         DeactivateAllPanels();
         DeactivateContinueExploring();
         StoreLastMainMenuButton();
         StoreLastPodInventoryButton();
     }
 
-
+    
     public void Resume()
     {
         EventManager.TriggerEvent(StandardEventName.Unpause);

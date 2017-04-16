@@ -3,6 +3,9 @@ using System.Collections;
 
 public class MouseLook : MonoBehaviour
 {
+    [HideInInspector]
+    public bool invertedVertical;
+
     [SerializeField] float m_sensitivityX = 3f;
     [SerializeField] float m_sensitivityY = 3f;
 
@@ -13,6 +16,8 @@ public class MouseLook : MonoBehaviour
     {
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
+
+        mouseY = invertedVertical ? -mouseY : mouseY;
 
         character.Rotate(Vector3.up * mouseX * m_sensitivityX);
         m_verticalLookRotation += mouseY * m_sensitivityY;
