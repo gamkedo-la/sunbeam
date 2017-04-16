@@ -205,6 +205,12 @@ public class PauseMenuManager : MonoBehaviour
     }
 
 
+    public void ToggleInvertedY(bool inverted)
+    {
+        EventManager.TriggerEvent(BooleanEventName.ToggleInvertedY, inverted);
+    }
+
+
     private void OnPause()
     {
         m_lastSelectedButtonMainMenu = m_firstSelectedButton;
