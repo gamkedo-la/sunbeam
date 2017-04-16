@@ -31,7 +31,7 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < joystickNames.Length; i++)
             m_useJoystickLook = m_useJoystickLook || !string.IsNullOrEmpty(joystickNames[i]);
 
-        OnUnpause();
+        OnUnpause(m_useJoystickLook);
     }
 
 
@@ -184,14 +184,25 @@ public class GameController : MonoBehaviour
 
     private void OnUnpause()
     {
+        OnUnpause(m_useJoystickLook);
+    }
+
+
+    private void OnUnpause(bool useJoystickLook)
+    {
         m_paused = false;
         Time.timeScale = m_timeScale;
-        //print("Unpause");
+
+        if (!m_dontLockMouseOnUnPause && !useJoystickLook)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            //print("Lock cursor");
+        }
 
         if (!m_dontLockMouseOnUnPause)
         {
-            Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            //print("Cursor invisible");
         }
     }
 
@@ -204,13 +215,21 @@ public class GameController : MonoBehaviour
 
     private void SetMouseControls()
     {
+        //print("Set mouse controls");
         m_useJoystickLook = false;
+
+        if (!m_paused)
+            OnUnpause();
     }
 
 
     private void SetJoypadControls()
     {
+        //print("Set joystick controls");
         m_useJoystickLook = true;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
 

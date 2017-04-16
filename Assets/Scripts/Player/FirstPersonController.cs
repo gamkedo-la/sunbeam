@@ -358,7 +358,7 @@ public class FirstPersonController : MonoBehaviour
                 m_useJoystickLook = false;
             }
 
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSecondsRealtime(1f);
         }
     }
 

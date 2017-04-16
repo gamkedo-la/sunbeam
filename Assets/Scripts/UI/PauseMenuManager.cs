@@ -13,16 +13,15 @@ public class PauseMenuManager : MonoBehaviour
     [SerializeField] GameObject m_messageScreen;
     [SerializeField] GameObject m_thanksForPlayingText;
     [SerializeField] GameObject m_continueExploringButton;
+    [SerializeField] Button m_firstSelectedButton;
 
     private GameController m_gameController;
-    private GameObject m_lastSelectedButton;
-    private EventSystem m_eventSystem;
+    private Button m_lastSelectedButton;
 
 
     void Awake()
     {
-        m_gameController = GameObject.FindObjectOfType<GameController>();
-        m_eventSystem = FindObjectOfType<EventSystem>();
+        m_gameController = FindObjectOfType<GameController>();
         DeactivateAllPanels();
         DeactivateContinueExploring();
     }
@@ -88,18 +87,32 @@ public class PauseMenuManager : MonoBehaviour
         if (m_messageScreen != null)
             m_messageScreen.SetActive(false);
 
-        m_lastSelectedButton = m_eventSystem.currentSelectedGameObject;
+        if (m_lastSelectedButton == null)
+            m_lastSelectedButton = m_firstSelectedButton;
+        else
+            m_lastSelectedButton = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
+    }
+
+
+    IEnumerator SetSelectButtonLater(Button selectedButton)
+    {
+        yield return null;
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(selectedButton.gameObject);
     }
 
 
     public void ShowPauseMenu(bool active)
     {
-        m_lastSelectedButton.GetComponent<Button>().Select();
+        if (m_lastSelectedButton != null)
+            m_lastSelectedButton.Select();
 
         DeactivateAllPanels();
 
         if (m_pauseMenu != null)
             m_pauseMenu.SetActive(active);
+
+        StartCoroutine(SetSelectButtonLater(m_lastSelectedButton));
     }
 
 
@@ -152,6 +165,7 @@ public class PauseMenuManager : MonoBehaviour
 
     private void OnPause()
     {
+        m_lastSelectedButton = m_firstSelectedButton;
         ShowPauseMenu(true);
     }
 
