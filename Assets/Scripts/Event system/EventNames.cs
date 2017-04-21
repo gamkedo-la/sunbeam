@@ -18,6 +18,7 @@ public enum StandardEventName
     TriggerClosingCinematic = 7,
     ContinueExploring = 8,
     ClosingCinematicEnd = 9,
+    LoadSaveGame = 10,
 }
 
 

@@ -15,6 +15,8 @@ public class PauseMenuManager : MonoBehaviour
     [SerializeField] GameObject m_continueExploringButton;
     [SerializeField] Button m_firstSelectedButton;
     [SerializeField] Button m_firstSelectedButtonPodInventory;
+    [SerializeField] Button m_loadGameButton;
+    [SerializeField] Text m_resumeButtonText;
 
     private GameController m_gameController;
     private Button m_lastSelectedButtonMainMenu;
@@ -35,9 +37,22 @@ public class PauseMenuManager : MonoBehaviour
         StoreLastPodInventoryButton();
     }
 
+
+    public void LoadSaveGame()
+    {
+        EventManager.TriggerEvent(StandardEventName.LoadSaveGame);
+        Resume();
+    }
+
     
     public void Resume()
     {
+        if (m_loadGameButton != null)
+            m_loadGameButton.interactable = false;
+
+        if (m_resumeButtonText != null)
+            m_resumeButtonText.text = "Resume";
+
         EventManager.TriggerEvent(StandardEventName.Unpause);
     }
 
@@ -205,6 +220,9 @@ public class PauseMenuManager : MonoBehaviour
 
     public void DeleteSaveData()
     {
+        if (m_loadGameButton != null)
+            m_loadGameButton.interactable = false;
+
         EventManager.TriggerEvent(StandardEventName.DeleteSaveData);
         ShowMessagePods(true);
     }
