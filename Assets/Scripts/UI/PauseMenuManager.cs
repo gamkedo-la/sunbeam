@@ -47,8 +47,11 @@ public class PauseMenuManager : MonoBehaviour
     
     public void Resume()
     {
-        if (m_loadGameButton != null)
+        if (m_loadGameButton != null && m_loadGameButton.interactable)
+        {
+            EventManager.TriggerEvent(StandardEventName.DeleteSaveData);
             m_loadGameButton.interactable = false;
+        }
 
         if (m_resumeButtonText != null)
             m_resumeButtonText.text = "Resume";

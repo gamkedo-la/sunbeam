@@ -4,7 +4,7 @@ using System.Collections;
 
 public class GameController : MonoBehaviour
 {
-    public static bool AllowCheatMode = true;
+    public static bool AllowCheatMode = false;
 
     private Camera m_mainCamera;
     private bool m_freeCameraEnabled = false;
