@@ -6,6 +6,7 @@ using UnityEngine;
 public class GateSaveStateManager : MonoBehaviour
 {
     [SerializeField] bool m_saveStateOfGate = true;
+    [SerializeField] string m_animationTriggerOnLoad = "Open";
 
     private Animator m_anim;
 
@@ -28,7 +29,7 @@ public class GateSaveStateManager : MonoBehaviour
         int open = PlayerPrefs.GetInt(name, 0);
 
         if (open == 1)
-            m_anim.SetTrigger("Open");
+            m_anim.SetTrigger(m_animationTriggerOnLoad);
     }
 
 

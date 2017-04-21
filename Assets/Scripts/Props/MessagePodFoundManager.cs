@@ -11,15 +11,11 @@ public class MessagePodFoundManager : MonoBehaviour
     private bool m_found;
 
 
-    void Awake()
+    private void LoadPodState()
     {
         int found = PlayerPrefs.GetInt(name, 0);
-        m_found = found == 1;     
-    }
+        m_found = found == 1;
 
-
-    void Start()
-    {
         if (m_found)
         {
             if (m_playerTrigger != null)
@@ -59,12 +55,14 @@ public class MessagePodFoundManager : MonoBehaviour
 
     void OnEnable()
     {
+        EventManager.StartListening(StandardEventName.LoadSaveGame, LoadPodState);
         EventManager.StartListening(StandardEventName.DeleteSaveData, SetFoundToFalse);
     }
 
 
     void OnDisable()
     {
+        EventManager.StopListening(StandardEventName.LoadSaveGame, LoadPodState);
         EventManager.StopListening(StandardEventName.DeleteSaveData, SetFoundToFalse);
     }
 }
