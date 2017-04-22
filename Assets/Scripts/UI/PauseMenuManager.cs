@@ -41,6 +41,10 @@ public class PauseMenuManager : MonoBehaviour
     public void LoadSaveGame()
     {
         EventManager.TriggerEvent(StandardEventName.LoadSaveGame);
+
+        if (m_loadGameButton != null && m_loadGameButton.interactable)
+            m_loadGameButton.interactable = false;
+        
         Resume();
     }
 
@@ -49,6 +53,7 @@ public class PauseMenuManager : MonoBehaviour
     {
         if (m_loadGameButton != null && m_loadGameButton.interactable)
         {
+            print("Delete all save data");
             EventManager.TriggerEvent(StandardEventName.DeleteSaveData);
             m_loadGameButton.interactable = false;
         }

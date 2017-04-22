@@ -18,6 +18,8 @@ public class MessagePodFoundManager : MonoBehaviour
 
         if (m_found)
         {
+            print("Load pod found: " + name);
+
             if (m_playerTrigger != null)
                 m_playerTrigger.enabled = false;
 
@@ -29,6 +31,7 @@ public class MessagePodFoundManager : MonoBehaviour
 
     public void SetFoundToTrue()
     {
+        print("Save pod found: " + name);
         m_found = true;
         PlayerPrefs.SetInt(name, 1);
     }
