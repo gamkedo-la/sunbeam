@@ -5,13 +5,13 @@ using System.Collections;
 public class GameController : MonoBehaviour
 {
     public static bool AllowCheatMode = false;
+    public static bool UseJoystickLook = false;
 
     private Camera m_mainCamera;
     private bool m_freeCameraEnabled = false;
     private bool m_paused = false;
     private bool m_disableMouseCapture;
     private bool m_dontLockMouseOnUnPause;
-    private bool m_useJoystickLook;
     private float m_timeScale;
 
     private FirstPersonController m_firstPersonController;
@@ -26,12 +26,12 @@ public class GameController : MonoBehaviour
 
         var joystickNames = Input.GetJoystickNames();
 
-        bool m_useJoystickLook = false;
+        UseJoystickLook = false;
 
         for (int i = 0; i < joystickNames.Length; i++)
-            m_useJoystickLook = m_useJoystickLook || !string.IsNullOrEmpty(joystickNames[i]);
+            UseJoystickLook = UseJoystickLook || !string.IsNullOrEmpty(joystickNames[i]);
 
-        OnUnpause(m_useJoystickLook);
+        OnUnpause(UseJoystickLook);
     }
 
 
@@ -184,7 +184,7 @@ public class GameController : MonoBehaviour
 
     private void OnUnpause()
     {
-        OnUnpause(m_useJoystickLook);
+        OnUnpause(UseJoystickLook);
     }
 
 
@@ -216,7 +216,7 @@ public class GameController : MonoBehaviour
     private void SetMouseControls()
     {
         //print("Set mouse controls");
-        m_useJoystickLook = false;
+        UseJoystickLook = false;
 
         if (!m_paused)
             OnUnpause();
@@ -226,7 +226,7 @@ public class GameController : MonoBehaviour
     private void SetJoypadControls()
     {
         //print("Set joystick controls");
-        m_useJoystickLook = true;
+        UseJoystickLook = true;
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;

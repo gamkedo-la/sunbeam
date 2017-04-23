@@ -153,15 +153,19 @@ public class PauseMenuManager : MonoBehaviour
 
     public void ShowPauseMenu(bool active)
     {
-        if (m_lastSelectedButtonMainMenu != null)
+        if (m_lastSelectedButtonMainMenu != null && GameController.UseJoystickLook)
+        {
+            print("Set pause button active: " + m_lastSelectedButtonMainMenu.name);
             m_lastSelectedButtonMainMenu.Select();
+        }
 
         DeactivateAllPanels();
 
         if (m_pauseMenu != null)
             m_pauseMenu.SetActive(active);
 
-        StartCoroutine(SetSelectButtonLater(m_lastSelectedButtonMainMenu));
+        if (GameController.UseJoystickLook)
+            StartCoroutine(SetSelectButtonLater(m_lastSelectedButtonMainMenu));
     }
 
 
@@ -185,9 +189,9 @@ public class PauseMenuManager : MonoBehaviour
         if (m_messagePodsScreen != null)
             m_messagePodsScreen.SetActive(true);
 
-        if (returnFromMessageScreen && m_lastSelectedButtonPodInventory != null)
+        if (returnFromMessageScreen && m_lastSelectedButtonPodInventory != null && GameController.UseJoystickLook)
             StartCoroutine(SetSelectButtonLater(m_lastSelectedButtonPodInventory));
-        else if(m_firstSelectedButtonPodInventory != null)
+        else if(m_firstSelectedButtonPodInventory != null && GameController.UseJoystickLook)
             StartCoroutine(SetSelectButtonLater(m_firstSelectedButtonPodInventory));
     }
 
