@@ -14,14 +14,16 @@ public class PrefsForInvertedY : MonoBehaviour
     void Awake()
     {
         m_toggle = GetComponent<Toggle>();
-        int toggleState = PlayerPrefs.GetInt(name, 0);
-
-        m_toggle.isOn = toggleState == 1;
     }
 
 
-    void Start()
+    public void Load()
     {
+        m_toggle = GetComponent<Toggle>();
+        int toggleState = PlayerPrefs.GetInt(name, 0);
+
+        m_toggle.isOn = toggleState == 1;
+
         ToggleInvertedY(m_toggle.isOn);
     }
 
