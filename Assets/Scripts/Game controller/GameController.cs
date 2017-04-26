@@ -7,6 +7,7 @@ public class GameController : MonoBehaviour
     public static bool AllowCheatMode = false;
     public static bool AllowCheatModeActiveInPreviousGame = false;
     public static bool UseJoystickLook = false;
+    public static bool FreeModeHidesPauseMenu = false;
 
     private Camera m_mainCamera;
     private bool m_freeCameraEnabled = false;
@@ -54,6 +55,8 @@ public class GameController : MonoBehaviour
         // This may need to be done after Start if anything ever gets set up in other Start methods that needs it to be unpaused,
         // but so far it looks to be fine to do this here.
         EventManager.TriggerEvent(StandardEventName.Pause);
+
+        StartCoroutine(CheckForCheatCode());
     }
 
 
@@ -113,6 +116,50 @@ public class GameController : MonoBehaviour
     }
 
 
+    private IEnumerator CheckForCheatCode()
+    {
+        bool fPressed = false;
+        bool lPressed = false;
+        bool yPressed = false; 
+
+        while (!AllowCheatMode)
+        {
+            if (fPressed && lPressed && yPressed)
+            {
+                print("Cheat mode activated");
+                AllowCheatModeActiveInPreviousGame = true;
+                AllowCheatMode = true;
+                EventManager.TriggerEvent(StandardEventName.CheatModeActivated);
+            }
+
+            if (!fPressed && Input.GetKeyDown(KeyCode.F))
+            {
+                print("F pressed");
+                fPressed = true;
+            }
+            else if (fPressed && !lPressed && Input.GetKeyDown(KeyCode.L))
+            {
+                print("L pressed");
+                lPressed = true;
+            }
+            else if (lPressed && !yPressed && Input.GetKeyDown(KeyCode.Y))
+            {
+                print("Y pressed");
+                yPressed = true;
+            }
+            else if (Input.anyKeyDown)
+            {
+                print("Cheat code interrupted");
+                fPressed = false;
+                lPressed = false;
+                yPressed = false;
+            }
+
+            yield return null;
+        }
+    }
+
+
     private void TogglePause()
     {
         //if (m_freeCameraEnabled)
@@ -154,25 +201,19 @@ public class GameController : MonoBehaviour
 
     private void SetTimeScale()
     {
-        if (m_freeCameraEnabled)
+        if (m_freeCameraEnabled && FreeModeHidesPauseMenu)
         {
             if (m_paused)
                 OnPause();
             else
-            {
                 OnUnpause();
-            }
         }
         else
         {
             if (m_paused)
-            {
                 EventManager.TriggerEvent(StandardEventName.Pause);
-            }
             else
-            {
                 EventManager.TriggerEvent(StandardEventName.Unpause);
-            }
         }
     }
 

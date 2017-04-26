@@ -80,6 +80,7 @@ public class FirstPersonController : MonoBehaviour
     private float m_slopeMovementDot;
     private float m_step;
     private bool m_canClimb;
+    private bool m_allowFreeModeMovement;
 
 
     void Start()
@@ -115,6 +116,8 @@ public class FirstPersonController : MonoBehaviour
 
 	void Update()
     {
+        m_allowFreeModeMovement = GameController.FreeModeHidesPauseMenu || !m_paused;
+
         RotateView();
 
         float h = Input.GetAxisRaw("Horizontal");
@@ -140,7 +143,8 @@ public class FirstPersonController : MonoBehaviour
       
             var freeMoveDirection = new Vector3(h, u, v).normalized;
 
-            transform.Translate(freeMoveDirection * m_speed * Time.unscaledDeltaTime);
+            if (m_allowFreeModeMovement)
+                transform.Translate(freeMoveDirection * m_speed * Time.unscaledDeltaTime);
 
             return;
         }
@@ -316,7 +320,7 @@ public class FirstPersonController : MonoBehaviour
 
     private void RotateView()
     {
-        if (m_paused && !m_freeMode)
+        if ((m_paused && !m_freeMode) || !m_allowFreeModeMovement)
             return;
 
         if (m_useJoystickLook)

@@ -308,10 +308,27 @@ public class PauseMenuManager : MonoBehaviour
     }
 
 
+    private void CheatModeActivated()
+    {
+        StartCoroutine(ShowCheatModeMessage());
+    }
+
+
+    private IEnumerator ShowCheatModeMessage()
+    {
+        ShowCheatModeAvailableText();
+
+        yield return new WaitForSeconds(5f);
+
+        DeactivateCheatModeAvailableText();
+    }
+
+
     void OnEnable()
     {
         EventManager.StartListening(StandardEventName.Pause, OnPause);
         EventManager.StartListening(StandardEventName.Unpause, OnUnpause);
+        EventManager.StartListening(StandardEventName.CheatModeActivated, CheatModeActivated);
     }
 
 
@@ -319,5 +336,6 @@ public class PauseMenuManager : MonoBehaviour
     {
         EventManager.StopListening(StandardEventName.Pause, OnPause);
         EventManager.StopListening(StandardEventName.Unpause, OnUnpause);
+        EventManager.StopListening(StandardEventName.CheatModeActivated, CheatModeActivated);
     }
 }
