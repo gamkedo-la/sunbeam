@@ -126,7 +126,7 @@ public class GameController : MonoBehaviour
         {
             if (fPressed && lPressed && yPressed)
             {
-                print("Cheat mode activated");
+                //print("Cheat mode activated");
                 AllowCheatModeActiveInPreviousGame = true;
                 AllowCheatMode = true;
                 EventManager.TriggerEvent(StandardEventName.CheatModeActivated);
@@ -134,22 +134,22 @@ public class GameController : MonoBehaviour
 
             if (!fPressed && Input.GetKeyDown(KeyCode.F))
             {
-                print("F pressed");
+                //print("F pressed");
                 fPressed = true;
             }
             else if (fPressed && !lPressed && Input.GetKeyDown(KeyCode.L))
             {
-                print("L pressed");
+                //print("L pressed");
                 lPressed = true;
             }
             else if (lPressed && !yPressed && Input.GetKeyDown(KeyCode.Y))
             {
-                print("Y pressed");
+                //print("Y pressed");
                 yPressed = true;
             }
             else if (Input.anyKeyDown)
             {
-                print("Cheat code interrupted");
+                //print("Cheat code interrupted");
                 fPressed = false;
                 lPressed = false;
                 yPressed = false;
