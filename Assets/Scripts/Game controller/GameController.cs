@@ -5,6 +5,7 @@ using System.Collections;
 public class GameController : MonoBehaviour
 {
     public static bool AllowCheatMode = false;
+    public static bool AllowCheatModeActiveInPreviousGame = false;
     public static bool UseJoystickLook = false;
 
     private Camera m_mainCamera;
@@ -30,6 +31,14 @@ public class GameController : MonoBehaviour
 
         for (int i = 0; i < joystickNames.Length; i++)
             UseJoystickLook = UseJoystickLook || !string.IsNullOrEmpty(joystickNames[i]);
+
+        int gameCompleted = PlayerPrefs.GetInt("Game completed", 0);
+
+        if (gameCompleted == 1)
+        {
+            AllowCheatModeActiveInPreviousGame = true;
+            AllowCheatMode = true;
+        }
 
         OnUnpause(UseJoystickLook);
     }
@@ -62,6 +71,13 @@ public class GameController : MonoBehaviour
     public void DisableMouseCapture()
     {
         m_disableMouseCapture = true;
+    }
+
+
+    public void GameCompleted()
+    {
+        AllowCheatMode = true;
+        PlayerPrefs.SetInt("Game completed", 1);
     }
 
 

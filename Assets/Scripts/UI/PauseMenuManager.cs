@@ -6,13 +6,16 @@ using UnityEngine.EventSystems;
 
 public class PauseMenuManager : MonoBehaviour
 {
+    [SerializeField] GameObject m_sunbeam;
     [SerializeField] GameObject m_pauseMenu;
     [SerializeField] GameObject m_messagePodsScreen;
     [SerializeField] GameObject m_controlsScreen;
+    [SerializeField] GameObject m_cheatControlsScreen;
     [SerializeField] GameObject m_creditsScreen;
     [SerializeField] GameObject m_messageScreen;
     [SerializeField] GameObject m_thanksForPlayingText;
     [SerializeField] GameObject m_continueExploringButton;
+    [SerializeField] GameObject m_cheatModeAvailableText;
     [SerializeField] Button m_firstSelectedButton;
     [SerializeField] Button m_firstSelectedButtonPodInventory;
     [SerializeField] Button m_loadGameButton;
@@ -23,6 +26,7 @@ public class PauseMenuManager : MonoBehaviour
     private GameController m_gameController;
     private Button m_lastSelectedButtonMainMenu;
     private Button m_lastSelectedButtonPodInventory;
+    private bool m_startOfGame = true;
 
 
     void Awake()
@@ -31,6 +35,7 @@ public class PauseMenuManager : MonoBehaviour
 
         DeactivateAllPanels();
         DeactivateContinueExploring();
+        DeactivateCheatModeAvailableText();
         StoreLastMainMenuButton();
         StoreLastPodInventoryButton();
     }
@@ -56,6 +61,8 @@ public class PauseMenuManager : MonoBehaviour
     
     public void Resume()
     {
+        m_startOfGame = false;
+
         if (m_loadGameButton != null && m_loadGameButton.interactable)
         {
             print("Delete all save data");
@@ -74,6 +81,7 @@ public class PauseMenuManager : MonoBehaviour
     {
         EventManager.TriggerEvent(StandardEventName.ContinueExploring);
         DeactivateContinueExploring();
+        DeactivateCheatModeAvailableText();
     }
 
 
@@ -84,6 +92,20 @@ public class PauseMenuManager : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+
+
+    private void DeactivateCheatModeAvailableText()
+    {
+        if (m_cheatModeAvailableText != null)
+            m_cheatModeAvailableText.SetActive(false);
+    }
+
+
+    private void ShowCheatModeAvailableText()
+    {
+        if (m_cheatModeAvailableText != null)
+            m_cheatModeAvailableText.SetActive(true);
     }
 
 
@@ -104,11 +126,24 @@ public class PauseMenuManager : MonoBehaviour
 
         if (m_continueExploringButton != null)
             m_continueExploringButton.SetActive(true);
+
+        if (!GameController.AllowCheatModeActiveInPreviousGame && GameController.AllowCheatMode)
+            ShowCheatModeAvailableText();
+    }
+
+
+    private void ShowSunbeam()
+    {
+        if (m_sunbeam != null)
+            m_sunbeam.SetActive(true);
     }
 
 
     private void DeactivateAllPanels()
     {
+        if (m_sunbeam != null)
+            m_sunbeam.SetActive(false);
+
         if (m_pauseMenu != null)
             m_pauseMenu.SetActive(false);
 
@@ -117,6 +152,9 @@ public class PauseMenuManager : MonoBehaviour
 
         if (m_controlsScreen != null)
             m_controlsScreen.SetActive(false);
+
+        if (m_cheatControlsScreen != null)
+            m_cheatControlsScreen.SetActive(false);
 
         if (m_creditsScreen != null)
             m_creditsScreen.SetActive(false);
@@ -160,7 +198,7 @@ public class PauseMenuManager : MonoBehaviour
     {
         if (m_lastSelectedButtonMainMenu != null && GameController.UseJoystickLook)
         {
-            print("Set pause button active: " + m_lastSelectedButtonMainMenu.name);
+            //print("Set pause button active: " + m_lastSelectedButtonMainMenu.name);
             m_lastSelectedButtonMainMenu.Select();
         }
 
@@ -171,6 +209,9 @@ public class PauseMenuManager : MonoBehaviour
 
         if (GameController.UseJoystickLook)
             StartCoroutine(SetSelectButtonLater(m_lastSelectedButtonMainMenu));
+
+        if (m_startOfGame)
+            ShowSunbeam();
     }
 
 
@@ -208,6 +249,15 @@ public class PauseMenuManager : MonoBehaviour
 
         if (m_controlsScreen != null)
             m_controlsScreen.SetActive(true);
+    }
+
+
+    public void ShowCheatControls()
+    {
+        DeactivateAllPanels();
+
+        if (m_cheatControlsScreen != null)
+            m_cheatControlsScreen.SetActive(true);
     }
 
 

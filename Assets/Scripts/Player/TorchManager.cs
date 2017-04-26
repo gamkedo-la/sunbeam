@@ -7,6 +7,7 @@ using UnityEngine;
 public class TorchManager : MonoBehaviour
 {
     [SerializeField] float m_sunAngleForTorchToggle = 0f;
+    [SerializeField] bool m_allowManualToggle = false;
 
     private Light m_light;
     private AudioSource m_audioSource;
@@ -37,7 +38,7 @@ public class TorchManager : MonoBehaviour
             m_light.enabled = false;
         }
 
-        if (GameController.AllowCheatMode)
+        if (m_allowManualToggle && GameController.AllowCheatMode)
             StartCoroutine(CheckForAxisInput("Torch", ToggleLight));
     }
 	

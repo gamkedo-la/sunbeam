@@ -10,6 +10,7 @@ public class TriggerCinematic : MonoBehaviour
     [SerializeField] Transform m_cameraAnchor;
     [SerializeField] UnityEvent m_eventsToTrigger;
     [SerializeField] UnityEvent m_eventsForContinueExploring;
+    [SerializeField] bool m_allowClosingCinematicCheatTrigger = false;
 
     private Transform m_camera;
 
@@ -22,7 +23,7 @@ public class TriggerCinematic : MonoBehaviour
 
     void Update()
     {
-        if (GameController.AllowCheatMode && Input.GetKeyDown(KeyCode.G))
+        if (GameController.AllowCheatMode && m_allowClosingCinematicCheatTrigger && Input.GetKeyDown(KeyCode.G))
             TriggerClosingCinematicDelayed();
     }
 
