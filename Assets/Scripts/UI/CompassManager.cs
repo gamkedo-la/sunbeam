@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System;
+using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 [RequireComponent(typeof(Image))]
 public class CompassManager : MonoBehaviour
@@ -18,6 +19,18 @@ public class CompassManager : MonoBehaviour
 
         if (planetObject != null)
             m_planet = planetObject.transform;   
+    }
+
+
+    void Start()
+    {
+        StartCoroutine(CheckForAxisInput("Toggle compass", ToggleCompass));
+    }
+
+
+    private void ToggleCompass()
+    {
+        m_compassImage.enabled = !m_compassImage.enabled;
     }
 
 
@@ -49,4 +62,25 @@ public class CompassManager : MonoBehaviour
 
         m_compassImage.rectTransform.rotation = Quaternion.Euler(0, 0, theta);
 	}
+
+
+
+    private IEnumerator CheckForAxisInput(string axisName, Action action)
+    {
+        bool buttonPressedPreviously = false;
+
+        while (true)
+        {
+            bool buttonPressed = Input.GetAxisRaw(axisName) == 1f;
+
+            if (buttonPressed && !buttonPressedPreviously)
+            {
+                action.Invoke();
+            }
+
+            buttonPressedPreviously = buttonPressed;
+
+            yield return null;
+        }
+    }
 }

@@ -61,18 +61,6 @@ public class PauseMenuManager : MonoBehaviour
     
     public void Resume()
     {
-        m_startOfGame = false;
-
-        if (m_loadGameButton != null && m_loadGameButton.interactable)
-        {
-            print("Delete all save data");
-            EventManager.TriggerEvent(StandardEventName.DeleteSaveData);
-            m_loadGameButton.interactable = false;
-        }
-
-        if (m_resumeButtonText != null)
-            m_resumeButtonText.text = "Resume";
-
         EventManager.TriggerEvent(StandardEventName.Unpause);
     }
 
@@ -304,6 +292,18 @@ public class PauseMenuManager : MonoBehaviour
 
     private void OnUnpause()
     {
+        m_startOfGame = false;
+
+        if (m_loadGameButton != null && m_loadGameButton.interactable)
+        {
+            print("Delete all save data");
+            EventManager.TriggerEvent(StandardEventName.DeleteSaveData);
+            m_loadGameButton.interactable = false;
+        }
+
+        if (m_resumeButtonText != null)
+            m_resumeButtonText.text = "Resume";
+
         ShowPauseMenu(false);
     }
 
