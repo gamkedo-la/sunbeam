@@ -8,6 +8,7 @@ public class PodLightManager : MonoBehaviour
     [SerializeField] float m_onDuration = 1.5f;
     [SerializeField] float m_offDuration = 2f;
     [SerializeField] float m_fadeDuration = 0.5f;
+    [SerializeField] bool m_randomStartDelay = true;
 
     private LensFlare m_flair;
     private Transform m_camera;
@@ -42,19 +43,18 @@ public class PodLightManager : MonoBehaviour
     {
         m_brightnessMultiplier = 1f;
 
+        if (m_randomStartDelay)
+            yield return new WaitForSeconds(Random.Range(0, m_onDuration));
+
         while(true)
         {
-            yield return new WaitForSeconds(m_onDuration);
-
-            StartCoroutine(FadeBrightness(0f));
-
-            yield return new WaitForSeconds(m_fadeDuration);
+            yield return StartCoroutine(FadeBrightness(0f));
 
             yield return new WaitForSeconds(m_offDuration);
 
-            StartCoroutine(FadeBrightness(1f));
+            yield return StartCoroutine(FadeBrightness(1f));
 
-            yield return new WaitForSeconds(m_fadeDuration);
+            yield return new WaitForSeconds(m_onDuration);
         }
     }
 
