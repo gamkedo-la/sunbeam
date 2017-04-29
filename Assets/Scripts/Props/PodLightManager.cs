@@ -48,11 +48,11 @@ public class PodLightManager : MonoBehaviour
 
         while(true)
         {
-            yield return StartCoroutine(FadeBrightness(0f));
+            yield return FadeBrightness(0f);
 
             yield return new WaitForSeconds(m_offDuration);
 
-            yield return StartCoroutine(FadeBrightness(1f));
+            yield return FadeBrightness(1f);
 
             yield return new WaitForSeconds(m_onDuration);
         }
