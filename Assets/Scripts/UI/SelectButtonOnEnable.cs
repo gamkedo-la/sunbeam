@@ -11,7 +11,7 @@ public class SelectButtonOnEnable : MonoBehaviour
 
     void OnEnable()
     {
-        if (m_buttonToSelectOnEnable != null)
+        if (m_buttonToSelectOnEnable != null && GameController.UseJoystickLook)
         {
             m_buttonToSelectOnEnable.Select();
             StartCoroutine(SetSelectButtonLater(m_buttonToSelectOnEnable));

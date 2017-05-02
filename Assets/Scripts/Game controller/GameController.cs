@@ -5,13 +5,15 @@ using System.Collections;
 public class GameController : MonoBehaviour
 {
     public static bool AllowCheatMode = false;
+    public static bool AllowCheatModeActiveInPreviousGame = false;
+    public static bool UseJoystickLook = false;
+    public static bool FreeModeHidesPauseMenu = false;
 
     private Camera m_mainCamera;
     private bool m_freeCameraEnabled = false;
     private bool m_paused = false;
     private bool m_disableMouseCapture;
     private bool m_dontLockMouseOnUnPause;
-    private bool m_useJoystickLook;
     private float m_timeScale;
 
     private FirstPersonController m_firstPersonController;
@@ -26,12 +28,20 @@ public class GameController : MonoBehaviour
 
         var joystickNames = Input.GetJoystickNames();
 
-        bool m_useJoystickLook = false;
+        UseJoystickLook = false;
 
         for (int i = 0; i < joystickNames.Length; i++)
-            m_useJoystickLook = m_useJoystickLook || !string.IsNullOrEmpty(joystickNames[i]);
+            UseJoystickLook = UseJoystickLook || !string.IsNullOrEmpty(joystickNames[i]);
 
-        OnUnpause(m_useJoystickLook);
+        int gameCompleted = PlayerPrefs.GetInt("Game completed", 0);
+
+        if (gameCompleted == 1)
+        {
+            AllowCheatModeActiveInPreviousGame = true;
+            AllowCheatMode = true;
+        }
+
+        OnUnpause(UseJoystickLook);
     }
 
 
@@ -45,6 +55,8 @@ public class GameController : MonoBehaviour
         // This may need to be done after Start if anything ever gets set up in other Start methods that needs it to be unpaused,
         // but so far it looks to be fine to do this here.
         EventManager.TriggerEvent(StandardEventName.Pause);
+
+        StartCoroutine(CheckForCheatCode());
     }
 
 
@@ -62,6 +74,13 @@ public class GameController : MonoBehaviour
     public void DisableMouseCapture()
     {
         m_disableMouseCapture = true;
+    }
+
+
+    public void GameCompleted()
+    {
+        AllowCheatMode = true;
+        PlayerPrefs.SetInt("Game completed", 1);
     }
 
 
@@ -90,6 +109,50 @@ public class GameController : MonoBehaviour
                 }
 
                 buttonPressedPreviously = buttonPressed;
+            }
+
+            yield return null;
+        }
+    }
+
+
+    private IEnumerator CheckForCheatCode()
+    {
+        bool fPressed = false;
+        bool lPressed = false;
+        bool yPressed = false; 
+
+        while (!AllowCheatMode)
+        {
+            if (fPressed && lPressed && yPressed)
+            {
+                //print("Cheat mode activated");
+                AllowCheatModeActiveInPreviousGame = true;
+                AllowCheatMode = true;
+                EventManager.TriggerEvent(StandardEventName.CheatModeActivated);
+            }
+
+            if (!fPressed && Input.GetKeyDown(KeyCode.F))
+            {
+                //print("F pressed");
+                fPressed = true;
+            }
+            else if (fPressed && !lPressed && Input.GetKeyDown(KeyCode.L))
+            {
+                //print("L pressed");
+                lPressed = true;
+            }
+            else if (lPressed && !yPressed && Input.GetKeyDown(KeyCode.Y))
+            {
+                //print("Y pressed");
+                yPressed = true;
+            }
+            else if (Input.anyKeyDown)
+            {
+                //print("Cheat code interrupted");
+                fPressed = false;
+                lPressed = false;
+                yPressed = false;
             }
 
             yield return null;
@@ -138,25 +201,19 @@ public class GameController : MonoBehaviour
 
     private void SetTimeScale()
     {
-        if (m_freeCameraEnabled)
+        if (m_freeCameraEnabled && FreeModeHidesPauseMenu)
         {
             if (m_paused)
                 OnPause();
             else
-            {
                 OnUnpause();
-            }
         }
         else
         {
             if (m_paused)
-            {
                 EventManager.TriggerEvent(StandardEventName.Pause);
-            }
             else
-            {
                 EventManager.TriggerEvent(StandardEventName.Unpause);
-            }
         }
     }
 
@@ -184,7 +241,7 @@ public class GameController : MonoBehaviour
 
     private void OnUnpause()
     {
-        OnUnpause(m_useJoystickLook);
+        OnUnpause(UseJoystickLook);
     }
 
 
@@ -216,7 +273,7 @@ public class GameController : MonoBehaviour
     private void SetMouseControls()
     {
         //print("Set mouse controls");
-        m_useJoystickLook = false;
+        UseJoystickLook = false;
 
         if (!m_paused)
             OnUnpause();
@@ -226,7 +283,7 @@ public class GameController : MonoBehaviour
     private void SetJoypadControls()
     {
         //print("Set joystick controls");
-        m_useJoystickLook = true;
+        UseJoystickLook = true;
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;

@@ -16,6 +16,7 @@ public class LampStateSaveManager : MonoBehaviour
 
     public void SaveLampOnState()
     {
+        print("Save lamp on: " + name);
         PlayerPrefs.SetInt(name, 1);
     }
 
@@ -25,7 +26,10 @@ public class LampStateSaveManager : MonoBehaviour
         int lampOn = PlayerPrefs.GetInt(name, 0);
 
         if (lampOn == 1)
+        {
+            print("Load lamp on: " + name);
             m_light.enabled = true;
+        }
     }
 
 

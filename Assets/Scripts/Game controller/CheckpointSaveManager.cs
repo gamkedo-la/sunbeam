@@ -15,6 +15,7 @@ public class CheckpointSaveManager : MonoBehaviour
 
     void OnTriggerEnter(Collider col)
     {
+        print("Save checkpoint triggered: " + name);
         PlayerPrefs.SetString("Checkpoint", name);
     }
 
@@ -25,6 +26,7 @@ public class CheckpointSaveManager : MonoBehaviour
 
         if (checkPoint == name)
         {
+            print("Load checkpoint triggered: " + name);
             m_player.position = transform.position;
             m_player.rotation = transform.rotation;
         }

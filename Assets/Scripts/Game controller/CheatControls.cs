@@ -4,9 +4,17 @@ using UnityEngine;
 
 public class CheatControls : MonoBehaviour
 {
+    [Header("Sky rotation")]
+    [SerializeField] bool m_allowSkyRotation = true;
     [SerializeField] string m_skyRotationAxisName = "Sky rotation";
     [SerializeField] float m_skyRotationSpeed = 30f;
+
+    [Header("Spawn points")]
+    [SerializeField] bool m_allowSpawnPoints = false;
     [SerializeField] Transform[] m_spawnPoints;
+
+    [Header("Orbit camera")]
+    [SerializeField] bool m_allowOrbitcamera = false;
     [SerializeField] GameObject m_orbitCamera;
 
     private Transform m_player;
@@ -32,7 +40,14 @@ public class CheatControls : MonoBehaviour
         if (!GameController.AllowCheatMode)
             return;
 
-        if (m_orbitCamera != null && Input.GetKeyDown(KeyCode.O))
+        if (m_allowSkyRotation)
+        {
+            float skyRotation = Input.GetAxis(m_skyRotationAxisName);
+
+            m_sky.Rotate(Vector3.up * skyRotation * m_skyRotationSpeed * Time.deltaTime, Space.Self);
+        }
+
+        if (m_allowOrbitcamera && m_orbitCamera != null && Input.GetKeyDown(KeyCode.O))
         {
             m_orbitCameraEnabled = !m_orbitCameraEnabled;
             m_firstPersonController.FreeMode(m_orbitCameraEnabled);
@@ -62,81 +77,80 @@ public class CheatControls : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1) && m_spawnPoints.Length > 0)
+        if (m_allowSpawnPoints)
         {
-            m_playerRigidbody.velocity = Vector3.zero;
-            m_player.position = m_spawnPoints[0].position;
-            m_player.rotation = m_spawnPoints[0].rotation;
+            if (Input.GetKeyDown(KeyCode.Alpha1) && m_spawnPoints.Length > 0)
+            {
+                m_playerRigidbody.velocity = Vector3.zero;
+                m_player.position = m_spawnPoints[0].position;
+                m_player.rotation = m_spawnPoints[0].rotation;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2) && m_spawnPoints.Length > 1)
+            {
+                m_playerRigidbody.velocity = Vector3.zero;
+                m_player.position = m_spawnPoints[1].position;
+                m_player.rotation = m_spawnPoints[1].rotation;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3) && m_spawnPoints.Length > 2)
+            {
+                m_playerRigidbody.velocity = Vector3.zero;
+                m_player.position = m_spawnPoints[2].position;
+                m_player.rotation = m_spawnPoints[2].rotation;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4) && m_spawnPoints.Length > 3)
+            {
+                m_playerRigidbody.velocity = Vector3.zero;
+                m_player.position = m_spawnPoints[3].position;
+                m_player.rotation = m_spawnPoints[3].rotation;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha5) && m_spawnPoints.Length > 4)
+            {
+                m_playerRigidbody.velocity = Vector3.zero;
+                m_player.position = m_spawnPoints[4].position;
+                m_player.rotation = m_spawnPoints[4].rotation;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha6) && m_spawnPoints.Length > 5)
+            {
+                m_playerRigidbody.velocity = Vector3.zero;
+                m_player.position = m_spawnPoints[5].position;
+                m_player.rotation = m_spawnPoints[5].rotation;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha7) && m_spawnPoints.Length > 6)
+            {
+                m_playerRigidbody.velocity = Vector3.zero;
+                m_player.position = m_spawnPoints[6].position;
+                m_player.rotation = m_spawnPoints[6].rotation;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha8) && m_spawnPoints.Length > 7)
+            {
+                m_playerRigidbody.velocity = Vector3.zero;
+                m_player.position = m_spawnPoints[7].position;
+                m_player.rotation = m_spawnPoints[7].rotation;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha9) && m_spawnPoints.Length > 8)
+            {
+                m_playerRigidbody.velocity = Vector3.zero;
+                m_player.position = m_spawnPoints[8].position;
+                m_player.rotation = m_spawnPoints[8].rotation;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha0) && m_spawnPoints.Length > 9)
+            {
+                m_playerRigidbody.velocity = Vector3.zero;
+                m_player.position = m_spawnPoints[9].position;
+                m_player.rotation = m_spawnPoints[9].rotation;
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftBracket) && m_spawnPoints.Length > 10)
+            {
+                m_playerRigidbody.velocity = Vector3.zero;
+                m_player.position = m_spawnPoints[10].position;
+                m_player.rotation = m_spawnPoints[10].rotation;
+            }
+            else if (Input.GetKeyDown(KeyCode.RightBracket) && m_spawnPoints.Length > 11)
+            {
+                m_playerRigidbody.velocity = Vector3.zero;
+                m_player.position = m_spawnPoints[11].position;
+                m_player.rotation = m_spawnPoints[11].rotation;
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2) && m_spawnPoints.Length > 1)
-        {
-            m_playerRigidbody.velocity = Vector3.zero;
-            m_player.position = m_spawnPoints[1].position;
-            m_player.rotation = m_spawnPoints[1].rotation;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3) && m_spawnPoints.Length > 2)
-        {
-            m_playerRigidbody.velocity = Vector3.zero;
-            m_player.position = m_spawnPoints[2].position;
-            m_player.rotation = m_spawnPoints[2].rotation;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha4) && m_spawnPoints.Length > 3)
-        {
-            m_playerRigidbody.velocity = Vector3.zero;
-            m_player.position = m_spawnPoints[3].position;
-            m_player.rotation = m_spawnPoints[3].rotation;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha5) && m_spawnPoints.Length > 4)
-        {
-            m_playerRigidbody.velocity = Vector3.zero;
-            m_player.position = m_spawnPoints[4].position;
-            m_player.rotation = m_spawnPoints[4].rotation;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha6) && m_spawnPoints.Length > 5)
-        {
-            m_playerRigidbody.velocity = Vector3.zero;
-            m_player.position = m_spawnPoints[5].position;
-            m_player.rotation = m_spawnPoints[5].rotation;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha7) && m_spawnPoints.Length > 6)
-        {
-            m_playerRigidbody.velocity = Vector3.zero;
-            m_player.position = m_spawnPoints[6].position;
-            m_player.rotation = m_spawnPoints[6].rotation;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha8) && m_spawnPoints.Length > 7)
-        {
-            m_playerRigidbody.velocity = Vector3.zero;
-            m_player.position = m_spawnPoints[7].position;
-            m_player.rotation = m_spawnPoints[7].rotation;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha9) && m_spawnPoints.Length > 8)
-        {
-            m_playerRigidbody.velocity = Vector3.zero;
-            m_player.position = m_spawnPoints[8].position;
-            m_player.rotation = m_spawnPoints[8].rotation;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha0) && m_spawnPoints.Length > 9)
-        {
-            m_playerRigidbody.velocity = Vector3.zero;
-            m_player.position = m_spawnPoints[9].position;
-            m_player.rotation = m_spawnPoints[9].rotation;
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftBracket) && m_spawnPoints.Length > 10)
-        {
-            m_playerRigidbody.velocity = Vector3.zero;
-            m_player.position = m_spawnPoints[10].position;
-            m_player.rotation = m_spawnPoints[10].rotation;
-        }
-        else if (Input.GetKeyDown(KeyCode.RightBracket) && m_spawnPoints.Length > 11)
-        {
-            m_playerRigidbody.velocity = Vector3.zero;
-            m_player.position = m_spawnPoints[11].position;
-            m_player.rotation = m_spawnPoints[11].rotation;
-        }
-
-        float skyRotation = Input.GetAxis(m_skyRotationAxisName);
-
-        m_sky.Rotate(Vector3.up * skyRotation * m_skyRotationSpeed * Time.deltaTime, Space.Self);
     }
 }

@@ -19,6 +19,7 @@ public enum StandardEventName
     ContinueExploring = 8,
     ClosingCinematicEnd = 9,
     LoadSaveGame = 10,
+    CheatModeActivated = 11,
 }
 
 

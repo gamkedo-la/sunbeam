@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: c943f86318871294d95e497e15ec3e5a
+timeCreated: 1492933549
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Sunny Spring Day
+  fontNames:
+  - Sunny Spring Day
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

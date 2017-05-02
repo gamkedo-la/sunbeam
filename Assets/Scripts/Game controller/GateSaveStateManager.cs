@@ -20,7 +20,10 @@ public class GateSaveStateManager : MonoBehaviour
 	public void SaveOpenGateState()
     {
         if (m_saveStateOfGate)
+        {
+            print("Save door open: " + name);
             PlayerPrefs.SetInt(name, 1);
+        }
     }
 
 
@@ -29,7 +32,10 @@ public class GateSaveStateManager : MonoBehaviour
         int open = PlayerPrefs.GetInt(name, 0);
 
         if (open == 1)
+        {
+            print("Load door open: " + name);
             m_anim.SetTrigger(m_animationTriggerOnLoad);
+        }
     }
 
 
