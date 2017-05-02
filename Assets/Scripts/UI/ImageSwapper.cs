@@ -20,6 +20,7 @@ public class ImageSwapper : MonoBehaviour
 
     private void SetMouseControlsSprite()
     {
+        //print("Set mouse control sprites");
         if (m_mouseControlsSprite != null)
             m_image.sprite = m_mouseControlsSprite;
     }
@@ -27,6 +28,7 @@ public class ImageSwapper : MonoBehaviour
 
     private void SetJoypadControlsSprite()
     {
+        //print("Set joypad control sprites");
         if (m_joypadControlsSprite != null)
             m_image.sprite = m_joypadControlsSprite;
     }

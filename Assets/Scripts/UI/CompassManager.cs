@@ -6,9 +6,12 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Image))]
 public class CompassManager : MonoBehaviour
 {
+    [SerializeField] bool m_turnOnForContinueExploring;
+
     private Transform m_planet;
     private Transform m_player;
     private Image m_compassImage;
+    private bool m_enabled;
 
 
     void Awake()
@@ -31,6 +34,7 @@ public class CompassManager : MonoBehaviour
     private void ToggleCompass()
     {
         m_compassImage.enabled = !m_compassImage.enabled;
+        m_enabled = m_compassImage.enabled;
     }
 
 
@@ -82,5 +86,32 @@ public class CompassManager : MonoBehaviour
 
             yield return null;
         }
+    }
+
+
+    private void TriggerClosingCinematic()
+    {
+        m_compassImage.enabled = false;
+    }
+
+
+    private void ContinueExploring()
+    {
+        if (m_turnOnForContinueExploring && m_enabled)
+            m_compassImage.enabled = true;
+    }
+
+
+    void OnEnable()
+    {
+        EventManager.StartListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
+        EventManager.StartListening(StandardEventName.ContinueExploring, ContinueExploring);
+    }
+
+
+    void OnDisable()
+    {
+        EventManager.StopListening(StandardEventName.TriggerClosingCinematic, TriggerClosingCinematic);
+        EventManager.StopListening(StandardEventName.ContinueExploring, ContinueExploring);
     }
 }

@@ -20,7 +20,7 @@ public class PauseMenuManager : MonoBehaviour
     [SerializeField] Button m_firstSelectedButtonPodInventory;
     [SerializeField] Button m_loadGameButton;
     [SerializeField] Text m_resumeButtonText;
-    [SerializeField] PrefsForInvertedY[] m_prefsForInvertedY;
+    [SerializeField] SwitchToggle[] m_toggles;
 
 
     private GameController m_gameController;
@@ -43,8 +43,8 @@ public class PauseMenuManager : MonoBehaviour
 
     void Start()
     {
-        for (int i = 0; i < m_prefsForInvertedY.Length; i++)
-            m_prefsForInvertedY[i].Load();
+        for (int i = 0; i < m_toggles.Length; i++)
+            m_toggles[i].Load();
     }
 
 

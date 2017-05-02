@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Toggle))]
-public class PrefsForInvertedY : MonoBehaviour
+public class PrefsForInvertedY : SwitchToggle
 {
     [SerializeField] BooleanEventName m_eventToTriggerOnToggle = BooleanEventName.ToggleInvertedJoypadLookY;
 
@@ -17,22 +17,22 @@ public class PrefsForInvertedY : MonoBehaviour
     }
 
 
-    public void Load()
+    public override void Load()
     {
         m_toggle = GetComponent<Toggle>();
         int toggleState = PlayerPrefs.GetInt(name, 0);
 
         m_toggle.isOn = toggleState == 1;
 
-        ToggleInvertedY(m_toggle.isOn);
+        Toggle(m_toggle.isOn);
     }
 
 
-    public void ToggleInvertedY(bool inverted)
+    public override void Toggle(bool on)
     {
-        int state = inverted ? 1 : 0;
+        int state = on ? 1 : 0;
         PlayerPrefs.SetInt(name, state);
 
-        EventManager.TriggerEvent(m_eventToTriggerOnToggle, inverted);
+        EventManager.TriggerEvent(m_eventToTriggerOnToggle, on);
     }
 }

@@ -64,7 +64,6 @@ public class FirstPersonController : MonoBehaviour
     private Vector3 m_smoothMoveVelocity;
     private bool m_grounded;
     private bool m_isRunning;
-    private bool m_useJoystickLook;
     private bool m_freeMode;
     private bool m_paused;
     private float m_speed;
@@ -107,8 +106,7 @@ public class FirstPersonController : MonoBehaviour
         }
 
         StartCoroutine(GetSprint());
-        StartCoroutine(CheckForJoysticks());
-
+        
         if (m_walkSfxType == WalkSfxType.Motor)
             StartCoroutine(PlayMotorAudio());
     }
@@ -323,47 +321,13 @@ public class FirstPersonController : MonoBehaviour
         if ((m_paused && !m_freeMode) || !m_allowFreeModeMovement)
             return;
 
-        if (m_useJoystickLook)
+        if (GameController.UseJoystickLook)
         {
             float deltaTime = m_freeMode ? Time.unscaledDeltaTime : Time.deltaTime;
             m_joystickLook.LookRotation(transform, m_camera.transform, m_verticalLookMinMax, deltaTime);
         }
         else
             m_mouseLook.LookRotation(transform, m_camera.transform, m_verticalLookMinMax);
-    }
-
-
-    private IEnumerator CheckForJoysticks()
-    {
-        while (true)
-        {
-            var joystickNames = Input.GetJoystickNames();
-
-            bool validJoystick = false;
-
-            for (int i = 0; i < joystickNames.Length; i++)
-            {
-                validJoystick = validJoystick || !string.IsNullOrEmpty(joystickNames[i]);
-                //print(string.Format("{0} Joystick {1}: {2}", Time.time, i + 1, joystickNames[i]));
-            }
-
-            if (validJoystick)
-            {
-                if (!m_useJoystickLook)
-                    EventManager.TriggerEvent(StandardEventName.ActivateJoypadControls);
-
-                m_useJoystickLook = true;
-            }
-            else
-            {
-                if (m_useJoystickLook)
-                    EventManager.TriggerEvent(StandardEventName.ActivateMouseControls);
-
-                m_useJoystickLook = false;
-            }
-
-            yield return new WaitForSecondsRealtime(1f);
-        }
     }
 
 

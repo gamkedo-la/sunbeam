@@ -6,8 +6,15 @@ public class GameController : MonoBehaviour
 {
     public static bool AllowCheatMode = false;
     public static bool AllowCheatModeActiveInPreviousGame = false;
-    public static bool UseJoystickLook = false;
     public static bool FreeModeHidesPauseMenu = false;
+
+    public static bool UseJoystickLook
+    {
+        get { return m_useJoypadIfPluggedIn && m_joypadPluggedIn; }
+    }
+
+    private static bool m_useJoypadIfPluggedIn = false;
+    private static bool m_joypadPluggedIn = false;
 
     private Camera m_mainCamera;
     private bool m_freeCameraEnabled = false;
@@ -26,20 +33,18 @@ public class GameController : MonoBehaviour
         m_mainCamera = Camera.main;
         m_timeScale = Time.timeScale;
 
-        var joystickNames = Input.GetJoystickNames();
-
-        UseJoystickLook = false;
-
-        for (int i = 0; i < joystickNames.Length; i++)
-            UseJoystickLook = UseJoystickLook || !string.IsNullOrEmpty(joystickNames[i]);
-
         int gameCompleted = PlayerPrefs.GetInt("Game completed", 0);
 
         if (gameCompleted == 1)
         {
             AllowCheatModeActiveInPreviousGame = true;
             AllowCheatMode = true;
-        }
+        }    
+
+        int useJoypad = PlayerPrefs.GetInt(PrefsForUseJoypad.UseJoypadPrefs, 0);
+        m_useJoypadIfPluggedIn = useJoypad == 1;
+
+        StartCoroutine(CheckForJoysticks());
 
         OnUnpause(UseJoystickLook);
     }
@@ -56,7 +61,43 @@ public class GameController : MonoBehaviour
         // but so far it looks to be fine to do this here.
         EventManager.TriggerEvent(StandardEventName.Pause);
 
-        StartCoroutine(CheckForCheatCode());
+        StartCoroutine(CheckForCheatCode());   
+    }
+
+
+    private IEnumerator CheckForJoysticks()
+    {
+        bool useJoystickPreviously = UseJoystickLook;
+
+        while (true)
+        {
+            var joystickNames = Input.GetJoystickNames();
+
+            bool validJoystick = false;
+
+            for (int i = 0; i < joystickNames.Length; i++)
+            {
+                validJoystick = validJoystick || !string.IsNullOrEmpty(joystickNames[i]);
+                //print(string.Format("{0} Joystick {1}: {2}", Time.time, i + 1, joystickNames[i]));
+            }
+
+            m_joypadPluggedIn = validJoystick;
+
+            if (UseJoystickLook && !useJoystickPreviously)
+            {
+                //print("Activate joystick controls");
+                EventManager.TriggerEvent(StandardEventName.ActivateJoypadControls);
+            }
+            else if (!UseJoystickLook && useJoystickPreviously)
+            {
+                //print("Activate mouse controls");
+                EventManager.TriggerEvent(StandardEventName.ActivateMouseControls);
+            }
+
+            useJoystickPreviously = UseJoystickLook;
+
+            yield return new WaitForSecondsRealtime(1f);
+        }
     }
 
 
@@ -243,7 +284,7 @@ public class GameController : MonoBehaviour
     {
         OnUnpause(UseJoystickLook);
     }
-
+    
 
     private void OnUnpause(bool useJoystickLook)
     {
@@ -273,7 +314,7 @@ public class GameController : MonoBehaviour
     private void SetMouseControls()
     {
         //print("Set mouse controls");
-        UseJoystickLook = false;
+        //UseJoystickLook = false;
 
         if (!m_paused)
             OnUnpause();
@@ -283,10 +324,15 @@ public class GameController : MonoBehaviour
     private void SetJoypadControls()
     {
         //print("Set joystick controls");
-        UseJoystickLook = true;
-
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+    }
+
+
+    private void SetUseJoypad(bool use)
+    {
+        //print("Use joystick if plugged in: " + use);
+        m_useJoypadIfPluggedIn = use;
     }
 
 
@@ -298,6 +344,7 @@ public class GameController : MonoBehaviour
         EventManager.StartListening(StandardEventName.ContinueExploring, OnContinueExploring);
         EventManager.StartListening(StandardEventName.ActivateMouseControls, SetMouseControls);
         EventManager.StartListening(StandardEventName.ActivateJoypadControls, SetJoypadControls);
+        EventManager.StartListening(BooleanEventName.ToggleUseJoypad, SetUseJoypad);
     }
 
 
@@ -309,6 +356,7 @@ public class GameController : MonoBehaviour
         EventManager.StopListening(StandardEventName.ClosingCinematicEnd, ClosingCinematicEnd);
         EventManager.StopListening(StandardEventName.ActivateMouseControls, SetMouseControls);
         EventManager.StopListening(StandardEventName.ActivateJoypadControls, SetJoypadControls);
+        EventManager.StopListening(BooleanEventName.ToggleUseJoypad, SetUseJoypad);
 
         Time.timeScale = m_timeScale;
     }
