@@ -5,6 +5,7 @@ public class GrassBehaviour : MonoBehaviour
 	Renderer rend;
 	Material mat;
 	float wind;
+	Vector4 windDirection = new Vector4(0, 0, 0, 0);
 
 	void Start()
 	{
@@ -29,6 +30,7 @@ public class GrassBehaviour : MonoBehaviour
 	{
 		wind = WindManager.grassPlane.windIntensity(transform.position);
 		//Vector2 windDirection = WindManager.grassPlane.windDirection3D;
-		mat.SetColor("_dir", new Vector4(wind - 0.5f, 0, 0, 0));
+		windDirection.x = wind - 0.5f;
+		mat.SetColor("_dir", windDirection);
 	}
 }
