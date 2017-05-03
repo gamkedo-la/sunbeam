@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 
 public class WindPlane : MonoBehaviour {
-	public float randomRange, windScale;
-
-	public Vector2 windDirection2D;
+    public float randomRange = 1f;
+    public float windScale = 0.01f;
+    public float strength = 1.0f;
+	public Vector2 windDirection2D= new Vector2(4, 8);
 
 	public Vector3 normal;
 
@@ -44,7 +45,9 @@ public class WindPlane : MonoBehaviour {
 		x += playerPlanePosition.x + windPosition.x;
 		y += playerPlanePosition.y + windPosition.y;
 
-		return windTex.GetPixelBilinear(x * windScale, y * windScale).r;
+        float wind = windTex.GetPixelBilinear(x * windScale, y * windScale).r - 0.5f;
+
+        return wind * strength;
 	}
 
 	void Update()

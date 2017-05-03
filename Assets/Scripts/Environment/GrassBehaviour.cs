@@ -7,30 +7,43 @@ public class GrassBehaviour : MonoBehaviour
 	float wind;
 	Vector4 windDirection = new Vector4(0, 0, 0, 0);
 
+    private bool updateShader = false;
+         
+
 	void Start()
 	{
 		rend = GetComponent<Renderer>();
 		mat = rend.material;
 	}
 
+
 	void OnBecameVisible()
 	{
+        updateShader = true;
 		UpdateShader();
 	}
 
-	void Update()
+
+    void OnBecomeInvisible()
+    {
+        updateShader = false;
+    }
+
+
+	public void UpdateMe()
 	{
-		if(rend.isVisible)
+		if(updateShader)
 		{
 			UpdateShader();
 		}
 	}
 
+
 	void UpdateShader()
 	{
 		wind = WindManager.grassPlane.windIntensity(transform.position);
 		//Vector2 windDirection = WindManager.grassPlane.windDirection3D;
-		windDirection.x = wind - 0.5f;
+		windDirection.x = wind;
 		mat.SetColor("_dir", windDirection);
 	}
 }

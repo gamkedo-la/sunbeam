@@ -49,4 +49,23 @@ public class FpsDisplay : MonoBehaviour
             yield return null;
         }
     }
+
+
+    private void CheatModeActivated()
+    {
+        StopAllCoroutines();
+        StartCoroutine(ShowFps());
+    }
+
+
+    void OnEnable()
+    {
+        EventManager.StartListening(StandardEventName.CheatModeActivated, CheatModeActivated);
+    }
+
+
+    void OnDisable()
+    {
+        EventManager.StopListening(StandardEventName.CheatModeActivated, CheatModeActivated);
+    }
 }
