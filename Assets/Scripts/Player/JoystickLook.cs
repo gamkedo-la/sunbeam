@@ -6,8 +6,8 @@ public class JoystickLook : MonoBehaviour
     [HideInInspector]
     public bool invertedVertical;
 
-    [SerializeField] string m_horizontalAxisName = "Horizontal look";
-    [SerializeField] string m_verticalAxisName = "Vertical look";
+    [SerializeField] string m_horizontalAxisName = "Horizontal look joystick";
+    [SerializeField] string m_verticalAxisName = "Vertical look joystick";
     [SerializeField] float m_sensitivityX = 3f;
     [SerializeField] float m_sensitivityY = 3f;
 

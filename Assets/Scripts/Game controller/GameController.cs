@@ -8,7 +8,7 @@ public class GameController : MonoBehaviour
     public static bool AllowCheatModeActiveInPreviousGame = false;
     public static bool FreeModeHidesPauseMenu = false;
 
-    public static bool UseJoystickLook
+    public static bool UseJoystick
     {
         get { return m_useJoypadIfPluggedIn && m_joypadPluggedIn; }
     }
@@ -46,7 +46,7 @@ public class GameController : MonoBehaviour
 
         StartCoroutine(CheckForJoysticks());
 
-        OnUnpause(UseJoystickLook);
+        OnUnpause(UseJoystick);
     }
 
 
@@ -67,7 +67,7 @@ public class GameController : MonoBehaviour
 
     private IEnumerator CheckForJoysticks()
     {
-        bool useJoystickPreviously = UseJoystickLook;
+        bool useJoystickPreviously = UseJoystick;
 
         while (true)
         {
@@ -83,18 +83,18 @@ public class GameController : MonoBehaviour
 
             m_joypadPluggedIn = validJoystick;
 
-            if (UseJoystickLook && !useJoystickPreviously)
+            if (UseJoystick && !useJoystickPreviously)
             {
                 //print("Activate joystick controls");
                 EventManager.TriggerEvent(StandardEventName.ActivateJoypadControls);
             }
-            else if (!UseJoystickLook && useJoystickPreviously)
+            else if (!UseJoystick && useJoystickPreviously)
             {
                 //print("Activate mouse controls");
                 EventManager.TriggerEvent(StandardEventName.ActivateMouseControls);
             }
 
-            useJoystickPreviously = UseJoystickLook;
+            useJoystickPreviously = UseJoystick;
 
             yield return new WaitForSecondsRealtime(1f);
         }
@@ -282,7 +282,7 @@ public class GameController : MonoBehaviour
 
     private void OnUnpause()
     {
-        OnUnpause(UseJoystickLook);
+        OnUnpause(UseJoystick);
     }
     
 

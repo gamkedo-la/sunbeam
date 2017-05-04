@@ -114,12 +114,18 @@ public class FirstPersonController : MonoBehaviour
 
 	void Update()
     {
+        bool useJoystick = GameController.UseJoystick;
         m_allowFreeModeMovement = GameController.FreeModeHidesPauseMenu || !m_paused;
 
         RotateView();
 
-        float h = Input.GetAxisRaw("Horizontal");
-        float v = Input.GetAxisRaw("Vertical");
+        float h = useJoystick
+            ? Input.GetAxisRaw("Horizontal joystick")
+            : Input.GetAxisRaw("Horizontal");
+
+        float v = useJoystick
+            ? Input.GetAxisRaw("Vertical joystick")
+            : Input.GetAxisRaw("Vertical");
 
         if (m_freeMode)
         {
@@ -152,7 +158,13 @@ public class FirstPersonController : MonoBehaviour
             m_speed = m_grounded ? m_speed : 0.5f * m_walkSpeed;
         }
 
-        var moveDirection = new Vector3(h, 0, v).normalized;
+        var moveDirection = new Vector3(h, 0, v);
+
+        if (!useJoystick || moveDirection.magnitude > 1f)
+            moveDirection.Normalize();
+
+        //print(moveDirection);
+
         var targetMoveAmount = moveDirection * m_speed;    
 
         m_moveAmount = Vector3.SmoothDamp(m_moveAmount, targetMoveAmount, ref m_smoothMoveVelocity, m_moveSmooth);  
@@ -321,7 +333,7 @@ public class FirstPersonController : MonoBehaviour
         if ((m_paused && !m_freeMode) || !m_allowFreeModeMovement)
             return;
 
-        if (GameController.UseJoystickLook)
+        if (GameController.UseJoystick)
         {
             float deltaTime = m_freeMode ? Time.unscaledDeltaTime : Time.deltaTime;
             m_joystickLook.LookRotation(transform, m_camera.transform, m_verticalLookMinMax, deltaTime);
