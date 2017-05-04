@@ -20,7 +20,7 @@ public class GrassBehaviour : MonoBehaviour
 	void OnBecameVisible()
 	{
         updateShader = true;
-		UpdateShader();
+		//UpdateShader();
 	}
 
 
