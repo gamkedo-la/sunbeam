@@ -144,8 +144,15 @@ public class FirstPersonController : MonoBehaviour
             }
             else
                 m_speed = m_freeModeStartSpeed;
-      
-            var freeMoveDirection = new Vector3(h, u, v).normalized;
+
+            var freeMoveDirection = new Vector3(h, 0, v);
+
+            if (!useJoystick || freeMoveDirection.magnitude > 1f)
+                freeMoveDirection.Normalize();
+
+            freeMoveDirection.y = u;
+
+            //print(freeMoveDirection);
 
             if (m_allowFreeModeMovement)
                 transform.Translate(freeMoveDirection * m_speed * Time.unscaledDeltaTime);
