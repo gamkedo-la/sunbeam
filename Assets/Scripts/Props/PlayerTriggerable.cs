@@ -162,6 +162,12 @@ public class PlayerTriggerable : MonoBehaviour
     }
 
 
+    public void Dectivate()
+    {
+        m_active = false;
+    }
+
+
     private void OnPause()
     {
         m_paused = true;
