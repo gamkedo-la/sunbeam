@@ -81,6 +81,9 @@ public class FirstPersonController : MonoBehaviour
     private bool m_canClimb;
     private bool m_allowFreeModeMovement;
 
+    private Vector3 m_lastGrountContactPosition;
+    private Quaternion m_lastGrountContactRotation;
+
 
     void Start()
     {
@@ -317,14 +320,28 @@ public class FirstPersonController : MonoBehaviour
 
     void OnCollisionStay(Collision col)
     {
-        var contact = col.contacts[0];
-        m_slopeNormal = contact.normal;
-        m_contact = contact.point;
+        if (!col.gameObject.CompareTag(Tags.WaterPart))
+        {
+            var contact = col.contacts[0];
+            m_slopeNormal = contact.normal;
+            m_contact = contact.point;
 
-        Debug.DrawRay(contact.point, m_slopeNormal, Color.yellow);
+            Debug.DrawRay(contact.point, m_slopeNormal, Color.yellow);
 
-        m_slope = Vector3.Angle(transform.up, m_slopeNormal);
-        m_step = Vector3.Dot(m_contact - transform.position, transform.up);
+            m_slope = Vector3.Angle(transform.up, m_slopeNormal);
+            m_step = Vector3.Dot(m_contact - transform.position, transform.up);
+
+            if (col.gameObject.CompareTag(Tags.Ground))
+            {
+                m_lastGrountContactPosition = contact.point;
+                //m_lastGrountContactRotation = transform.rotation;
+            }
+        }
+        else
+        {
+            transform.position = m_lastGrountContactPosition;
+            //transform.rotation = m_lastGrountContactRotation;
+        }
     }
 
 

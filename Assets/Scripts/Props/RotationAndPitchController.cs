@@ -73,13 +73,24 @@ public class RotationAndPitchController : PropControllerBase
         if (!m_active)
             return;
 
-        float h1 = Input.GetAxis("Horizontal");
-        float v1 = Input.GetAxis("Vertical");
-        float h2 = Input.GetAxis("Horizontal look");
-        float v2 = Input.GetAxis("Vertical look");
+        float h = 0;
+        float v = 0;
 
-        float h = Mathf.Clamp(h1 + h2, -1f, 1f);
-        float v = Mathf.Clamp(v1 + v2, -1f, 1f);
+        if (GameController.UseJoystick)
+        {
+            float h1 = Input.GetAxis("Horizontal joystick");
+            float v1 = Input.GetAxis("Vertical joystick");
+            float h2 = Input.GetAxis("Horizontal look joystick");
+            float v2 = Input.GetAxis("Vertical look joystick");
+
+            h = Mathf.Clamp(h1 + h2, -1f, 1f);
+            v = Mathf.Clamp(v1 + v2, -1f, 1f);
+        }
+        else
+        {
+            h = Input.GetAxis("Horizontal");
+            v = Input.GetAxis("Vertical");
+        }    
 
         float rotationToAdd = h * m_rotationSpeed * Time.deltaTime;
         rotationToAdd = m_reverseDirection ? -rotationToAdd : rotationToAdd;
