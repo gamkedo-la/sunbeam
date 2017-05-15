@@ -1,5 +1,3 @@
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
 Shader "FX/MirrorReflection"
 {
 	Properties
@@ -30,7 +28,7 @@ Shader "FX/MirrorReflection"
 			v2f vert(float4 pos : POSITION, float2 uv : TEXCOORD0)
 			{
 				v2f o;
-				o.pos = UnityObjectToClipPos(pos);
+				o.pos = mul(UNITY_MATRIX_MVP, pos);
 				o.uv = TRANSFORM_TEX(uv, _MainTex);
 				o.refl = ComputeScreenPos(o.pos);
 				return o;
