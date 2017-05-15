@@ -159,12 +159,14 @@ public class PlayerTriggerable : MonoBehaviour
     public void Activate()
     {
         m_active = true;
+        m_trigger.enabled = true;
     }
 
 
     public void Dectivate()
     {
         m_active = false;
+        m_trigger.enabled = false;
     }
 
 

@@ -1,10 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Animator))]
 public class WoodenTowerPlatformController : MonoBehaviour
 {
+    [SerializeField] UnityEvent m_platformUpEndActions;
+    [SerializeField] UnityEvent m_platformDownEndActions;
+
     private Animator m_anim;
     private int m_up;
     private int m_down;
@@ -35,5 +39,19 @@ public class WoodenTowerPlatformController : MonoBehaviour
     public void UnparentPlayer()
     {
         m_player.parent = null;
+    }
+
+
+    public void PlatformUpEndTrigger()
+    {
+        UnparentPlayer();
+        m_platformUpEndActions.Invoke();
+    }
+
+
+    public void PlatformDownEndTrigger()
+    {
+        UnparentPlayer();
+        m_platformDownEndActions.Invoke();
     }
 }
