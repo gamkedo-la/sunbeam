@@ -36,7 +36,10 @@ public class PlayerTriggerable : MonoBehaviour
         m_player = GameObject.FindGameObjectWithTag(Tags.Player).transform;
         m_trigger = GetComponent<Collider>();
 
-        m_active = m_startActive;
+        if (m_startActive)
+            Activate();
+        else
+            TurnOffTrigger();
     }
 
 
@@ -57,11 +60,8 @@ public class PlayerTriggerable : MonoBehaviour
                 //print("Trigger activate action");
                 TriggerActivateActions();
 
-                if (m_disableTriggerOnActivate && m_trigger != null)
-                {
-                    m_trigger.enabled = false;
-                    m_activationTriggered = false;
-                }
+                if (m_disableTriggerOnActivate)
+                    TurnOffTrigger();
 
                 if (!m_dontTriggerCameraMovement)
                     EventManager.TriggerEvent(BooleanEventName.Interact, false);
@@ -159,14 +159,18 @@ public class PlayerTriggerable : MonoBehaviour
     public void Activate()
     {
         m_active = true;
-        m_trigger.enabled = true;
+
+        if (m_trigger != null)
+            m_trigger.enabled = true;
     }
 
 
-    public void Dectivate()
+    public void TurnOffTrigger()
     {
-        m_active = false;
-        m_trigger.enabled = false;
+        m_activationTriggered = false;
+
+        if (m_trigger != null)
+            m_trigger.enabled = false;
     }
 
 
