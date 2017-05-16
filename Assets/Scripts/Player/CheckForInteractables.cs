@@ -28,7 +28,7 @@ public class CheckForInteractables : MonoBehaviour
             {
                 m_playerTriggereable = hit.transform.GetComponentInChildren<PlayerTriggerable>();
 
-                if (m_playerTriggereable != null && m_playerTriggereable.Active)
+                if (m_playerTriggereable != null)// && m_playerTriggereable.Active)
                 {
                     m_playerTriggereable.SetCanBeTriggered(true);
                     m_canBeTriggered = true;
@@ -45,7 +45,7 @@ public class CheckForInteractables : MonoBehaviour
         {
             m_canBeTriggered = false;
 
-            if (m_playerTriggereable != null && m_playerTriggereable.Active)
+            if (m_playerTriggereable != null)// && m_playerTriggereable.Active)
             {
                 m_playerTriggereable.SetCanBeTriggered(false);         
             }

@@ -10,8 +10,6 @@ public class PlayerTriggerable : MonoBehaviour
     [SerializeField] bool m_startActive = true;
     [SerializeField] bool m_dontTriggerCameraMovement;
     [SerializeField] bool m_disableTriggerOnActivate;
-    [SerializeField] bool m_resetAfterDelay;
-    [SerializeField] float m_resetAfterSeconds = 1f;
     [SerializeField] Transform m_tranformToParentPlayerTo;
     [SerializeField] UnityEvent m_actionsOnActivate;
     [SerializeField] UnityEvent m_actionsOnDeactivate;
@@ -20,7 +18,6 @@ public class PlayerTriggerable : MonoBehaviour
 
     private Collider m_trigger;
     private Transform m_player;
-    private bool m_active;
     private bool m_canBeTriggered;
     private bool m_actionsTrggered;
     private bool m_activationTriggered;
@@ -68,9 +65,6 @@ public class PlayerTriggerable : MonoBehaviour
 
                 if (m_showControls && !m_dontShowRotationControls)
                     EventManager.TriggerEvent(BooleanEventName.ShowRotationControls, true);
-
-                if (m_resetAfterDelay)
-                    StartCoroutine(Reset());
             }
             else if (m_activationTriggered && (m_submit || m_cancel))
             {
@@ -129,12 +123,6 @@ public class PlayerTriggerable : MonoBehaviour
     }
 
 
-    public bool Active
-    {
-        get { return m_active; }
-    }
-
-
     private void TriggerActivateActions()
     {
         m_player.parent = m_tranformToParentPlayerTo;
@@ -148,18 +136,8 @@ public class PlayerTriggerable : MonoBehaviour
     }
 
 
-    private IEnumerator Reset()
-    {
-        yield return new WaitForSeconds(m_resetAfterSeconds);
-
-        m_activationTriggered = false;
-    }
-
-
     public void Activate()
     {
-        m_active = true;
-
         if (m_trigger != null)
             m_trigger.enabled = true;
     }
@@ -188,17 +166,18 @@ public class PlayerTriggerable : MonoBehaviour
 
     private void TriggerClosingCinematic()
     {
-        m_activeWhenCinemticStarted = m_active;
+        m_activeWhenCinemticStarted = m_trigger != null && m_trigger.enabled;
         m_canBeTriggeredWhenCinematicStarted = m_canBeTriggered;
-        m_active = false;
+        TurnOffTrigger();
         m_canBeTriggered = false;
-        m_activationTriggered = false;
     }
 
 
     private void ContinueExploring()
     {
-        m_active = m_activeWhenCinemticStarted;
+        if (m_activeWhenCinemticStarted)
+            Activate();
+
         m_canBeTriggered = m_canBeTriggeredWhenCinematicStarted;
     }
 

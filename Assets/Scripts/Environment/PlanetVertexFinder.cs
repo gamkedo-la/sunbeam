@@ -19,7 +19,7 @@ public class PlanetVertexFinder : MonoBehaviour
 
     private int m_length;
     private int m_vertexSetIndex;
-    private int m_closestVertexIndex;
+    //private int m_closestVertexIndex;
 
     private bool m_iterating;
     
@@ -125,10 +125,10 @@ public class PlanetVertexFinder : MonoBehaviour
         }
 
         // convert nearest vertex back to world space
-        closestVertex = m_closestMeshTransform.TransformPoint(closestVertex);
+        //closestVertex = m_closestMeshTransform.TransformPoint(closestVertex);
 
         m_closestPoint = closestVertex;
-        m_closestVertexIndex = closestVertexIndex;  
+        //m_closestVertexIndex = closestVertexIndex;  
 
         m_iterating = false;
     }

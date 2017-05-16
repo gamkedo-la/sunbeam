@@ -100,7 +100,7 @@ public class SkyManager : MonoBehaviour
     {
         var observerDirection = observer.position.normalized;
 
-        float dotToObserver = Vector3.Dot(-transform.forward, observerDirection);
+        //float dotToObserver = Vector3.Dot(-transform.forward, observerDirection);
         float sunAngleAboveHorizon = Vector3.Angle(transform.forward, observerDirection) - 90f;
 
         return sunAngleAboveHorizon;

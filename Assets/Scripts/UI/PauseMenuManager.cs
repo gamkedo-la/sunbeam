@@ -23,7 +23,7 @@ public class PauseMenuManager : MonoBehaviour
     [SerializeField] SwitchToggle[] m_toggles;
 
 
-    private GameController m_gameController;
+    //private GameController m_gameController;
     private Button m_lastSelectedButtonMainMenu;
     private Button m_lastSelectedButtonPodInventory;
     private bool m_startOfGame = true;
@@ -31,7 +31,7 @@ public class PauseMenuManager : MonoBehaviour
 
     void Awake()
     {
-        m_gameController = FindObjectOfType<GameController>();
+        //m_gameController = FindObjectOfType<GameController>();
 
         DeactivateAllPanels();
         DeactivateContinueExploring();
