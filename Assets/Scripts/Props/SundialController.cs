@@ -29,8 +29,19 @@ public class SundialController : PropControllerBase
         if (!m_active)
             return;
 
-        float h1 = Input.GetAxis("Horizontal");
-        float h2 = Input.GetAxis("Horizontal look");
+        float h1;
+        float h2;
+
+        if (GameController.UseJoystick)
+        {
+            h1 = Input.GetAxis("Horizontal joystick");
+            h2 = Input.GetAxis("Horizontal look joystick");
+        }
+        else
+        {
+            h1 = Input.GetAxis("Horizontal");
+            h2 = Input.GetAxis("Horizontal look");
+        }
 
         float h = Mathf.Clamp(h1 + h2, -1f, 1f);
 
