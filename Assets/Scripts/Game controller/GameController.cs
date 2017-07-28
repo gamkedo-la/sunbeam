@@ -13,6 +13,8 @@ public class GameController : MonoBehaviour
         get { return m_useJoypadIfPluggedIn && m_joypadPluggedIn; }
     }
 
+    [SerializeField] bool m_startPaused = true;
+
     private static bool m_useJoypadIfPluggedIn = false;
     private static bool m_joypadPluggedIn = false;
 
@@ -59,7 +61,8 @@ public class GameController : MonoBehaviour
 
         // This may need to be done after Start if anything ever gets set up in other Start methods that needs it to be unpaused,
         // but so far it looks to be fine to do this here.
-        EventManager.TriggerEvent(StandardEventName.Pause);
+        if (m_startPaused)
+            EventManager.TriggerEvent(StandardEventName.Pause);
 
         StartCoroutine(CheckForCheatCode());   
     }

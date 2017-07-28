@@ -8,9 +8,35 @@ ModelImporter:
     100000: //RootNode
     100002: Salmon_LOD0
     100004: Salmon_LOD1
+    100006: Armature
+    100008: Front_1
+    100010: Front_2
+    100012: Head
+    100014: Jaw_bottom
+    100016: Jaw_top
+    100018: Rear_1
+    100020: Rear_2
+    100022: Rear_3
+    100024: Root
+    100026: Tail_bottom
+    100028: Tail_top
+    100030: Tail
     400000: //RootNode
     400002: Salmon_LOD0
     400004: Salmon_LOD1
+    400006: Armature
+    400008: Front_1
+    400010: Front_2
+    400012: Head
+    400014: Jaw_bottom
+    400016: Jaw_top
+    400018: Rear_1
+    400020: Rear_2
+    400022: Rear_3
+    400024: Root
+    400026: Tail_bottom
+    400028: Tail_top
+    400030: Tail
     2300000: //RootNode
     2300002: Salmon_LOD0
     2300004: Salmon_LOD1
@@ -21,7 +47,11 @@ ModelImporter:
     4300002: Salmon_LOD0
     4300004: Salmon_LOD1
     7400000: Default Take
+    7400002: Swim
+    7400004: Idle
     9500000: //RootNode
+    13700000: Salmon_LOD0
+    13700002: Salmon_LOD1
     20500000: //RootNode
   materials:
     importMaterials: 1
@@ -43,7 +73,127 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Swim
+      takeName: Swim
+      firstFrame: 0
+      lastFrame: 24
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Root
+        weight: 1
+      - path: Armature/Root/Front_1
+        weight: 1
+      - path: Armature/Root/Front_1/Front_2
+        weight: 1
+      - path: Armature/Root/Front_1/Front_2/Head
+        weight: 1
+      - path: Armature/Root/Front_1/Front_2/Head/Jaw_bottom
+        weight: 1
+      - path: Armature/Root/Front_1/Front_2/Head/Jaw_top
+        weight: 1
+      - path: Armature/Root/Rear_1
+        weight: 1
+      - path: Armature/Root/Rear_1/Rear_2
+        weight: 1
+      - path: Armature/Root/Rear_1/Rear_2/Rear_3
+        weight: 1
+      - path: Armature/Root/Rear_1/Rear_2/Rear_3/Tail
+        weight: 1
+      - path: Armature/Root/Rear_1/Rear_2/Rear_3/Tail/Tail_bottom
+        weight: 1
+      - path: Armature/Root/Rear_1/Rear_2/Rear_3/Tail/Tail_top
+        weight: 1
+      - path: Salmon_LOD0
+        weight: 1
+      - path: Salmon_LOD1
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Idle
+      takeName: Idle
+      firstFrame: 0
+      lastFrame: 49
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Root
+        weight: 1
+      - path: Armature/Root/Front_1
+        weight: 1
+      - path: Armature/Root/Front_1/Front_2
+        weight: 1
+      - path: Armature/Root/Front_1/Front_2/Head
+        weight: 1
+      - path: Armature/Root/Front_1/Front_2/Head/Jaw_bottom
+        weight: 1
+      - path: Armature/Root/Front_1/Front_2/Head/Jaw_top
+        weight: 1
+      - path: Armature/Root/Rear_1
+        weight: 1
+      - path: Armature/Root/Rear_1/Rear_2
+        weight: 1
+      - path: Armature/Root/Rear_1/Rear_2/Rear_3
+        weight: 1
+      - path: Armature/Root/Rear_1/Rear_2/Rear_3/Tail
+        weight: 1
+      - path: Armature/Root/Rear_1/Rear_2/Rear_3/Tail/Tail_bottom
+        weight: 1
+      - path: Armature/Root/Rear_1/Rear_2/Rear_3/Tail/Tail_top
+        weight: 1
+      - path: Salmon_LOD0
+        weight: 1
+      - path: Salmon_LOD1
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages:
