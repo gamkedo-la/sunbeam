@@ -11,4 +11,5 @@ public class Tags : MonoBehaviour
     public const string Sky = "Sky";
     public const string WaterPart = "Water part";
     public const string PlayerCollider = "Player collider";
+    public const string Respawn = "Respawn";
 }

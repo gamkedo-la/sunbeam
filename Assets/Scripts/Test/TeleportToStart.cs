@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TeleportToStart : MonoBehaviour
 {
+    [SerializeField] float m_jumpBackDistance = 50f;
+
     private Vector3 m_startPosition;
     private TrailRenderer m_trail;
 
@@ -20,7 +22,16 @@ public class TeleportToStart : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             transform.position = m_startPosition;
-            m_trail.Clear();
+
+            if (m_trail != null)
+                m_trail.Clear();
         }
 	}
+
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag(Tags.Respawn))
+            transform.position -= transform.forward * m_jumpBackDistance;
+    }
 }
